@@ -1,0 +1,108 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>ADMIN DASH</title>
+</head>
+<body>
+    <div class="container-fluid rounded">
+        <section class="row justify-content-center ps-5">  
+            <div class="col-5 mb-3">Start Date</div>
+            <div class="col-1 mb-3"></div>
+            <div class="col-5 mb-3">End Date</div>
+            <div class="col-1 mb-3"></div>
+            <div class="mb-3 col-1">
+                <label for="startDay" class="form-label">Day</label>
+                <select id="startDay" class="form-select" name="startDay">                    
+                    <option selected value="0">--</option>
+                    {% for i in range (1, 32) %}
+                    <option value={{i}}>{{i}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3 col-2">
+                <label for="startMonth" class="form-label">Month</label>
+                <select id="startMonth" class="form-select" name="startMonth">                    
+                    <option selected value="0">Select One</option>
+                    {% for i in range (1, 13) %}
+                    <option value={{i}}>{{i}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3 col-2">
+                <label for="startYear" class="form-label">Year</label>
+                <select id="startYear" class="form-select" name="startYear">                    
+                    <option selected value="0">Select One</option>
+                    {% for i in range (2019, 2022) %}
+                    <option value={{i}}>{{i}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3 col-1"></div>
+            <div class="mb-3 col-1">
+                <label for="endDay" class="form-label">Day</label>
+                <select id="endDay" class="form-select" name="endDay">                    
+                    <option selected value="0">--</option>
+                    {% for i in range (1, 32) %}
+                    <option value={{i}}>{{i}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3 col-2">
+                <label for="endMonth" class="form-label">Month</label>
+                <select id="endMonth" class="form-select" name="endMonth">                    
+                    <option selected value="0">Select One</option>
+                    {% for i in range (1, 13) %}
+                    <option value={{i}}>{{i}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3 col-2">
+                <label for="endYear" class="form-label">Year</label>
+                <select id="endYear" class="form-select" name="endYear">                    
+                    <option selected value="0">Select One</option>
+                    {% for i in range (2019, 2022) %}
+                    <option value={{i}}>{{i}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-1 mb-3"></div>
+            <div class="mb-3 col-2">
+                <label for="billStatus" class="form-label">Status</label>
+                <select id="billStatus" class="form-select" name="billStatus">                    
+                    <option selected value="0">Select One</option>
+                    <option value="paid">Paid</option>                    
+                    <option value="unpaid">Unpaid</option>
+                </select>
+            </div>
+            <div class="col-1 mb-3"></div>
+            <div class="mb-3 col-2">
+                <label for="inputId" class="form-label">Consumer ID</label>
+                <input type="text" class="form-control" id="inputId" name="inputId">
+            </div>
+            <div class="col-1 mb-3"></div>
+            <div class="mb-3 col-2">
+                <label for="inputBillId" class="form-label">Bill ID</label>
+                <input type="text" class="form-control" id="inputBillId" name="inputBillId">
+            </div>
+            <div class="col-1 mb-3"></div>
+            <div class="mb-3 col-2">
+                <label for="inputMeterId" class="form-label">Meter ID</label>
+                <input type="text" class="form-control" id="inputMeterId" name="inputMeterId">
+            </div>
+            <div class="col-1 mb-3"></div>
+            {% for i in range (0, 5) %}
+            {% include "includes/consumerInputs/billBrief.html" %}
+            {% endfor %}
+        </section>
+    </div>
+    
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

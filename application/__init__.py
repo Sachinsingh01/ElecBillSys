@@ -124,3 +124,19 @@ def uploadFile():
                 print("That file extension is not allowed")
                 return redirect(request.url)
     return render_template("meterReading.html")
+
+@app.route("/complainList")
+def complainList():
+    return render_template("complainList.html")
+
+@app.route("/complainDetail")
+def complainDetail():
+    return render_template("complainDetail.html")
+
+@app.route("/billTimeline")
+def billTimeline():
+    return render_template("billTimeline.html")  
+
+@app.route("/billDetail")
+def billDetail():
+    return render_template("billDetail.html") 
