@@ -19,7 +19,7 @@ app.config['MYSQL_DATABASE_DB'] = 'sql6433489'
 app.config['MYSQL_DATABASE_HOST'] = 'sql6.freemysqlhosting.net'
 mysql.init_app(app)
 
-# app.config["CSV_UPLOADS"] = "C:\Users\adamle\Documents\ElecBillSys\application\static\file"
+app.config["CSV_UPLOADS"] = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file"
 # app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["CSV"]
 
 def allowed_file(filename):
@@ -102,25 +102,25 @@ def adminCust():
 
 @app.route("/uploadFile", methods=["GET", "POST"])
 def uploadFile():
-    # if request.method == "POST":
+    if request.method == "POST":
 
-    #     if request.files:
-    #         file = request.files["file"]
+        if request.files:
+            file = request.files["csvfile"]
 
-    #         if file.filename == "":
-    #             print("No filename")
-    #             return redirect(request.url)
+            if file.filename == "":
+                print("No filename")
+                return redirect(request.url)
 
-    #         if allowed_file(file.filename):
-    #             filename = secure_filename(file.filename)
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
 
-    #             file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
+                file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
 
-    #             print("file saved")
+                print("file saved")
 
-    #             return redirect(request.url)
+                return redirect(request.url)
 
-    #         else:
-    #             print("That file extension is not allowed")
-    #             return redirect(request.url)
+            else:
+                print("That file extension is not allowed")
+                return redirect(request.url)
     return render_template("meterReading.html")
