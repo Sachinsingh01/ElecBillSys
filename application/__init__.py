@@ -36,23 +36,30 @@ def login():
     # Output message if something goes wrong...
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
-    if request.method == 'POST'and 'inputId' in request.form and 'inputPassword' in request.form:
+    if request.method == 'POST'and 'inputCredentials' in request.form and 'inputId' in request.form and 'inputPassword' in request.form:
         # Create variables for easy access
+
         username = request.form['inputId']
         password = request.form['inputPassword']
+        role = request.form['inputCredentials']
         # Check if account exists using MySQL
         cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (username, password))
         # Fetch one record and return result
         account = cursor.fetchone()
    
     # If account exists in accounts table in out database
-        if account:
+        if account and role == "1":
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
             session['id'] = account['id']
+            session['role'] = role
             # session['username'] = account['username']
             # Redirect to home page
             #return 'Logged in successfully!'
+            return redirect(url_for('adminCust'))
+        elif account:
+            session['loggedin'] = True
+            session['id'] = account['id']
             return redirect(url_for('home'))
         else:
             # Account doesnt exist or username/password incorrect
@@ -70,4 +77,10 @@ def logout():
 
 @app.route("/adminCust")
 def adminCust():
-    return render_template("customerDataInput.html")
+    if 'loggedin' in session and session['role'] == "1":
+   
+        # User is loggedin show them the home page
+        return render_template("customerDataInput.html")
+    # User is not loggedin redirect to login page
+    return redirect(url_for('login'))
+    
