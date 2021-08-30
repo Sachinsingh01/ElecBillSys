@@ -1,6 +1,8 @@
 from flask import Flask, request, session, redirect, url_for, render_template
 from flaskext.mysql import MySQL
 import pymysql 
+from werkzeug.utils import secure_filename
+import os
 import re 
 
 
@@ -17,6 +19,20 @@ app.config['MYSQL_DATABASE_DB'] = 'sql6433489'
 app.config['MYSQL_DATABASE_HOST'] = 'sql6.freemysqlhosting.net'
 mysql.init_app(app)
 
+app.config["CSV_UPLOADS"] = "C:\Users\adamle\Documents\ElecBillSys\application\static\file"
+# app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["CSV"]
+
+def allowed_file(filename):
+
+    if not "." in filename:
+        return False
+
+    ext = filename.rsplit(".", 1)[1]
+
+    if ext.upper() == "CSV":
+        return True
+    else:
+        return False
 
 @app.route("/")
 def home():
@@ -83,4 +99,28 @@ def adminCust():
         return render_template("customerDataInput.html")
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
-    
+
+@app.route("/uploadFile", methods=["GET", "POST"])
+def uploadFile():
+    if request.method == "POST":
+
+        if request.files:
+            file = request.files["file"]
+
+            if file.filename == "":
+                print("No filename")
+                return redirect(request.url)
+
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+
+                file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
+
+                print("file saved")
+
+                return redirect(request.url)
+
+            else:
+                print("That file extension is not allowed")
+                return redirect(request.url)
+    return render_template("meterReading.html")
