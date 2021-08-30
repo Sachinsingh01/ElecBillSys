@@ -68,4 +68,6 @@ def logout():
    # Redirect to login page
     return redirect(url_for('login'))
 
-
+@app.route("/adminCust")
+def adminCust():
+    return render_template("customerDataInput.html")
