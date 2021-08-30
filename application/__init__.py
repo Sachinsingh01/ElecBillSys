@@ -71,3 +71,4 @@ def logout():
 @app.route("/adminCust")
 def adminCust():
     return render_template("customerDataInput.html")
+    
