@@ -19,7 +19,7 @@ app.config['MYSQL_DATABASE_DB'] = 'sql6433489'
 app.config['MYSQL_DATABASE_HOST'] = 'sql6.freemysqlhosting.net'
 mysql.init_app(app)
 
-app.config["CSV_UPLOADS"] = "C:\Users\adamle\Documents\ElecBillSys\application\static\file"
+# app.config["CSV_UPLOADS"] = "C:\Users\adamle\Documents\ElecBillSys\application\static\file"
 # app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["CSV"]
 
 def allowed_file(filename):
