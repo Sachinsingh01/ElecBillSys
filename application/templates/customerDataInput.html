@@ -1,75 +1,34 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Admin Dash</title>
 </head>
+
 <body>
 
-    <div class="container-fluid rounded">
+    <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
             <section class="col-12 col-sm-11 col-md-11">
                 <form method="POST" class="shadow p-5 mb-5 bg-body rounded mt-5">
                     <h2 class="text-start mb-3">Customer Details</h2>
-                    <div class="btn-group mb-3" role="group" aria-label="Customer Info add delete update radio toggle button group">
-                        <input type="radio" class="btn-check" name="btnradiocust" id="custAdd" autocomplete="off" checked>
+                    <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" name="custFuncType" id="custAdd" autocomplete="off"
+                            checked>
                         <label class="btn btn-outline-primary" for="custAdd">Add Customer</label>
-                      
-                        <input type="radio" class="btn-check" name="btnradiocust" id="custDel" autocomplete="off">
+
+                        <input type="radio" class="btn-check" name="custFuncType" id="custDel" autocomplete="off">
                         <label class="btn btn-outline-primary" for="custDel">Delete Customer</label>
-                      
-                        <input type="radio" class="btn-check" name="btnradiocust" id="custUpd" autocomplete="off">
+
+                        <input type="radio" class="btn-check" name="custFuncType" id="custUpd" autocomplete="off">
                         <label class="btn btn-outline-primary" for="custUpd">Update Customer</label>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputConID" class="form-label">Consumer ID</label>
-                        <input type="text" class="form-control" id="inputConID" name="inputConID">
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputConFName" class="form-label">Consumer First Name</label>
-                        <input type="text" class="form-control" id="inputConFName" name="inputConFName">
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputConLName" class="form-label">Consumer Last Name</label>
-                        <input type="text" class="form-control" id="inputConLName" name="inputConLName">
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputConAddress" class="form-label">Consumer Address</label>
-                        <input type="text" class="form-control" id="inputConAddress" name="inputConAddress">
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputConTaluka" class="form-label">Consumer Taluka</label>
-                        <input type="text" class="form-control" id="inputConTaluka" name="inputConTaluka">
-                    </div>  
-                    <div class="mb-3">
-                        <label for="inputConDistrict" class="form-label">Consumer District</label>
-                        <input type="text" class="form-control" id="inputConDistrict" name="inputConDistrict">
-                    </div>        
-                    <div class="mb-3">
-                        <label for="inputConPin" class="form-label">Consumer Pin Code</label>
-                        <input type="text" class="form-control" id="inputConPin" name="inputConPin">
-                    </div>     
-                    <div class="mb-3">
-                        <label for="inputMeterId" class="form-label">Meter ID</label>
-                        <input type="text" class="form-control" id="inputMeterId" name="inputMeterId">
-                    </div>                       
-                    <div class="mb-3">
-                        <label for="inputConType" class="form-label">Consumer Type</label>
-                        <input type="text" class="form-control" id="inputConType" name="inputConType">
-                    </div>  
-                    <div class="mb-3">
-                        <label for="inputConContact" class="form-label">Consumer Contact</label>
-                        <input type="text" class="form-control" id="inputConContact" name="inputConContact">
-                    </div>  
-                    <div class="mb-3">
-                        <label for="inputSancLoad" class="form-label">Sanctioned Load</label>
-                        <input type="text" class="form-control" id="inputSancLoad" name="inputSancLoad">
-                    </div>  
-                    <div class="d-grid gap-2 d-block">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>                    
+                    </div>                 
+                    {% include "includes/consumerInputs/consumerAdd.html" %}
+                    {% include "includes/consumerInputs/consumerFilter.html" %}
                 </form>
             </section>
         </section>
@@ -77,8 +36,26 @@
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        document.getElementById("custAdd").addEventListener("click", (e)=>{            
+            document.getElementById("addEl").style.display = "flex"
+            document.getElementById("filterEl").style.display = "none"
+        })
+        document.getElementById("custUpd").addEventListener("click", (e)=>{
+            document.getElementById("addEl").style.display = "none"            
+            document.getElementById("filterEl").style.display = "flex"
+        })
+        document.getElementById("custDel").addEventListener("click", (e)=>{
+            document.getElementById("addEl").style.display = "none"         
+            document.getElementById("filterEl").style.display = "flex"
+        })
+    </script>
 </body>
+
 </html>
