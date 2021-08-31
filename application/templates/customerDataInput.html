@@ -18,13 +18,13 @@
                     <h2 class="text-start mb-3">Consumer Details</h2>
                     <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="custFuncType" id="custAdd" value="custAdd" autocomplete="off"
-                            checked>
+                            {% if val == "add"%} checked {%endif%}>
                         <label class="btn btn-outline-primary" for="custAdd">Add Consumer</label>
 
-                        <input type="radio" class="btn-check" name="custFuncType" id="custDel" autocomplete="off" value="custDel">
+                        <input type="radio" class="btn-check" name="custFuncType" id="custDel" autocomplete="off" value="custDel" {% if val == "del"%} checked {%endif%}>
                         <label class="btn btn-outline-primary" for="custDel">Delete Consumer</label>
 
-                        <input type="radio" class="btn-check" name="custFuncType" id="custUpd" value="custUpd" autocomplete="off">
+                        <input type="radio" class="btn-check" name="custFuncType" id="custUpd" value="custUpd" autocomplete="off" {% if val == "upd"%} checked {%endif%}>
                         <label class="btn btn-outline-primary" for="custUpd">Update Consumer</label>
                     </div>              
                     <input type="text" class="d-none" id="task" name="task" value= {{val}}>   
@@ -47,6 +47,19 @@
         document.getElementById("custAdd").addEventListener("click", (e)=>{            
             document.getElementById("addEl").style.display = "flex"
             document.getElementById("filterEl").style.display = "none"
+            if(document.getElementById("task").value != "add"){
+                document.getElementById("inputConID").value = ""
+                document.getElementById("inputConFName").value = ""
+                document.getElementById("inputConLName").value = ""
+                document.getElementById("inputConAddress").value = ""
+                document.getElementById("inputConTaluka").value = ""
+                document.getElementById("inputConDistrict").value = ""
+                document.getElementById("inputConPin").value = ""
+                document.getElementById("inputMeterId").value = ""
+                document.getElementById("inputConType").value = ""
+                document.getElementById("inputConContact").value = ""
+                document.getElementById("inputSancLoad").value = ""
+            }           
             document.getElementById("task").value = "add"
         })
         document.getElementById("custUpd").addEventListener("click", (e)=>{
