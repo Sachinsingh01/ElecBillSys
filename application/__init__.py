@@ -108,7 +108,7 @@ def adminCust():
         conType = ""
         contact = ""
         sanctionedLoad = ""
-        js = {fname:fname,lname:lname,cid:cid}
+        js = {"fname":fname,"lname":lname,"cid":cid}
         if request.method == "POST" and 'task' in request.form:
             session["task"] = request.form['task']
             task = session["task"]
@@ -131,7 +131,7 @@ def adminCust():
                 print(msg)
                 return render_template("customerDataInput.html", msg = msg, val = task, js = js)
             #Add End
-
+            #Update Start
             elif task == "upd":
                 cid = request.form['inputConFilID']
                 print("In Update " )
@@ -151,6 +151,29 @@ def adminCust():
                 js = {"fname":fname,"lname":lname,"cid":cid}
                 print(js)
                 return render_template("customerDataInput.html", val = task, js = js)
+            #Update end
+
+            #delete start
+            elif task == "del":
+                cid = request.form['inputConFilID']
+                print("In Update " )
+                print(cid)
+                #Database Query 
+                #assumed that data is valid
+                fname = "you"
+                lname = "Exist"
+                address = "no home"
+                taluka = "Ponda"
+                district = "Confused"
+                pinCode = "403406"
+                meterId = "PON131231"
+                conType = "Domestic"
+                contact = "9876543210"
+                sanctionedLoad = "1.2"
+                js = {"fname":fname,"lname":lname,"cid":cid}
+                print(js)
+                return render_template("customerDataInput.html", val = task, js = js) 
+            #Delete end
         # User is loggedin show them the home page
         return render_template("customerDataInput.html", val = task, js=js)
     # User is not loggedin redirect to login page
