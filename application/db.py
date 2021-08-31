@@ -25,5 +25,5 @@ createConsumerTable = """ CREATE TABLE Consumer (
     ConContact varchar(10) NOT NULL UNIQUE
 );
 """
-cursor.execute(createConsumerTable)
-conn.close()
+# cursor.execute(createConsumerTable)
+# conn.close()

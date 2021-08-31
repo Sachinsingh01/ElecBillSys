@@ -69,6 +69,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             session['role'] = role
+            session["task"] = "add"
             # session['username'] = account['username']
             # Redirect to home page
             #return 'Logged in successfully!'
@@ -91,13 +92,36 @@ def logout():
    # Redirect to login page
     return redirect(url_for('login'))
 
-@app.route("/adminCust")
+@app.route("/adminCust", methods=["POST", "GET"])
 def adminCust():
     if 'loggedin' in session and session['role'] == "1":
-   
+        print("56843")
+        if request.method == "POST" and 'task' in request.form:
+            session["task"] = request.form['task']
+            print(session["task"])
+            if session["task"] == "add":
+                cid = request.form['inputConID']
+                fname = request.form['inputConFName']
+                lname = request.form['inputConLName']
+                address = request.form['inputConAddress']
+                taluka = request.form['inputConTaluka']
+                district = request.form['inputConDistrict']
+                pinCode = request.form['inputConPin']
+                meterId = request.form['inputMeterId']
+                conType = request.form['inputConType']
+                contact = request.form['inputConContact']
+                sanctionedLoad = request.form['inputSancLoad']
+                print(cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                msg = "Customer succefully added"
+                print(msg)
+                return render_template("customerDataInput.html", msg = msg, val = session["task"] )
         # User is loggedin show them the home page
+        if 'task' in session:
+            task = session["task"]
+            return render_template("customerDataInput.html", val = task)
         return render_template("customerDataInput.html")
     # User is not loggedin redirect to login page
+
     return redirect(url_for('login'))
 
 @app.route("/uploadFile", methods=["GET", "POST"])
