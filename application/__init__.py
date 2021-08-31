@@ -140,3 +140,7 @@ def billTimeline():
 @app.route("/billDetail")
 def billDetail():
     return render_template("billDetail.html") 
+
+@app.route("/adminDist")
+def adminDist():
+    return render_template("/distributorDataInput.html")
