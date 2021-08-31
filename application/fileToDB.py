@@ -1,5 +1,5 @@
 import pandas as pd
 
-df = pd.read_csv("static/file/test.csv")
+df = pd.read_csv("static/file/readings.csv")
 
 print(df.head())
