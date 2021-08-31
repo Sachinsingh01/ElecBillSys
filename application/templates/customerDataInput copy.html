@@ -17,16 +17,17 @@
                 <form method="POST" class="shadow p-5 mb-5 bg-body rounded mt-5">
                     <h2 class="text-start mb-3">Consumer Details</h2>
                     <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="custFuncType" id="custAdd" autocomplete="off"
+                        <input type="radio" class="btn-check" name="custFuncType" id="custAdd" value="custAdd" autocomplete="off"
                             checked>
                         <label class="btn btn-outline-primary" for="custAdd">Add Consumer</label>
 
-                        <input type="radio" class="btn-check" name="custFuncType" id="custDel" autocomplete="off">
+                        <input type="radio" class="btn-check" name="custFuncType" id="custDel" autocomplete="off" value="custDel">
                         <label class="btn btn-outline-primary" for="custDel">Delete Consumer</label>
 
-                        <input type="radio" class="btn-check" name="custFuncType" id="custUpd" autocomplete="off">
+                        <input type="radio" class="btn-check" name="custFuncType" id="custUpd" value="custUpd" autocomplete="off">
                         <label class="btn btn-outline-primary" for="custUpd">Update Consumer</label>
-                    </div>                 
+                    </div>              
+                    <input type="text" class="d-none" id="task" name="task" value= "add">   
                     {% include "includes/consumerInputs/consumerAdd.html" %}
                     {% include "includes/consumerInputs/consumerFilter.html" %}
                 </form>
@@ -46,14 +47,17 @@
         document.getElementById("custAdd").addEventListener("click", (e)=>{            
             document.getElementById("addEl").style.display = "flex"
             document.getElementById("filterEl").style.display = "none"
+            document.getElementById("task").value = "add"
         })
         document.getElementById("custUpd").addEventListener("click", (e)=>{
             document.getElementById("addEl").style.display = "none"            
             document.getElementById("filterEl").style.display = "flex"
+            document.getElementById("task").value = "upd"
         })
         document.getElementById("custDel").addEventListener("click", (e)=>{
             document.getElementById("addEl").style.display = "none"         
             document.getElementById("filterEl").style.display = "flex"
+            document.getElementById("task").value = "del"
         })
     </script>
 </body>
