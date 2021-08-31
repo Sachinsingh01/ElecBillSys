@@ -13,10 +13,10 @@ app.secret_key = 'weareateamofidkhowmany'
 
 mysql = MySQL()
 
-app.config['MYSQL_DATABASE_USER'] = 'sql6433489'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'tC7bZ7lzuf'
-app.config['MYSQL_DATABASE_DB'] = 'sql6433489'
-app.config['MYSQL_DATABASE_HOST'] = 'sql6.freemysqlhosting.net'
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = ''
+app.config['MYSQL_DATABASE_DB'] = 'test'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
 app.config["CSV_UPLOADS"] = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file"
@@ -59,7 +59,7 @@ def login():
         password = request.form['inputPassword']
         role = request.form['inputCredentials']
         # Check if account exists using MySQL
-        cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (username, password))
+        cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (int(username), password))
         # Fetch one record and return result
         account = cursor.fetchone()
    
@@ -95,7 +95,6 @@ def logout():
 @app.route("/adminCust", methods=["POST", "GET"])
 def adminCust():
     if 'loggedin' in session and session['role'] == "1":
-        print("56843")
         task = session["task"]
         cid = ""
         fname = ""
