@@ -108,7 +108,7 @@ def adminCust():
         conType = ""
         contact = ""
         sanctionedLoad = ""
-        js = {fname:fname,lname:lname,cid:cid}
+        js = {"fname":fname,"lname":lname,"cid":cid}
         if request.method == "POST" and 'task' in request.form:
             session["task"] = request.form['task']
             task = session["task"]
