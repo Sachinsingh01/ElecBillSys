@@ -126,6 +126,19 @@ def adminCust():
                 contact = request.form['inputConContact']
                 sanctionedLoad = request.form['inputSancLoad']
                 print(cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                conn = mysql.connect()
+                cursor = conn.cursor(pymysql.cursors.DictCursor)
+        # cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (int(username), password))
+                try:
+                    try:
+                        cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,contact,int(sanctionedLoad)))
+                        # NB : you won't get an IntegrityError when reading
+                    except:
+                        print("Exception")
+                        return None
+                finally:
+                    conn.close()
+
                 msg = "Customer succefully added"
                 print(msg)
                 return render_template("customerDataInput.html", msg = msg, val = task, js = js)
