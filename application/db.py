@@ -25,5 +25,69 @@ createConsumerTable = """ CREATE TABLE Consumer (
     ConContact varchar(10) NOT NULL UNIQUE
 );
 """
-cursor.execute(createConsumerTable)
+createDistributorTable = """ CREATE TABLE Distributor (
+    DisID varchar(12) PRIMARY KEY,
+    DisName varchar(40) NOT NULL,
+    DisAddress varchar NOT NULL,
+
+    DisContact varchar(10) NOT NULL UNIQUE,
+    Rate float NOT NULL
+);
+"""
+
+createSubsidy = """ CREATE TABLE Subsidy (
+    SubID varchar(12) PRIMARY KEY,
+    SubPercent float NOT NULL,
+    Typecon varchar(20) NOT NULL
+);
+"""
+
+createConMeterReadForMonth =  """ CREATE TABLE Cwmr_Month (
+    ConID varchar(12) PRIMARY KEY,
+    ReadDate DATE PRIMARY KEY NOT NULL,
+    Reading varchar(30) NOT NULL
+);
+"""
+
+createConBillsDetails = """ CREATE TABLE Con_Bills_Details (
+    BillID varchar(12) PRIMARY KEY,
+    Amount float NOT NULL,
+    DueDate DATE NOT NULL,
+    StartDate DATE NOT NULL,
+    EndDate DATE NOT NULL,
+    ConID varchar(12) NOT NULL
+)
+"""
+
+createBillCorrecDetails = """ CREATE TABLE Bill_Correc_Details (
+    BillID varchar(12) PRIMARY KEY,
+    Status varchar(10) NOT NULL,
+    Comment varchar(500),
+    FieldToCorrect varchar(20) NOT NULL,
+    ConID varchar(12) NOT NULL,
+    Amount float NOT NULL
+)
+"""
+
+createNotice = """ CREATE TABLE Notice (
+    NoticeID varchar(12) PRIMARY KEY,
+    BillID varchar(12) NOT NULL,
+    Fine float,
+    Days integer
+)
+"""
+
+#
+
+# createElectricityRates = """ CREATE TABLE Electricity_Rates (
+    
+# )
+# """
+
+# createDiscoms = """ CREATE TABLE Discoms (
+    
+# )
+# """
+
+#cursor.execute(createConsumerTable)
 conn.close()
