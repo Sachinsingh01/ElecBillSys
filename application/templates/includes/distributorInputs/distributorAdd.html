@@ -1,41 +1,44 @@
 <div class="row" id="addElD">
+    {% if val == "del" %} <fieldset class="row" id="fieldSetD" disabled> {% endif %}
 <div class="mb-3 col-4">
     <label for="inputDistID" class="form-label">Distributor ID</label>
-    <input type="text" class="form-control" id="inputDistID" name="inputDistID">
+    <input type="text" class="form-control" id="inputDistID" name="inputDistID" {% if val != "add" %} value = {{js.did}} {% endif %}>
 </div>
 <div class="mb-3 col-4">
     <label for="inputDistCompName" class="form-label">Distributor Company Name</label>
-    <input type="text" class="form-control" id="inputDistCompName" name="inputDistCompName">
+    <input type="text" class="form-control" id="inputDistCompName" name="inputDistCompName" {% if val != "add" %} value = {{js.compName}} {% endif %}>
 </div>
 <div class="mb-3 col-4"></div>
 <div class="mb-3 col-12">
     <label for="inputDistAddress" class="form-label">Distributor Address</label>
-    <input type="text" class="form-control" id="inputDistAddress" name="inputDistAddress">
+    <input type="text" class="form-control" id="inputDistAddress" name="inputDistAddress" {% if val != "add" %} value = {{js.dAddress}} {% endif %}>
 </div>
 <div class="mb-3 col-4">
     <label for="inputDistTaluka" class="form-label">Distributor Taluka</label>
-    <input type="text" class="form-control" id="inputDistTaluka" name="inputDistTaluka">
+    <input type="text" class="form-control" id="inputDistTaluka" name="inputDistTaluka" {% if val != "add" %} value = {{js.dTaluka}} {% endif %}>
 </div>  
 <div class="mb-3 col-4">
     <label for="inputDistDistrict" class="form-label">Distributor District</label>
-    <input type="text" class="form-control" id="inputDistDistrict" name="inputDistDistrict">
+    <input type="text" class="form-control" id="inputDistDistrict" name="inputDistDistrict" {% if val != "add" %} value = {{js.dDistrict}} {% endif %}>
 </div>        
 <div class="mb-3 col-4">
     <label for="inputDistPin" class="form-label">Distributor Pin Code</label>
-    <input type="text" class="form-control" id="inputDistPin" name="inputDistPin">
+    <input type="text" class="form-control" id="inputDistPin" name="inputDistPin" {% if val != "add" %} value = {{js.dPinCode}} {% endif %}>
 </div>     
 <div class="mb-3 col-4">
     <label for="inputSupplyPMonth" class="form-label">Supply (per Month)</label>
-    <input type="text" class="form-control" id="inputSupplyPMonth" name="inputSupplyPMonth">
+    <input type="text" class="form-control" id="inputSupplyPMonth" name="inputSupplyPMonth" {% if val != "add" %} value = {{js.supplyMonth}} {% endif %}>
 </div>                       
 <div class="mb-3 col-4">
     <label for="inputSupplyRate" class="form-label">Supply Rate</label>
-    <input type="text" class="form-control" id="inputSupplyRate" name="inputSupplyRate">
+    <input type="text" class="form-control" id="inputSupplyRate" name="inputSupplyRate" {% if val != "add" %} value = {{js.supplyRate}} {% endif %}>
 </div>  
 <div class="mb-3 col-4">
     <label for="inputDistContact" class="form-label">Distributor Contact</label>
-    <input type="text" class="form-control" id="inputDistContact" name="inputDistContact">
+    <input type="text" class="form-control" id="inputDistContact" name="inputDistContact" {% if val != "add" %} value = {{js.dContact}} {% endif %}>
 </div>  
+
+{% if val == "del" %} </fieldset> {% endif %}
 <div class="mb-3 col-4"></div>
 <div class="d-grid gap-2 col-4 d-block">
     <button type="submit" class="btn btn-primary">Submit</button>
