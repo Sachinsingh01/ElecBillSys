@@ -1,15 +1,15 @@
 import pymysql
 
 conn = pymysql.connect(
-    host = 'sql6.freemysqlhosting.net',
-    database = 'sql6433489',
-    user = 'sql6433489',
-    password = 'tC7bZ7lzuf',
-    charset = 'utf8mb4',
+    host = 'localhost',
+    database = 'test',
+    user = 'root',
+    password = '',
     cursorclass = pymysql.cursors.DictCursor
 )
 
 cursor = conn.cursor()
+
 
 createConsumerTable = """ CREATE TABLE Consumer (
     ConID varchar(12) PRIMARY KEY,
@@ -88,6 +88,12 @@ createNotice = """ CREATE TABLE Notice (
     
 # )
 # """
-
-#cursor.execute(createConsumerTable)
+# testTable =  """ CREATE TABLE user (
+#     id integer PRIMARY KEY,
+#     password varchar(12) NOT NULL
+# )
+# """
+testInsert = """ INSERT INTO user VALUES (1,"rajesh");
+"""
+cursor.execute(testInsert)
 conn.close()
