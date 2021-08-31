@@ -96,10 +96,25 @@ def logout():
 def adminCust():
     if 'loggedin' in session and session['role'] == "1":
         print("56843")
+        task = session["task"]
+        cid = ""
+        fname = ""
+        lname = ""
+        address = ""
+        taluka = ""
+        district = ""
+        pinCode = ""
+        meterId = ""
+        conType = ""
+        contact = ""
+        sanctionedLoad = ""
+        js = {fname:fname,lname:lname,cid:cid}
         if request.method == "POST" and 'task' in request.form:
             session["task"] = request.form['task']
+            task = session["task"]
             print(session["task"])
-            if session["task"] == "add":
+            #Add start
+            if task == "add":
                 cid = request.form['inputConID']
                 fname = request.form['inputConFName']
                 lname = request.form['inputConLName']
@@ -114,12 +129,30 @@ def adminCust():
                 print(cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
                 msg = "Customer succefully added"
                 print(msg)
-                return render_template("customerDataInput.html", msg = msg, val = session["task"] )
+                return render_template("customerDataInput.html", msg = msg, val = task, js = js)
+            #Add End
+
+            elif task == "upd":
+                cid = request.form['inputConFilID']
+                print("In Update " )
+                print(cid)
+                #Database Query 
+                #assumed that data is valid
+                fname = "you"
+                lname = "Exist"
+                address = "no home"
+                taluka = "Ponda"
+                district = "Confused"
+                pinCode = "403406"
+                meterId = "PON131231"
+                conType = "Domestic"
+                contact = "9876543210"
+                sanctionedLoad = "1.2"
+                js = {"fname":fname,"lname":lname,"cid":cid}
+                print(js)
+                return render_template("customerDataInput.html", val = task, js = js)
         # User is loggedin show them the home page
-        if 'task' in session:
-            task = session["task"]
-            return render_template("customerDataInput.html", val = task)
-        return render_template("customerDataInput.html")
+        return render_template("customerDataInput.html", val = task, js=js)
     # User is not loggedin redirect to login page
 
     return redirect(url_for('login'))
@@ -164,7 +197,3 @@ def billTimeline():
 @app.route("/billDetail")
 def billDetail():
     return render_template("billDetail.html") 
-
-@app.route("/adminDist")
-def adminDist():
-    return render_template("/distributorDataInput.html")
