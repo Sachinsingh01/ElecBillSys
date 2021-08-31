@@ -13,7 +13,7 @@
 
     <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
-            <section class="col-12 col-sm-11 col-md-11">
+            <section class="col-12 col-sm-11 col-md-11" id="loaderfn">
                 <form method="POST" class="shadow p-5 mb-5 bg-body rounded mt-5">
                     <h2 class="text-start mb-3">Consumer Details</h2>
                     <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
@@ -27,7 +27,7 @@
                         <input type="radio" class="btn-check" name="custFuncType" id="custUpd" value="custUpd" autocomplete="off" {% if val == "upd"%} checked {%endif%}>
                         <label class="btn btn-outline-primary" for="custUpd">Update Consumer</label>
                     </div>              
-                    <input type="text" class="d-none" id="task" name="task" value= {{val}}>   
+                    <input type="text" class="d-none" id="task" name="task" value= {{val}}>  
                     {% include "includes/consumerInputs/consumerAdd.html" %}
                     {% include "includes/consumerInputs/consumerFilter.html" %}
                 </form>
@@ -59,8 +59,10 @@
                 document.getElementById("inputConType").value = ""
                 document.getElementById("inputConContact").value = ""
                 document.getElementById("inputSancLoad").value = ""
+                document.getElementById("inputConFilID").value = ""
             }           
             document.getElementById("task").value = "add"
+            document.getElementById("fieldSet").disabled = false
         })
         document.getElementById("custUpd").addEventListener("click", (e)=>{
             document.getElementById("addEl").style.display = "none"            

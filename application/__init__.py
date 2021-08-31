@@ -108,7 +108,9 @@ def adminCust():
         conType = ""
         contact = ""
         sanctionedLoad = ""
-        js = {"fname":fname,"lname":lname,"cid":cid}
+        print("hi")
+        js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
+        print("i am here")
         if request.method == "POST" and 'task' in request.form:
             session["task"] = request.form['task']
             task = session["task"]
@@ -148,7 +150,7 @@ def adminCust():
                 conType = "Domestic"
                 contact = "9876543210"
                 sanctionedLoad = "1.2"
-                js = {"fname":fname,"lname":lname,"cid":cid}
+                js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
                 print(js)
                 return render_template("customerDataInput.html", val = task, js = js)
             #Update end
@@ -170,7 +172,7 @@ def adminCust():
                 conType = "Domestic"
                 contact = "9876543210"
                 sanctionedLoad = "1.2"
-                js = {"fname":fname,"lname":lname,"cid":cid}
+                js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
                 print(js)
                 return render_template("customerDataInput.html", val = task, js = js) 
             #Delete end
@@ -220,3 +222,84 @@ def billTimeline():
 @app.route("/billDetail")
 def billDetail():
     return render_template("billDetail.html") 
+
+@app.route("/adminDist", methods=["POST", "GET"])
+def adminDist():
+    if 'loggedin' in session and session['role'] == "1":
+        print("56843")
+        task = session["task"]
+        did = ""
+        compName = ""
+        dAddress = ""
+        dTaluka = ""
+        dDistrict = ""
+        dPinCode = ""
+        dContact = ""
+        supplyMonth = ""
+        supplyRate = ""
+        print("hi")
+        js = {"compName":compName, "did":did, "dAddress":dAddress, "dTaluka":dTaluka, "dDistrict":dDistrict, "dPinCode":dPinCode, "dContact":dContact, "supplyMonth":supplyMonth, "supplyRate":supplyRate}
+        print("i am here")
+        if request.method == "POST" and 'task' in request.form:
+            session["task"] = request.form['task']
+            task = session["task"]
+            print(session["task"])
+            #Add start
+            if task == "add":
+                did = request.form["inputDistID"]
+                compName = request.form["inputDistCompName"]
+                dAddress = request.form["inputDistAddress"]
+                dTaluka = request.form["inputDistTaluka"]
+                dDistrict = request.form["inputDistDistrict"]
+                dPinCode = request.form["inputDistPin"]
+                dContact = request.form["inputDistContact"]
+                supplyMonth = request.form["inputSupplyPMonth"]
+                supplyRate = request.form["inputSupplyRate"]
+                msg = "Customer succefully added"
+                print(msg)
+                return render_template("distributorDataInput.html", msg = msg, val = task, js = js)
+            #Add End
+            #Update Start
+            elif task == "upd":
+                did = request.form['inputDistFilID']
+                print("In Update " )
+                print(did)
+                #Database Query 
+                #assumed that data is valid
+                compName = "bigBiz"
+                dAddress = "palace"
+                dTaluka = "Ponda"
+                dDistrict = "Confused"
+                dPinCode = "403406"
+                supplyMonth = "12"
+                supplyRate = "11412"
+                dContact = "9876543210"
+                js = {"compName":compName, "did":did, "dAddress":dAddress, "dTaluka":dTaluka, "dDistrict":dDistrict, "dPinCode":dPinCode, "dContact":dContact, "supplyMonth":supplyMonth, "supplyRate":supplyRate}
+                print(js)
+                return render_template("distributorDataInput.html", val = task, js = js)
+            #Update end
+
+            #delete start
+            elif task == "del":
+                did = request.form['inputDistFilID']
+                print("In Delete " )
+                print(did)
+                #Database Query 
+                #assumed that data is valid
+                compName = "bigBiz"
+                dAddress = "palace"
+                dTaluka = "Ponda"
+                dDistrict = "Confused"
+                dPinCode = "403406"
+                supplyMonth = "12"
+                supplyRate = "11412"
+                dContact = "9876543210"
+                js = {"compName":compName, "did":did, "dAddress":dAddress, "dTaluka":dTaluka, "dDistrict":dDistrict, "dPinCode":dPinCode, "dContact":dContact, "supplyMonth":supplyMonth, "supplyRate":supplyRate}
+                print(js)
+                return render_template("distributorDataInput.html", val = task, js = js) 
+            #Delete end
+        # User is loggedin show them the home page
+        return render_template("distributorDataInput.html", val = task, js=js)
+    # User is not loggedin redirect to login page
+
+    return redirect(url_for('login'))

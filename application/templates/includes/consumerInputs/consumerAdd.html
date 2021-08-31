@@ -1,7 +1,8 @@
 <div class="row" id="addEl">
+    {% if val == "del" %} <fieldset class="row" id="fieldSet" disabled> {% endif %}
 <div class="mb-3 col-4">
     <label for="inputConID" class="form-label">Consumer ID</label>
-    <input type="text" class="form-control" id="inputConID" name="inputConID" {% if val != "add" %} value = {{js.cid}} {% endif %}>
+    <input type="text" class="form-control" id="inputConID"  name="inputConID" {% if val != "add" %} value = {{js.cid}} {% endif %}>
 </div>
 <div class="mb-3 col-4">
     <label for="inputConFName" class="form-label">Consumer First Name</label>
@@ -45,6 +46,7 @@
 </div>  
 <div class="mb-3 col-4"></div>
 <div class="mb-3 col-4"></div>
+{% if val == "del" %} </fieldset> {% endif %}
 <div class="mb-3 col-4"></div>
 <div class="d-grid gap-2 col-4 d-block">
     <button type="submit" class="btn btn-primary" id = "custBtn">Submit</button>
