@@ -128,22 +128,29 @@ def adminCust():
                 conType = request.form['inputConType']
                 contact = request.form['inputConContact']
                 sanctionedLoad = request.form['inputSancLoad']
-                print(cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
                 conn = mysql.connect()
                 cursor = conn.cursor(pymysql.cursors.DictCursor)
-        # cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (int(username), password))
-                try:
+                consumer = Consumer(cursor,cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                msg = None
+                if not consumer.validateCId():
+                    msg = "Invalid User ID"
+                elif not consumer.validateMeterID():
+                    msg = "Invalid Meter ID"
+                elif not consumer.validateDistrict():
+                    msg = "Invalid District"
+                elif not consumer.validateTaluka():
+                    msg = "invalid Taluka"
+                
+                if msg == None:
                     try:
-                        cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact))
-                        conn.commit()
-                        # NB : you won't get an IntegrityError when reading
-                    except:
-                        print("Exception")
-                        return None
-                finally:
-                    conn.close()
-
-                msg = "Customer succefully added"
+                        val = consumer.insertConsumer()
+                        if val:
+                            conn.commit()
+                            msg = "Customer succefully added"
+                        else:
+                            msg = "Unable to add Customer"
+                    finally:
+                        conn.close()
                 print(msg)
                 return render_template("customerDataInput.html", msg = msg, val = task, js = js)
             #Add End
@@ -246,3 +253,15 @@ def test():
     print(sql)
     return "<h1>testing<h1>"
 
+
+                    # try:
+                    #     try:
+                    #         # cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact))
+                    #         val = consumer.insertConsumer()
+                    #         conn.commit()
+                    #         # NB : you won't get an IntegrityError when reading
+                    #     except:
+                    #         print("Exception")
+                    #         return None
+                    # finally:
+                    #     conn.close()
