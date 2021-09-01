@@ -283,6 +283,25 @@ def billTimeline():
 def billDetail():
     return render_template("billDetail.html") 
 
+<<<<<<< HEAD
+@app.route("/adminDist")
+def adminDist():
+    fname = "you"
+    lname = "Exist"
+    address = "no home"
+    taluka = "Ponda"
+    district = "Confused"
+    pinCode = "403406"
+    meterId = "PON131231"
+    conType = "Domestic"
+    contact = "9876543210"
+    sanctionedLoad = "1.2"
+    cid="12312"
+    task = "add"
+    js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
+    print(js)
+    return render_template("distributorDataInput.html", val = task, js=js) 
+=======
 @app.route("/test")
 def test():
     conn = mysql.connect()
@@ -309,3 +328,4 @@ def test():
                     #     msg = "Customer deleted Sucessfully"
                     # else:
                     #     msg = "Unable to delete cutomer"
+>>>>>>> 0cba7139c044a285ad94b2c1f8d5fe76b5c3c0ef
