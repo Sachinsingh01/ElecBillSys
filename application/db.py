@@ -93,7 +93,7 @@ createNotice = """ CREATE TABLE Notice (
 #     password varchar(12) NOT NULL
 # )
 # """
-testInsert = """ INSERT INTO user VALUES (1,"rajesh");
-"""
-cursor.execute(testInsert)
+#testInsert = """ INSERT INTO user VALUES (1,"rajesh");
+#"""
+#cursor.execute(createConsumerTable)
 conn.close()
