@@ -18,11 +18,29 @@
 </div>
 <div class="mb-3 col-4">
     <label for="inputConTaluka" class="form-label">Consumer Taluka</label>
-    <input type="text" class="form-control" id="inputConTaluka" name="inputConTaluka" {% if val != "add" %} value = {{js.taluka}} {% endif %}>
+    <select id="inputConTaluka" class="form-select" name="inputConTaluka">
+        <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
+        <option {% if val != "add" and js.taluka == "Bardez" %} selected {% endif %} value="Bardez">Bardez</option>
+        <option {% if val != "add" and js.taluka == "Bicholim" %} selected {% endif %} value="Bicholim">Bicholim</option>
+        <option {% if val != "add" and js.taluka == "Canacona" %} selected {% endif %} value="Canacona">Canacona</option>
+        <option {% if val != "add" and js.taluka == "Dharbandora" %} selected {% endif %} value="Sattari">Sattari</option>
+        <option {% if val != "add" and js.taluka == "Mormugao" %} selected {% endif %} value="Mormugao">Mormugao</option>
+        <option {% if val != "add" and js.taluka == "Pernem" %} selected {% endif %} value="Pernem">Pernem</option>
+        <option {% if val != "add" and js.taluka == "Ponda" %} selected {% endif %} value="Ponda">Ponda</option>
+        <option {% if val != "add" and js.taluka == "Quepem" %} selected {% endif %} value="Quepem">Quepem</option>
+        <option {% if val != "add" and js.taluka == "Salcette" %} selected {% endif %} value="Salcette">Salcette</option>
+        <option {% if val != "add" and js.taluka == "Sanguem" %} selected {% endif %} value="Sanguem">Sanguem</option>
+        <option {% if val != "add" and js.taluka == "Sattari" %} selected {% endif %} value="Sattari">Sattari</option>
+        <option {% if val != "add" and js.taluka == "Tiswadi" %} selected {% endif %} value="Tiswadi">Tiswadi</option>
+    </select>
 </div>  
 <div class="mb-3 col-4">
     <label for="inputConDistrict" class="form-label">Consumer District</label>
-    <input type="text" class="form-control" id="inputConDistrict" name="inputConDistrict" {% if val != "add" %} value = {{js.district}} {% endif %}>
+    <select id="inputConDistrict" class="form-select" name="inputConDistrict">
+        <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
+        <option {% if val != "add" and js.district == "North Goa" %} selected {% endif %} value="North Goa">North Goa</option>
+        <option {% if val != "add" and js.district == "South Goa" %} selected {% endif %} value="South Goa">South Goa</option>
+    </select>
 </div>        
 <div class="mb-3 col-4">
     <label for="inputConPin" class="form-label">Consumer Pin Code</label>
@@ -34,7 +52,12 @@
 </div>                       
 <div class="mb-3 col-4">
     <label for="inputConType" class="form-label">Consumer Type</label>
-    <input type="text" class="form-control" id="inputConType" name="inputConType" {% if val != "add" %} value = {{js.conType}} {% endif %}>
+    <select id="inputConType" class="form-select" name="inputConType">
+        <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
+        <option {% if val != "add" and js.conType == "dom" %} selected {% endif %} value="dom">Domestic</option>
+        <option {% if val != "add" and js.conType == "com" %} selected {% endif %} value="com">Commercial</option>
+        <option {% if val != "add" and js.conType == "ind" %} selected {% endif %} value="ind">Industrial</option>
+    </select>
 </div>  
 <div class="mb-3 col-4">
     <label for="inputConContact" class="form-label">Consumer Contact</label>
