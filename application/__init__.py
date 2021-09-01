@@ -3,6 +3,7 @@ from flaskext.mysql import MySQL
 import pymysql 
 from werkzeug.utils import secure_filename
 import os
+from .consumer import Consumer
 import re 
 
 
@@ -106,7 +107,7 @@ def adminCust():
         meterId = ""
         conType = ""
         contact = ""
-        sanctionedLoad = ""
+        sanctionedLoad = 0
         print("hi")
         js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
         print("i am here")
@@ -127,65 +128,112 @@ def adminCust():
                 conType = request.form['inputConType']
                 contact = request.form['inputConContact']
                 sanctionedLoad = request.form['inputSancLoad']
-                print(cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
                 conn = mysql.connect()
                 cursor = conn.cursor(pymysql.cursors.DictCursor)
-        # cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (int(username), password))
-                try:
+                consumer = Consumer(conn,cursor,cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                msg = None
+                if not consumer.validateCId():
+                    msg = "Invalid User ID"
+                elif not consumer.validateMeterID():
+                    msg = "Invalid Meter ID"
+                elif not consumer.validateDistrict():
+                    msg = "Invalid District"
+                elif not consumer.validateTaluka():
+                    msg = "invalid Taluka"
+                
+                if msg == None:
                     try:
-                        cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact))
-                        # NB : you won't get an IntegrityError when reading
-                    except:
-                        print("Exception")
-                        return None
-                finally:
-                    conn.close()
-
-                msg = "Customer succefully added"
+                        val = consumer.insertConsumer()
+                        if val:
+                            conn.commit()
+                            msg = "Customer succefully added"
+                        else:
+                            msg = "Unable to add Customer"
+                    finally:
+                        conn.close()
                 print(msg)
                 return render_template("customerDataInput.html", msg = msg, val = task, js = js)
             #Add End
             #Update Start
             elif task == "upd":
                 cid = request.form['inputConFilID']
-                print("In Update " )
+                conn = mysql.connect()
+                cursor = conn.cursor(pymysql.cursors.DictCursor)
+                consumer = Consumer(conn,cursor,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                msg = None
+                print("in Update")
                 print(cid)
-                #Database Query 
-                #assumed that data is valid
-                fname = "you"
-                lname = "Exist"
-                address = "no home"
-                taluka = "Ponda"
-                district = "Confused"
-                pinCode = "403406"
-                meterId = "PON131231"
-                conType = "Domestic"
-                contact = "9876543210"
-                sanctionedLoad = "1.2"
-                js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
+                print(request.form['state'])
+                if request.form['state'] == "1":
+                    try:
+                        try:
+                            print("actually updating")
+                            cid = request.form['inputConID']
+                            fname = request.form['inputConFName']
+                            lname = request.form['inputConLName']
+                            address = request.form['inputConAddress']
+                            taluka = request.form['inputConTaluka']
+                            district = request.form['inputConDistrict']
+                            pinCode = request.form['inputConPin']
+                            meterId = request.form['inputMeterId']
+                            conType = request.form['inputConType']
+                            contact = request.form['inputConContact']
+                            sanctionedLoad = request.form['inputSancLoad']
+                            print(fname)
+                            val = consumer.updateConsumer(cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                            if val:
+                                msg = "Customer updated Sucessfully"
+
+                            else:
+                                msg = "Unable to update consumer"
+                        except:
+                            msg = "Unable to update consumer"
+                    finally:
+                        conn.close()
+                else:
+                    val2 = consumer.getConsumer()
+                    if not val2:
+                        msg = "Unable to find the consumer"
+                js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
                 print(js)
+                print(msg)
                 return render_template("customerDataInput.html", val = task, js = js)
             #Update end
 
             #delete start
             elif task == "del":
                 cid = request.form['inputConFilID']
-                print("In Update " )
                 print(cid)
-                #Database Query 
-                #assumed that data is valid
-                fname = "you"
-                lname = "Exist"
-                address = "no home"
-                taluka = "Ponda"
-                district = "Confused"
-                pinCode = "403406"
-                meterId = "PON131231"
-                conType = "Domestic"
-                contact = "9876543210"
-                sanctionedLoad = "1.2"
-                js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
+                conn = mysql.connect()
+                cursor = conn.cursor(pymysql.cursors.DictCursor)
+                consumer = Consumer(conn,cursor,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                msg = None
+                print("in Delete" )
+                print(cid)
+                print(request.form['state'])
+                if request.form['state'] == "1":
+                    try:
+                        try:
+                            print("actually deleting")
+                            print(request.form['realID'])
+                            val = consumer.deleteConsumer(cid = request.form['realID'])
+                            
+                            if val:
+                                msg = "Customer deleted Sucessfully"
+
+                            else:
+                                msg = "Unable to delete cutomer"
+                        except:
+                            msg = "Unable to delete consumer"
+                    finally:
+                        conn.close()
+                else:
+                    val2 = consumer.getConsumer()
+                    if not val2:
+                        msg = "Unable to find the consumer"
+                js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
                 print(js)
+                print(msg)
                 return render_template("customerDataInput.html", val = task, js = js) 
             #Delete end
         # User is loggedin show them the home page
@@ -235,6 +283,7 @@ def billTimeline():
 def billDetail():
     return render_template("billDetail.html") 
 
+<<<<<<< HEAD
 @app.route("/adminDist")
 def adminDist():
     fname = "you"
@@ -252,3 +301,31 @@ def adminDist():
     js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
     print(js)
     return render_template("distributorDataInput.html", val = task, js=js) 
+=======
+@app.route("/test")
+def test():
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    consumer = Consumer(conn,cursor)
+    sql = consumer.validateCId()
+    print(sql)
+    return "<h1>testing<h1>"
+
+
+                    # try:
+                    #     try:
+                    #         # cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact))
+                    #         val = consumer.insertConsumer()
+                    #         conn.commit()
+                    #         # NB : you won't get an IntegrityError when reading
+                    #     except:
+                    #         print("Exception")
+                    #         return None
+                    # finally:
+                    #     conn.close()
+                    # val = consumer.deleteConsumer()
+                    # if val:
+                    #     msg = "Customer deleted Sucessfully"
+                    # else:
+                    #     msg = "Unable to delete cutomer"
+>>>>>>> 0cba7139c044a285ad94b2c1f8d5fe76b5c3c0ef
