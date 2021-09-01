@@ -130,7 +130,7 @@ def adminCust():
                 sanctionedLoad = request.form['inputSancLoad']
                 conn = mysql.connect()
                 cursor = conn.cursor(pymysql.cursors.DictCursor)
-                consumer = Consumer(cursor,cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                consumer = Consumer(conn,cursor,cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
                 msg = None
                 if not consumer.validateCId():
                     msg = "Invalid User ID"
@@ -181,21 +181,32 @@ def adminCust():
                 cid = request.form['inputConFilID']
                 conn = mysql.connect()
                 cursor = conn.cursor(pymysql.cursors.DictCursor)
-                consumer = Consumer(cursor,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                consumer = Consumer(conn,cursor,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
                 msg = None
-                print("In Update " )
+                print("in Delete" )
                 print(cid)
-                try:
-                    val = consumer.deleteConsumer()
-                    if val:
-                        msg = "Customer deleted Sucessfully"
-                    else:
-                        msg = "Unable to delete cutomer"
-                finally:
-                    conn.close()
+                if request.form['inputConFName'] != "":
+                    try:
+                        try:
+                            print("actually deleting")
+                            val = consumer.deleteConsumer()
+                            
+                            if val:
+                                msg = "Customer deleted Sucessfully"
 
+                            else:
+                                msg = "Unable to delete cutomer"
+                        except:
+                            msg = "Unable to delete consumer"
+                    finally:
+                        conn.close()
+                else:
+                    val2 = consumer.getConsumer()
+                    if not val2:
+                        msg = "Unable to find the consumer"
                 js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
                 print(js)
+                print(msg)
                 return render_template("customerDataInput.html", val = task, js = js) 
             #Delete end
         # User is loggedin show them the home page
@@ -249,7 +260,7 @@ def billDetail():
 def test():
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    consumer = Consumer(cursor=cursor)
+    consumer = Consumer(conn,cursor)
     sql = consumer.validateCId()
     print(sql)
     return "<h1>testing<h1>"
@@ -266,3 +277,8 @@ def test():
                     #         return None
                     # finally:
                     #     conn.close()
+                    # val = consumer.deleteConsumer()
+                    # if val:
+                    #     msg = "Customer deleted Sucessfully"
+                    # else:
+                    #     msg = "Unable to delete cutomer"
