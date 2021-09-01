@@ -3,6 +3,7 @@ from flaskext.mysql import MySQL
 import pymysql 
 from werkzeug.utils import secure_filename
 import os
+from .consumer import Consumer
 import re 
 
 
@@ -234,4 +235,13 @@ def billTimeline():
 @app.route("/billDetail")
 def billDetail():
     return render_template("billDetail.html") 
+
+@app.route("/test")
+def test():
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    consumer = Consumer(cursor=cursor)
+    sql = consumer.validateCId()
+    print(sql)
+    return "<h1>testing<h1>"
 
