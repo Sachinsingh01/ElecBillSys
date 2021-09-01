@@ -135,6 +135,7 @@ def adminCust():
                 try:
                     try:
                         cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact))
+                        conn.commit()
                         # NB : you won't get an IntegrityError when reading
                     except:
                         print("Exception")
