@@ -133,7 +133,7 @@ def adminCust():
         # cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (int(username), password))
                 try:
                     try:
-                        cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,contact,int(sanctionedLoad)))
+                        cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact))
                         # NB : you won't get an IntegrityError when reading
                     except:
                         print("Exception")
