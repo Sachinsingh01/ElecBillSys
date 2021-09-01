@@ -21,7 +21,7 @@ class Consumer():
         self.cursor = cursor
         self.conn = conn
     def validateTaluka(self):
-        if self.taluka in self.talukas:
+        if self.taluka.upper() in self.talukas:
             return True
         else:
             return False
@@ -36,7 +36,7 @@ class Consumer():
             return False
 
     def validateDistrict(self):
-        if self.district in self.districts:
+        if self.district.upper() in self.districts:
             return True 
         else:
             return False
@@ -56,24 +56,20 @@ class Consumer():
     def insertConsumer(self):
         try:
             self.cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.cid,self.fname,self.lname,self.address,self.taluka,self.district,self.pinCode,self.meterId,self.conType,int(self.sanctionedLoad),self.contact))
+            
             return True
         except:
             print("Exception")
             return False
-    def deleteConsumer(self):
+    def deleteConsumer(self, cid):
         try:
-            val = self.getConsumer()
-            if val:
-                try:
-                    self.cursor.execute('DELETE FROM consumer WHERE ConID = %s', (self.cid))
-                    self.conn.commit()
-                    return True
-                except:
-                    print("Exception")
-                    return False 
+            print("deleting inside cons")
+            self.cursor.execute('DELETE FROM consumer WHERE ConID = %s', (cid))
+            self.conn.commit()
+            return True
         except:
             print("Exception")
-            return False
+            return False 
         
     def getConsumer(self):
         try:
@@ -93,4 +89,12 @@ class Consumer():
         except:
             print("Exception")
             return False
-    
+    def updateConsumer(self,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad):
+        try:
+            print("in consumer update")
+            self.cursor.execute("UPDATE consumer SET ConFirstName = %s, ConLastName = %s, ConAddress = %s, ConTaluka = %s, ConDistrict = %s, ConPinCode = %s,MeterID = %s,ConType = %s,ConSanctionedLoad = %s,ConContact = %s WHERE ConID = %s",(fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact,cid))
+            self.conn.commit()
+            return True
+        except:
+            print("Exception")
+            return False

@@ -27,7 +27,8 @@
                         <input type="radio" class="btn-check" name="custFuncType" id="custUpd" value="custUpd" autocomplete="off" {% if val == "upd"%} checked {%endif%}>
                         <label class="btn btn-outline-primary" for="custUpd">Update Consumer</label>
                     </div>              
-                    <input type="text" class="d-none" id="task" name="task" value= {{val}}>  
+                    <input type="text" class="d-none" id="task" name="task" value= {{val}}> 
+                    <input type="text" class="d-none" id="state" name="state" value= "0"> 
                     {% include "includes/consumerInputs/consumerAdd.html" %}
                     {% include "includes/consumerInputs/consumerFilter.html" %}
                 </form>
@@ -44,6 +45,12 @@
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
     <script type="text/javascript">
+        document.getElementById("filBtn").addEventListener("click", (e)=>{
+            document.getElementById("state").value = "0"
+        })
+        document.getElementById("addBtn").addEventListener("click", (e)=>{
+            document.getElementById("state").value = "1"
+        })
         document.getElementById("custAdd").addEventListener("click", (e)=>{            
             document.getElementById("addEl").style.display = "flex"
             document.getElementById("filterEl").style.display = "none"

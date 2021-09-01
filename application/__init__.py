@@ -157,39 +157,66 @@ def adminCust():
             #Update Start
             elif task == "upd":
                 cid = request.form['inputConFilID']
-                print("In Update " )
+                conn = mysql.connect()
+                cursor = conn.cursor(pymysql.cursors.DictCursor)
+                consumer = Consumer(conn,cursor,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                msg = None
+                print("in Update")
                 print(cid)
-                #Database Query 
-                #assumed that data is valid
-                fname = "you"
-                lname = "Exist"
-                address = "no home"
-                taluka = "Ponda"
-                district = "Confused"
-                pinCode = "403406"
-                meterId = "PON131231"
-                conType = "Domestic"
-                contact = "9876543210"
-                sanctionedLoad = "1.2"
-                js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
+                print(request.form['state'])
+                if request.form['state'] == "1":
+                    try:
+                        try:
+                            print("actually updating")
+                            cid = request.form['inputConID']
+                            fname = request.form['inputConFName']
+                            lname = request.form['inputConLName']
+                            address = request.form['inputConAddress']
+                            taluka = request.form['inputConTaluka']
+                            district = request.form['inputConDistrict']
+                            pinCode = request.form['inputConPin']
+                            meterId = request.form['inputMeterId']
+                            conType = request.form['inputConType']
+                            contact = request.form['inputConContact']
+                            sanctionedLoad = request.form['inputSancLoad']
+                            print(fname)
+                            val = consumer.updateConsumer(cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                            if val:
+                                msg = "Customer updated Sucessfully"
+
+                            else:
+                                msg = "Unable to update consumer"
+                        except:
+                            msg = "Unable to update consumer"
+                    finally:
+                        conn.close()
+                else:
+                    val2 = consumer.getConsumer()
+                    if not val2:
+                        msg = "Unable to find the consumer"
+                js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
                 print(js)
+                print(msg)
                 return render_template("customerDataInput.html", val = task, js = js)
             #Update end
 
             #delete start
             elif task == "del":
                 cid = request.form['inputConFilID']
+                print(cid)
                 conn = mysql.connect()
                 cursor = conn.cursor(pymysql.cursors.DictCursor)
                 consumer = Consumer(conn,cursor,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
                 msg = None
                 print("in Delete" )
                 print(cid)
-                if request.form['inputConFName'] != "":
+                print(request.form['state'])
+                if request.form['state'] == "1":
                     try:
                         try:
                             print("actually deleting")
-                            val = consumer.deleteConsumer()
+                            print(request.form['realID'])
+                            val = consumer.deleteConsumer(cid = request.form['realID'])
                             
                             if val:
                                 msg = "Customer deleted Sucessfully"
