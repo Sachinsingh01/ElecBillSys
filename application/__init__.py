@@ -107,7 +107,7 @@ def adminCust():
         meterId = ""
         conType = ""
         contact = ""
-        sanctionedLoad = ""
+        sanctionedLoad = 0
         print("hi")
         js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
         print("i am here")
@@ -179,21 +179,22 @@ def adminCust():
             #delete start
             elif task == "del":
                 cid = request.form['inputConFilID']
+                conn = mysql.connect()
+                cursor = conn.cursor(pymysql.cursors.DictCursor)
+                consumer = Consumer(cursor,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                msg = None
                 print("In Update " )
                 print(cid)
-                #Database Query 
-                #assumed that data is valid
-                fname = "you"
-                lname = "Exist"
-                address = "no home"
-                taluka = "Ponda"
-                district = "Confused"
-                pinCode = "403406"
-                meterId = "PON131231"
-                conType = "Domestic"
-                contact = "9876543210"
-                sanctionedLoad = "1.2"
-                js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
+                try:
+                    val = consumer.deleteConsumer()
+                    if val:
+                        msg = "Customer deleted Sucessfully"
+                    else:
+                        msg = "Unable to delete cutomer"
+                finally:
+                    conn.close()
+
+                js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
                 print(js)
                 return render_template("customerDataInput.html", val = task, js = js) 
             #Delete end
