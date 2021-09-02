@@ -4,6 +4,7 @@ import pymysql
 from werkzeug.utils import secure_filename
 import os
 from .consumer import Consumer
+from .fileToDB import MeterReading
 import re 
 
 
@@ -50,39 +51,26 @@ def home():
 def login():
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    # Output message if something goes wrong...
     msg = ''
-    # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST'and 'inputCredentials' in request.form and 'inputId' in request.form and 'inputPassword' in request.form:
-        # Create variables for easy access
-
         username = request.form['inputId']
         password = request.form['inputPassword']
         role = request.form['inputCredentials']
-        # Check if account exists using MySQL
         cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (int(username), password))
-        # Fetch one record and return result
         account = cursor.fetchone()
-   
-    # If account exists in accounts table in out database
-        if account and role == "1":
-            # Create session data, we can access this data in other routes
+        if account:
             session['loggedin'] = True
             session['id'] = account['id']
             session['role'] = role
-            session["task"] = "add"
-            # session['username'] = account['username']
-            # Redirect to home page
-            #return 'Logged in successfully!'
-            return redirect(url_for('adminCust'))
-        elif account:
-            session['loggedin'] = True
-            session['id'] = account['id']
-            return redirect(url_for('home'))
+            if role == "1":
+                session["task"] = "add"
+                return redirect(url_for('adminCust'))
+            elif account and role == "2":
+                return redirect(url_for('billDetail'))
+            elif role == "3":
+                return redirect(url_for('uploadFile'))
         else:
-            # Account doesnt exist or username/password incorrect
-            msg = 'Incorrect username/password!'
-    
+            msg = 'Incorrect username/password!'  
     return render_template('login.html', msg=msg)
 
 @app.route("/logout")
@@ -257,10 +245,12 @@ def uploadFile():
                 filename = secure_filename(file.filename)
 
                 file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
-
-                print("file saved")
-
-                return redirect(request.url)
+                conn = mysql.connect()
+                meterReading = MeterReading(conn)
+                val = meterReading.readFile()
+                if val:
+                    print("file saved")
+                    return redirect(request.url)
 
             else:
                 print("That file extension is not allowed")
@@ -291,21 +281,3 @@ def test():
     sql = consumer.validateCId()
     print(sql)
     return "<h1>testing<h1>"
-
-
-                    # try:
-                    #     try:
-                    #         # cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact))
-                    #         val = consumer.insertConsumer()
-                    #         conn.commit()
-                    #         # NB : you won't get an IntegrityError when reading
-                    #     except:
-                    #         print("Exception")
-                    #         return None
-                    # finally:
-                    #     conn.close()
-                    # val = consumer.deleteConsumer()
-                    # if val:
-                    #     msg = "Customer deleted Sucessfully"
-                    # else:
-                    #     msg = "Unable to delete cutomer"
