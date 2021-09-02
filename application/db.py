@@ -49,10 +49,10 @@ createSubsidy = """ CREATE TABLE Subsidy (
 """
 #createConMeterReadForMonth stores the query to create a new consumer wise meter reading per month table
 createConMeterReadForMonth =  """ CREATE TABLE Cwmr_Month (
+    ReadID varchar(15) PRIMARY KEY,
     ConID varchar(12),
     ReadDate DATE NOT NULL,
-    Reading varchar(30) NOT NULL,
-    CONSTRAINT meterread_pk PRIMARY KEY (ConID,ReadDate)
+    Reading integer NOT NULL
 );
 """
 
