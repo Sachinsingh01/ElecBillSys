@@ -1,41 +1,439 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <title>ADMIN DASH</title>
-</head>
-<body>
+  </head>
+
+  <body>
     <div class="container-fluid rounded">
-        <section class="row justify-content-center">
-            <section class="col-12 col-sm-11 col-md-11">
-                <div class="shadow p-5 mb-5 bg-body rounded mt-5">
+      <section class="row justify-content-center">
+        <section class="col-12 col-sm-11 col-md-11">
+          <div
+            class="shadow p-2 mb-5 bg-body rounded mt-5"
+            style="font-size: 14px"
+          >
+            <div class="row p-2">
+              <p class="font-monospace col-12 uppercase fs-3 text-center">
+                Electricity Department - Government of Goa
+              </p>
+              <div class="row m-0">
+              <div class="col-4 mb-5 p-2" style="border: 2px solid">
+                <p class="font-monospace mb-0 col-12">Name :</p>
+                <p class="font-monospace mb-0 col-12">CA No. :</p>
+                <p class="font-monospace mb-0 col-12">Inst. No. :</p>
+                <p class="font-monospace mb-0 col-12">Address :</p>
+                <p class="font-monospace mb-0 col-12">Tel No. :</p>
+                <p class="font-monospace mb-0 col-12">E-mail ID :</p>
+              </div>
+              <div
+                class="col-4 mb-5 p-2"
+                style="border: 2px solid; border-left: none"
+              >
+                <p class="font-monospace mb-0 col-12">Energisation Date :</p>
+                <p class="font-monospace mb-0 col-12">MRU No. :</p>
+                <p class="font-monospace mb-0 col-12">Meter Status :</p>
+                <p class="font-monospace mb-0 col-12">Connection Status :</p>
+                <p class="font-monospace mb-0 col-12">Tariff Category :</p>
+                <p class="font-monospace mb-0 col-12">Feeder No. :</p>
+                <p class="font-monospace mb-0 col-12">DTC Pole No. :</p>
+                <p class="font-monospace mb-0 col-12">Voltage Level(KV) :</p>
+                <p class="font-monospace mb-0 col-12">Sanc. Load :</p>
+                <p class="font-monospace mb-0 col-12">Legacy No. :</p>
+              </div>
+              <div
+                class="col-4 mb-5 p-2"
+                style="border: 2px solid; border-left: none"
+              >
+                <p class="font-monospace mb-0 col-12">Line Min Charges :</p>
+                <p class="font-monospace mb-0 col-12">Walking Sequence :</p>
+                <p class="font-monospace mb-0 col-12">
+                  Security Deposit(SD) - CD/BG :
+                </p>
+                <p class="font-monospace mb-0 col-12">Bill Date :</p>
+                <p class="font-monospace mb-0 col-12">Due Date :</p>
+                <p class="font-monospace mb-0 col-12">Bill Basis :</p>
+                <p class="font-monospace mb-0 col-12">Bill Number :</p>
+                <p class="font-monospace mb-0 col-12">
+                  Last Bill Reading Date :
+                </p>
+                <p class="font-monospace mb-0 col-12">
+                  Billing Period in Days :
+                </p>
+                <p class="font-monospace mb-0 col-12">Read Period in Days :</p>
+              </div>
+            </div>
+              <div class="row m-0" style="font-size: 12.5px ;">
+              <p
+                class="font-monospace mb-0 text-center col-1"
+                style="border: 2px solid"
+              >
+                Meter Number
+              </p>
+              <p
+                class="font-monospace mb-0 text-center col-1"
+                style="border: 2px solid; border-left: none"
+              >
+                Unit
+              </p>
+              <p
+                class="font-monospace mb-0 text-center col-2"
+                style="border: 2px solid; border-left: none"
+              >
+                Current Reading Date
+              </p>
+              <p
+                class="font-monospace mb-0 text-center col-1"
+                style="border: 2px solid; border-left: none"
+              >
+                Current Reading
+              </p>
+              <p
+                class="font-monospace mb-0 text-center col-2"
+                style="border: 2px solid; border-left: none"
+              >
+                Previous Reading Date
+              </p>
+              <p
+                class="font-monospace mb-0 text-center col-1"
+                style="border: 2px solid; border-left: none"
+              >
+                Previous Reading
+              </p>
+              <p
+                class="font-monospace mb-0 text-center col-1"
+                style="border: 2px solid; border-left: none"
+              >
+                Reading Difference
+              </p>
+              <p
+                class="font-monospace mb-0 text-center col-1"
+                style="border: 2px solid; border-left: none"
+              >
+                MF
+              </p>
+              <p
+                class="font-monospace mb-0 text-center col-1"
+                style="border: 2px solid; border-left: none;"
+              >
+                Consumption
+              </p>
+              <p
+                class="font-monospace mb-0 text-center col-1"
+                style="border: 2px solid; border-left: none"
+              >
+                Reading Remark
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-1"
+                style="border: 2px solid; border-top: none"
+              >
+                Meter Number
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-1"
+                style="border: 2px solid; border-left: none; border-top: none"
+              >
+                Unit
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-2"
+                style="border: 2px solid; border-left: none; border-top: none"
+              >
+                Current Reading Date
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-1"
+                style="border: 2px solid; border-left: none; border-top: none"
+              >
+                Current Reading
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-2"
+                style="border: 2px solid; border-left: none; border-top: none"
+              >
+                Previous Reading Date
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-1"
+                style="border: 2px solid; border-left: none; border-top: none"
+              >
+                Previous Reading
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-1"
+                style="border: 2px solid; border-left: none; border-top: none"
+              >
+                Reading Difference
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-1"
+                style="border: 2px solid; border-left: none; border-top: none"
+              >
+                MF
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-1"
+                style="border: 2px solid; border-left: none; border-top: none;"
+              >
+                337
+              </p>
+              <p
+                class="font-monospace mb-5 text-center col-1"
+                style="border: 2px solid; border-left: none; border-top: none"
+              >
+                Reading Remark
+              </p>
+            </div>
+              <p class="font-monospace col-12">Bill Summary :</p>
+              <div class="row m-0">
+              <p class="font-monospace text-center mb-0 col-2" style="border: 2px solid;">
+                Previous Arrears/Advance(A)
+              </p>
+              <p class="font-monospace text-center mb-0 col-2" style="border: 2px solid; border-left: none;">Advance Payable(B)</p>
+              <p class="font-monospace text-center mb-0 col-1" style="border: 2px solid; border-left: none;">
+                DPC till Bill Date(C)
+              </p>
+              <p class="font-monospace text-center mb-0 col-1" style="border: 2px solid; border-left: none;">
+                Present Total Bill(D)
+              </p>
+              <p class="font-monospace text-center mb-0 col-1" style="border: 2px solid; border-left: none;">Rounding Amount(E)</p>
+              <p class="font-monospace text-center mb-0 col-5" style="border: 2px solid; border-left: none;">
+                Ammpount Payable on or before due date 20-jul-2021 (A + B + C +
+                D + E)
+              </p>
+              <p class="font-monospace mb-5 text-center col-2" style="border: 2px solid;border-top: none;">Meter Number</p>
+              <p class="font-monospace mb-5 text-center col-2" style="border: 2px solid; border-left: none;border-top: none;">Unit</p>
+              <p class="font-monospace mb-5 text-center col-1" style="border: 2px solid; border-left: none;border-top: none;">
+                Current Reading Date
+              </p>
+              <p class="font-monospace mb-5 text-center col-1" style="border: 2px solid; border-left: none;border-top: none;">
+                Current Reading
+              </p>
+              <p class="font-monospace mb-5 text-center col-1" style="border: 2px solid; border-left: none;border-top: none;">
+                Previous Reading Date
+              </p>
+              <p class="font-monospace mb-5 text-center col-5" style="border: 2px solid; border-left: none;border-top: none;">
+                Previous Reading
+              </p>
+            </div>
+              <p class="font-monospace mb-0 col-12">Amount Payable</p>
+              <p class="font-monospace mb-0 col-12">
+                Last Payment of 1169.00 Recieved on 08-jul-2021
+              </p>
+              <p class="font-monospace col-12">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel
+                exercitationem officiis explicabo quo veritatis consectetur
+                magnam autem fugiat ab incidunt. Odio fugit eum labore facilis
+                distinctio ad ducimus quaerat commodi.
+              </p>
+
+              <p class="font-monospace col-7">
+                Current Demand Calculation Details
+              </p>
+              <p class="font-monospace col-5">Present Bill Charges</p>
+              <div class="row m-0">
+              <div class="col-7 mb-2" style="border: 2px solid;">
+                <div class="row" >
+                  <div class="font-monospace text-center col-2">
+                    Particulars
+                  </div>
+                  <div class="font-monospace text-center col-2">Quantity</div>
+                  <div class="font-monospace text-center col-1">Rate</div>
+                  <div class="font-monospace text-center col-2">Amount</div>
+                  <div class="font-monospace text-center col-2">Quantity</div>
+                  <div class="font-monospace text-center col-1">Rate</div>
+                  <div class="font-monospace text-center col-2">Amount</div>
+
+                  <div class="font-monospace col-2">Fixed Charges</div>
+                  <div class="col-5">
                     <div class="row">
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Consumer ID : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Consumer Name : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Consumer Type : </p>
-                        <p class="font-monospace p-2 col-lg-12 col-md-12 col-sm-12">Consumer Address : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Meter ID : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Consumer Type : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Sanctioned Load : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Bill ID : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Bill Amount : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Metered Units : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Bill Status : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Start Date : </p>                        
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">End Date : </p>                       
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Due Date : </p>   
+                      <div class="font-monospace text-center col-5">1</div>
+                      <div class="font-monospace text-center col-2">60.00</div>
+                      <div class="font-monospace text-center col-5">88.00</div>
                     </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="row"></div>
+                  </div>
+                  <div class="font-monospace col-2">Energy Charges</div>
+                  <div class="col-5">
+                    <div class="row">
+                      <div class="font-monospace text-center col-5">1</div>
+                      <div class="font-monospace text-center col-2">60.00</div>
+                      <div class="font-monospace text-center col-5">88.00</div>
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="row"></div>
+                  </div>
+                  <div class="font-monospace col-2">FPPCA</div>
+                  <div class="col-5">
+                    <div class="row">
+                      <div class="font-monospace text-center col-5">1</div>
+                      <div class="font-monospace text-center col-2">60.00</div>
+                      <div class="font-monospace text-center col-5">88.00</div>
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="row"></div>
+                  </div>
+                  <div class="font-monospace col-2">Subsidy</div>
+                  <div class="col-5">
+                    <div class="row">
+                      <div class="font-monospace text-center col-5">1</div>
+                      <div class="font-monospace text-center col-2">60.00</div>
+                      <div class="font-monospace text-center col-5">88.00</div>
+                    </div>
+                  </div>
+                  <div class="col-5"></div>
                 </div>
-            </section>
+              </div>
+              <div class="col-5 mb-2" style="border: 2px solid;border-left: none;">
+                <div class="row">
+                  <div class="font-monospace text-start col-9">Particulars</div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start col-9">
+                    Fixed Charges
+                  </div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start col-9">
+                    Energy Charges
+                  </div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start col-9">FPPCA</div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start col-9">
+                    Sundry Charges
+                  </div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start col-9">
+                    Adv/PP Rebate
+                  </div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start col-9">Meter Rent</div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start col-9">
+                    Electricity Duty @ Rs. 0.20/KWh
+                  </div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start col-9">
+                    Monthly Minimum Charges
+                  </div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start col-9">Subsidy</div>
+                  <div class="font-monospace text-end col-3">Amount</div>
+                  <div class="font-monospace text-start mt-3 col-9">
+                    Total Current Demand
+                  </div>
+                  <div class="font-monospace text-end mt-3 col-3">Amount</div>
+                  <div class="font-monospace text-start mt-3 col-9"></div>
+                  <div class="font-monospace text-end mt-3 col-3">Amount</div>
+                </div>
+              </div>
+            </div>
+              <div class="col-3">
+                <div class="row">
+                  <p class="font-monospace mb-0 col-12">
+                    Meter reader's Name/code
+                  </p>
+                  <p class="font-monospace mb-0 col-12">Meter reader's Sign</p>
+                </div>
+              </div>
+              <div class="col-1">
+                <div class="row">
+                  <i class="col-6"
+                    ><img
+                      src="..\static\icons\www.png"
+                      style="width: 2.7rem"
+                      alt="www icon"
+                  /></i>
+                  <i class="col-6"
+                    ><img
+                      src="..\static\icons\rupee.png"
+                      style="width: 2.7rem"
+                      alt="rupee icon"
+                  /></i>
+                </div>
+              </div>
+              <p class="font-monospace text-center mb-0 col-3">
+                https://www.goaelectricity.gov.in
+              </p>
+              <div class="col-3">
+                <div class="row">
+                  <i class="col-2"
+                    ><img
+                      src="..\static\icons\facebook.png"
+                      style="width: 2.7rem"
+                      alt="facebook icon"
+                  /></i>
+                  <p class="font-monospace text-center mb-0 col-10">
+                    www.facebook.com/goaelectricity
+                  </p>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="row">
+                  <p class="font-monospace text-center mb-0 col-12">Sign</p>
+                  <p class="font-monospace text-center mb-0 col-12">
+                    CEE's Sign
+                  </p>
+                </div>
+              </div>
+              <div class="my-2 col-12" style="border-top: 2px dashed"></div>
+              <p class="font-monospace col-12 uppercase fs-3 text-center">
+                Electricity Department - Government of Goa
+              </p>
+              <div class="row m-0">
+              <p class="font-monospace mb-0 col-6" style="border: 2px solid;">Name :</p>
+              <p class="font-monospace mb-0 col-6" style="border: 2px solid;border-left: none;">CA No./Bill No. :</p>
+              <p class="font-monospace mb-0 col-6" style="border: 2px solid; border-top: none;">Installation No. :</p>
+              <p class="font-monospace mb-0 col-6" style="border: 2px solid;border-left: none;border-top: none;">Bill Period :</p>
+              <p class="font-monospace mb-0 col-6" style="border: 2px solid;border-top: none;">Bill Amount Payable :</p>
+              <p class="font-monospace mb-0 col-6" style="border: 2px solid;border-left: none;border-top: none;">Due Date :</p>
+              <p class="font-monospace mb-0 col-2" style="border: 2px solid;border-right: none;border-top: none;">Current Bill :</p>
+              <p class="font-monospace mb-0 col-1" style="border: 2px solid;border-left: none;border-right: none;border-top: none;">EC :</p>
+              <p class="font-monospace mb-0 col-1" style="border: 2px solid;border-left: none;border-right: none;border-top: none;">ED :</p>
+              <p class="font-monospace mb-0 col-1" style="border: 2px solid;border-left: none;border-right: none;border-top: none;">FC :</p>
+              <p class="font-monospace mb-0 col-2" style="border: 2px solid;border-left: none;border-right: none;border-top: none;">FPPCA :</p>
+              <p class="font-monospace mb-0 col-1" style="border: 2px solid;border-left: none;border-right: none;border-top: none;">MR :</p>
+              <p class="font-monospace mb-0 col-1" style="border: 2px solid;border-left: none;border-right: none;border-top: none;">REB :</p>
+              <p class="font-monospace mb-0 col-3" style="border: 2px solid;border-left: none;border-top: none;">Other :</p>
+              <p class="font-monospace fs-4 text-center pt-1 pb-5 col-12" style="border: 2px solid;border-top: none;">
+                Avoid Touching Eyes, Nose and Mouth. -- Together We can fight
+                COVID-19
+              </p>
+            </div>
+            </div>
+          </div>
         </section>
+      </section>
     </div>
-    
 
-
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-</body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
