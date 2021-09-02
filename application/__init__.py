@@ -55,7 +55,7 @@ def login():
         username = request.form['inputId']
         password = request.form['inputPassword']
         role = request.form['inputCredentials']
-        cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (int(username), password))
+        cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (username, password))
         account = cursor.fetchone()
         if account:
             session['loggedin'] = True
@@ -260,7 +260,12 @@ def billTimeline():
 
 @app.route("/billDetail")
 def billDetail():
-    return render_template("billDetail.html") 
+    cid = session["id"]
+    conn = mysql.connect()
+    consumer = Consumer(conn, request)
+    consumer.getConsumer(cid)
+    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
+    return render_template("billDetail.html" ,js=js) 
 
 @app.route("/test")
 def test():
