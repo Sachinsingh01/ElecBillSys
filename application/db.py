@@ -213,12 +213,4 @@ createPaymentInfo = """ CREATE TABLE PaymentInfo (
 #cursor.execute(createBillingCalInfo)
 #cursor.execute(createDiscoms)
 #cursor.execute(createPaymentInfo)
-<<<<<<< HEAD
-
-=======
-# cursor.execute(createElectricityRates)
-# cursor.execute(createGenCharges)
-# cursor.execute(createFPPCACharges)
-# cursor.execute(createFixedCharges)
->>>>>>> 9f0e026f929c3d6d582ccba7c0c0f2befe929284
 conn.close()
