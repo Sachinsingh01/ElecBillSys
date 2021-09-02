@@ -287,3 +287,30 @@ def billTimeline():
 @app.route("/billDetail")
 def billDetail():
     return render_template("billDetail.html") 
+
+@app.route("/test")
+def test():
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    consumer = Consumer(conn,cursor)
+    sql = consumer.validateCId()
+    print(sql)
+    return "<h1>testing<h1>"
+
+
+                    # try:
+                    #     try:
+                    #         # cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact))
+                    #         val = consumer.insertConsumer()
+                    #         conn.commit()
+                    #         # NB : you won't get an IntegrityError when reading
+                    #     except:
+                    #         print("Exception")
+                    #         return None
+                    # finally:
+                    #     conn.close()
+                    # val = consumer.deleteConsumer()
+                    # if val:
+                    #     msg = "Customer deleted Sucessfully"
+                    # else:
+                    #     msg = "Unable to delete cutomer"
