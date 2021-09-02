@@ -10,6 +10,7 @@ conn = pymysql.connect(
 
 cursor = conn.cursor()
 
+#FK for contype to be added
 #createConsumerTable stores the query to create a new consumer table
 createConsumerTable = """ CREATE TABLE Consumer (
     ConID varchar(12) PRIMARY KEY,
@@ -42,23 +43,30 @@ createDistributorTable = """ CREATE TABLE Distributor (
 
 #createSubsidy stores the query to create a new subsidy table
 createSubsidy = """ CREATE TABLE Subsidy (
-    SubID varchar(12) PRIMARY KEY,
-    SubPercent float NOT NULL,
-    TypeCon varchar(20) NOT NULL
+    SubsidyID varchar(12) PRIMARY KEY,
+    SubPercent float NOT NULL
 );
 """
 #createCWMRMonthReading stores the query to create a new consumer wise meter reading  table to store monthly reading values
 createCWMRMonthReading =  """ CREATE TABLE CwmrMonthReading (
     ReadingID varchar(12) PRIMARY KEY,
-    Reading varchar(30) NOT NULL
+    Reading varchar(30) NOT NULL,
+    CONSTRAINT FK_ReadingID 
+    FOREIGN KEY (ReadingID)
+    REFERENCES CwmrMonthDate(ReadingID)
+    ON DELETE CASCADE
 );
 """
 
 #createCWMRMonthDate stores the query to create a new cwmrMonthDate table to store the reading date
-createCWMRMonthDate = """ CREATE TABLE CwmrMothDate (
+createCWMRMonthDate = """ CREATE TABLE CwmrMonthDate (
     ReadingID varchar(12) PRIMARY KEY,
     ReadDate DATE NOT NULL,
-    ConID varchar(12) NOT NULL
+    ConID varchar(12) NOT NULL,
+    CONSTRAINT FK_cwmrconID 
+    FOREIGN KEY (ConID)
+    REFERENCES Consumer(ConID)
+    ON DELETE CASCADE
 );
 """
 
@@ -69,7 +77,11 @@ createConBillsDetails = """ CREATE TABLE ConBillsDetails (
     DueDate DATE NOT NULL,
     StartDate DATE NOT NULL,
     EndDate DATE NOT NULL,
-    ConID varchar(12) NOT NULL
+    ConID varchar(12) NOT NULL,
+    CONSTRAINT FK_conbilldetailsconID 
+    FOREIGN KEY (ConID)
+    REFERENCES Consumer(ConID)
+    ON DELETE CASCADE
 );
 """
 
@@ -81,7 +93,11 @@ createBillCorrecDetails = """ CREATE TABLE BillCorrecDetails (
     Comment varchar(500),
     FieldToCorrect varchar(20) NOT NULL,
     ConID varchar(12) NOT NULL,
-    Amount float NOT NULL
+    Amount float NOT NULL,
+    CONSTRAINT FK_billcorrecdetconID 
+    FOREIGN KEY (ConID)
+    REFERENCES Consumer(ConID)
+    ON DELETE CASCADE
 );
 """
 #createNotice stores the query to create a new notice table
@@ -106,45 +122,48 @@ createBillingCalInfo = """ CREATE TABLE BillingCalendarInfo (
 """
 #createElectricityRates stores query to create a new ElectricityRates table
 createElectricityRates = """ CREATE TABLE ElectricityRates (
-    ErID varchar(12) PRIMARY KEY,
-    ConType varchar(3) NOT NULL,
-    ApplicableFrom DATE NOT NULL
+    RatesRefID varchar(12),
+    ConType varchar(3),
+    ApplicationFrom DATE,
+    GenChargeID varchar(12) NOT NULL,
+    FPPCAChargeID varchar(12) NOT NULL,
+    FixedChargeID varchar(12) NOT NULL,
+    SusbsidyID varchar(12) NOT NULL,
+    CONSTRAINT PK_elecrates PRIMARY KEY (RatesRefID,ConType,ApplicationFrom),
+    CONSTRAINT FK_elecratesgencharge
+    FOREIGN KEY (GenChargeID)
+    REFERENCES GenCharges(GenChargeID),
+    CONSTRAINT FK_elecratesfppcacharge 
+    FOREIGN KEY (FPPCAChargeID)
+    REFERENCES FPPCACharges(FPPCAChargeID),
+    CONSTRAINT FK_elecratesfixedcharge 
+    FOREIGN KEY (FixedChargeID)
+    REFERENCES FixedCharges(FixedChargeID)
 );
 """
 
 #createGenCharges stores query to create a new General Charges table
 createGenCharges = """ CREATE TABLE GenCharges (
-    ErID varchar(12) PRIMARY KEY,
-    FromUnits int(10),
-    ToUnits int(10),
-    GenCharges real,
-    CONSTRAINT FK_ErID1 
-    FOREIGN KEY (ErID)
-    REFERENCES ElectricityRates(ErID)
-    ON DELETE CASCADE
+    GenChargeID varchar(3),
+    MaxUnits real,
+    GenCharges real NOT NULL,
+    CONSTRAINT PK_gencharges PRIMARY KEY (GenChargeID, MaxUnits)
 );
 """
 
 #createFPPCACharges stores query to create a new FPPCA charges table
 createFPPCACharges = """ CREATE TABLE FPPCACharges (
-    ErID varchar(12) PRIMARY KEY,
-    FromUnits int(10),
-    ToUnits int(10),
-    FPPCACharges real,
-    CONSTRAINT FK_ErID2 
-    FOREIGN KEY (ErID)
-    REFERENCES ElectricityRates(ErID)
-    ON DELETE CASCADE
+    FPPCAChargeID varchar(3),
+    MaxUnits real,
+    FPPCACharges real NOT NULL,
+    CONSTRAINT PK_fppcacharge PRIMARY KEY (FPPCAChargeID,MaxUnits)
 );
 """
 
+#createFixedCharges stores query to create a new Fixed Charges table
 createFixedCharges = """ CREATE TABLE FixedCharges (
-    ErID varchar(12) PRIMARY KEY,
-    FixedCharges real,
-    CONSTRAINT FK_ErID3 
-    FOREIGN KEY (ErID)
-    REFERENCES ElectricityRates(ErID)
-    ON DELETE CASCADE
+    FixedChargeID varchar(3) PRIMARY KEY,
+    FixedCharges real NOT NULL
 );
 """
 
@@ -166,7 +185,11 @@ createPaymentInfo = """ CREATE TABLE PaymentInfo (
     BillID varchar(12) NOT NULL,
     ModeOfPayment varchar(8) NOT NULL,
     PaymentDate DATE NOT NULL,
-    AmountPaid float NOT NULL
+    AmountPaid float NOT NULL,
+    CONSTRAINT FK_paymentinfobillID 
+    FOREIGN KEY (BillID)
+    REFERENCES ConBillsDetails(BillID)
+    ON DELETE CASCADE
 );
 """
 # testTable =  """ CREATE TABLE user (
@@ -176,19 +199,19 @@ createPaymentInfo = """ CREATE TABLE PaymentInfo (
 # """
 #testInsert = """ INSERT INTO user VALUES (1,"rajesh");
 #"""
-
+# cursor.execute(createGenCharges)
+# cursor.execute(createFPPCACharges)
+#cursor.execute(createFixedCharges)
+#cursor.execute(createElectricityRates)
 #cursor.execute(createConsumerTable)
 #cursor.execute(createDistributorTable)
 #cursor.execute(createSubsidy)
-#cursor.execute(createConMeterReadForMonth)
+#cursor.execute(createCWMRMonthDate)
+#cursor.execute(createCWMRMonthReading)
 #cursor.execute(createConBillsDetails)
 #cursor.execute(createBillCorrecDetails)
 #cursor.execute(createBillingCalInfo)
-#cursor.execute(createElectricityRates)
 #cursor.execute(createDiscoms)
 #cursor.execute(createPaymentInfo)
-cursor.execute(createElectricityRates)
-cursor.execute(createGenCharges)
-cursor.execute(createFPPCACharges)
-cursor.execute(createFixedCharges)
+
 conn.close()
