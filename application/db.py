@@ -30,7 +30,7 @@ createConsumerTable = """ CREATE TABLE Consumer (
 createDistributorTable = """ CREATE TABLE Distributor (
     DisID varchar(12) PRIMARY KEY,
     DisName varchar(40) NOT NULL,
-    DisAddress varchar NOT NULL,
+    DisAddress varchar(40) NOT NULL,
     DisTaluka varchar(15) NOT NULL,
     DisDistrict varchar(15) NOT NULL,
     DisPincode varchar(6) NOT NULL,
@@ -47,17 +47,23 @@ createSubsidy = """ CREATE TABLE Subsidy (
     TypeCon varchar(20) NOT NULL
 );
 """
-#createConMeterReadForMonth stores the query to create a new consumer wise meter reading per month table
-createConMeterReadForMonth =  """ CREATE TABLE Cwmr_Month (
-    ReadID varchar(15) PRIMARY KEY,
-    ConID varchar(12),
+#createCWMRMonthReading stores the query to create a new consumer wise meter reading  table to store monthly reading values
+createCWMRMonthReading =  """ CREATE TABLE CwmrMonthReading (
+    ReadingID varchar(12) PRIMARY KEY,
+    Reading varchar(30) NOT NULL
+);
+"""
+
+#createCWMRMonthDate stores the query to create a new cwmrMonthDate table to store the reading date
+createCWMRMonthDate = """ CREATE TABLE CwmrMothDate (
+    ReadingID varchar(12) PRIMARY KEY,
     ReadDate DATE NOT NULL,
-    Reading integer NOT NULL
+    ConID varchar(12) NOT NULL
 );
 """
 
 #createConBillsDetails stores the query to create a new consumer bills details table
-createConBillsDetails = """ CREATE TABLE Con_Bills_Details (
+createConBillsDetails = """ CREATE TABLE ConBillsDetails (
     BillID varchar(12) PRIMARY KEY,
     Amount float NOT NULL,
     DueDate DATE NOT NULL,
@@ -68,7 +74,7 @@ createConBillsDetails = """ CREATE TABLE Con_Bills_Details (
 """
 
 #createConsumerTable stores the query to create a new Bill correction details table
-createBillCorrecDetails = """ CREATE TABLE Bill_Correc_Details (
+createBillCorrecDetails = """ CREATE TABLE BillCorrecDetails (
     BillCorrID integer(10) PRIMARY KEY,
     BillID varchar(12) NOT NULL,
     Status varchar(10) NOT NULL,
@@ -100,12 +106,45 @@ createBillingCalInfo = """ CREATE TABLE BillingCalendarInfo (
 """
 #createElectricityRates stores query to create a new ElectricityRates table
 createElectricityRates = """ CREATE TABLE ElectricityRates (
-ConType varchar(3),
-ApplicableFrom DATE,
-FromUnits integer(10),
-ToUnits integer(10),
-Rate real,
-CONSTRAINT elecrates_pk PRIMARY KEY (ConType,ApplicableFrom)
+    ErID varchar(12) PRIMARY KEY,
+    ConType varchar(3) NOT NULL,
+    ApplicableFrom DATE NOT NULL
+);
+"""
+
+#createGenCharges stores query to create a new General Charges table
+createGenCharges = """ CREATE TABLE GenCharges (
+    ErID varchar(12) PRIMARY KEY,
+    FromUnits int(10),
+    ToUnits int(10),
+    GenCharges real,
+    CONSTRAINT FK_ErID1 
+    FOREIGN KEY (ErID)
+    REFERENCES ElectricityRates(ErID)
+    ON DELETE CASCADE
+);
+"""
+
+#createFPPCACharges stores query to create a new FPPCA charges table
+createFPPCACharges = """ CREATE TABLE FPPCACharges (
+    ErID varchar(12) PRIMARY KEY,
+    FromUnits int(10),
+    ToUnits int(10),
+    FPPCACharges real,
+    CONSTRAINT FK_ErID2 
+    FOREIGN KEY (ErID)
+    REFERENCES ElectricityRates(ErID)
+    ON DELETE CASCADE
+);
+"""
+
+createFixedCharges = """ CREATE TABLE FixedCharges (
+    ErID varchar(12) PRIMARY KEY,
+    FixedCharges real,
+    CONSTRAINT FK_ErID3 
+    FOREIGN KEY (ErID)
+    REFERENCES ElectricityRates(ErID)
+    ON DELETE CASCADE
 );
 """
 
@@ -147,5 +186,9 @@ createPaymentInfo = """ CREATE TABLE PaymentInfo (
 #cursor.execute(createBillingCalInfo)
 #cursor.execute(createElectricityRates)
 #cursor.execute(createDiscoms)
-cursor.execute(createPaymentInfo)
+#cursor.execute(createPaymentInfo)
+cursor.execute(createElectricityRates)
+cursor.execute(createGenCharges)
+cursor.execute(createFPPCACharges)
+cursor.execute(createFixedCharges)
 conn.close()
