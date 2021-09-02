@@ -15,7 +15,7 @@ class Consumer():
         self.conType = conType
         self.sanctionedLoad = sanctionedLoad
         self.contact = contact
-        self.talukas = ["PONDA", "PANAJI"]
+        self.talukas = ["PONDA", "TISWADI", "BARDEZ", "BICHOLIM", "CANACONA", "SATTARI", "MORMUGAO", "PERNEM", "QUEPEM", "SALCETTE", "SANGUEM", "DHARBANDORA"]
         self.cidTalukas = ["PON", "PAN"]
         self.districts = ["SOUTH GOA","NORTH GOA"]
         self.cursor = cursor
