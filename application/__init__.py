@@ -4,6 +4,7 @@ import pymysql
 from werkzeug.utils import secure_filename
 import os
 from .consumer import Consumer
+import json
 import re 
 
 
@@ -38,7 +39,6 @@ def allowed_file(filename):
 @app.route("/")
 def home():
     if 'loggedin' in session:
-   
         # User is loggedin show them the home page
         return render_template('home.html', username=session['id'])
     # User is not loggedin redirect to login page
@@ -111,26 +111,17 @@ def adminCust():
         print("hi")
         js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
         print("i am here")
+
         if request.method == "POST" and 'task' in request.form:
             session["task"] = request.form['task']
             task = session["task"]
             print(session["task"])
-            #Add start
+
+            # Begin Add
             if task == "add":
-                cid = request.form['inputConID']
-                fname = request.form['inputConFName']
-                lname = request.form['inputConLName']
-                address = request.form['inputConAddress']
-                taluka = request.form['inputConTaluka']
-                district = request.form['inputConDistrict']
-                pinCode = request.form['inputConPin']
-                meterId = request.form['inputMeterId']
-                conType = request.form['inputConType']
-                contact = request.form['inputConContact']
-                sanctionedLoad = request.form['inputSancLoad']
                 conn = mysql.connect()
-                cursor = conn.cursor(pymysql.cursors.DictCursor)
-                consumer = Consumer(conn,cursor,cid , fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+
+                consumer = Consumer(conn,request)
                 msg = None
                 if not consumer.validateCId():
                     msg = "Invalid User ID"
@@ -139,88 +130,86 @@ def adminCust():
                 elif not consumer.validateDistrict():
                     msg = "Invalid District"
                 elif not consumer.validateTaluka():
-                    msg = "invalid Taluka"
+                    msg = "Invalid Taluka"
+                elif not consumer.validateContact():
+                    msg = "Please Check Contact Details"
                 
                 if msg == None:
                     try:
                         val = consumer.insertConsumer()
                         if val:
                             conn.commit()
-                            msg = "Customer succefully added"
+                            msg = "Consumer Succefully Added"
                         else:
-                            msg = "Unable to add Customer"
+                            msg = "Unable to Add Consumer"
                     finally:
                         conn.close()
+
                 print(msg)
                 return render_template("customerDataInput.html", msg = msg, val = task, js = js)
-            #Add End
-            #Update Start
+            # End Add
+
+            # Begin Update
             elif task == "upd":
                 cid = request.form['inputConFilID']
                 conn = mysql.connect()
-                cursor = conn.cursor(pymysql.cursors.DictCursor)
-                consumer = Consumer(conn,cursor,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                consumer = Consumer(conn, request)
                 msg = None
+
+                # Messages for testing
                 print("in Update")
                 print(cid)
                 print(request.form['state'])
+
                 if request.form['state'] == "1":
                     try:
                         try:
                             print("actually updating")
-                            cid = request.form['inputConID']
-                            fname = request.form['inputConFName']
-                            lname = request.form['inputConLName']
-                            address = request.form['inputConAddress']
-                            taluka = request.form['inputConTaluka']
-                            district = request.form['inputConDistrict']
-                            pinCode = request.form['inputConPin']
-                            meterId = request.form['inputMeterId']
-                            conType = request.form['inputConType']
-                            contact = request.form['inputConContact']
-                            sanctionedLoad = request.form['inputSancLoad']
-                            print(fname)
-                            val = consumer.updateConsumer(cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
-                            if val:
+                            cid = request.form['realID']
+                            print(cid)
+                            print("Printing cid")
+                            updateCon = consumer.updateConsumer(cid, request)
+                            if updateCon:
                                 msg = "Customer updated Sucessfully"
-
                             else:
-                                msg = "Unable to update consumer"
+                                msg = "Unable to update consumer 1"
                         except:
                             msg = "Unable to update consumer"
                     finally:
                         conn.close()
                 else:
-                    val2 = consumer.getConsumer()
-                    if not val2:
+                    findCon = consumer.getConsumer(cid)
+                    if not findCon:
                         msg = "Unable to find the consumer"
+
                 js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
                 print(js)
                 print(msg)
                 return render_template("customerDataInput.html", val = task, js = js)
-            #Update end
+            # End Update
 
-            #delete start
+            # Begin Delete
             elif task == "del":
+                js = {"fname":"", "lname":"", "cid":"", "address":"", "taluka":"", "district":"", "pinCode":"", "meterId":"", "conType":"", "contact":"", "sanctionedLoad":""}
                 cid = request.form['inputConFilID']
                 print(cid)
                 conn = mysql.connect()
-                cursor = conn.cursor(pymysql.cursors.DictCursor)
-                consumer = Consumer(conn,cursor,cid, fname, lname, address, taluka, district, pinCode, meterId, conType, contact,sanctionedLoad)
+                consumer = Consumer(conn, request)
+                consumer.getConsumer(cid)
                 msg = None
-                print("in Delete" )
-                print(cid)
+                print("in Delete")
                 print(request.form['state'])
                 if request.form['state'] == "1":
                     try:
                         try:
                             print("actually deleting")
                             print(request.form['realID'])
-                            val = consumer.deleteConsumer(cid = request.form['realID'])
+                            cid = request.form['realID']
+                            
+                            val = consumer.deleteConsumer(cid)
                             
                             if val:
                                 msg = "Customer deleted Sucessfully"
-
                             else:
                                 msg = "Unable to delete cutomer"
                         except:
@@ -228,16 +217,17 @@ def adminCust():
                     finally:
                         conn.close()
                 else:
-                    val2 = consumer.getConsumer()
+                    val2 = consumer.getConsumer(cid)
+                    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
                     if not val2:
                         msg = "Unable to find the consumer"
-                js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
+                
                 print(js)
                 print(msg)
                 return render_template("customerDataInput.html", val = task, js = js) 
             #Delete end
         # User is loggedin show them the home page
-        return render_template("customerDataInput.html", val = task, js=js)
+        return render_template("customerDataInput.html", val = task, js = js)
     # User is not loggedin redirect to login page
 
     return redirect(url_for('login'))
@@ -283,25 +273,6 @@ def billTimeline():
 def billDetail():
     return render_template("billDetail.html") 
 
-<<<<<<< HEAD
-@app.route("/adminDist")
-def adminDist():
-    fname = "you"
-    lname = "Exist"
-    address = "no home"
-    taluka = "Ponda"
-    district = "Confused"
-    pinCode = "403406"
-    meterId = "PON131231"
-    conType = "Domestic"
-    contact = "9876543210"
-    sanctionedLoad = "1.2"
-    cid="12312"
-    task = "add"
-    js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
-    print(js)
-    return render_template("distributorDataInput.html", val = task, js=js) 
-=======
 @app.route("/test")
 def test():
     conn = mysql.connect()
@@ -328,4 +299,3 @@ def test():
                     #     msg = "Customer deleted Sucessfully"
                     # else:
                     #     msg = "Unable to delete cutomer"
->>>>>>> 0cba7139c044a285ad94b2c1f8d5fe76b5c3c0ef
