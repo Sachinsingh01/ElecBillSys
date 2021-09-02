@@ -4,11 +4,8 @@ import pymysql
 from werkzeug.utils import secure_filename
 import os
 from .consumer import Consumer
-<<<<<<< HEAD
 import json
-=======
 from .fileToDB import MeterReading
->>>>>>> de0cb8692265136fc58df93038e91f52c52c0b5a
 import re 
 
 
@@ -274,24 +271,3 @@ def test():
     sql = consumer.validateCId()
     print(sql)
     return "<h1>testing<h1>"
-<<<<<<< HEAD
-
-
-                    # try:
-                    #     try:
-                    #         # cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(cid,fname,lname,address,taluka,district,pinCode,meterId,conType,int(sanctionedLoad),contact))
-                    #         val = consumer.insertConsumer()
-                    #         conn.commit()
-                    #         # NB : you won't get an IntegrityError when reading
-                    #     except:
-                    #         print("Exception")
-                    #         return None
-                    # finally:
-                    #     conn.close()
-                    # val = consumer.deleteConsumer()
-                    # if val:
-                    #     msg = "Customer deleted Sucessfully"
-                    # else:
-                    #     msg = "Unable to delete cutomer"
-=======
->>>>>>> de0cb8692265136fc58df93038e91f52c52c0b5a
