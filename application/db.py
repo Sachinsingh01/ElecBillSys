@@ -117,7 +117,7 @@ createBillingCalInfo = """ CREATE TABLE Billing_Calendar_Info (
 """
 
 createConType = """ CREATE TABLE Con_Type (
-    Con_Type_ID integer(3) NOT NULL,
+    Con_Type_ID integer(3) PRIMARY KEY,
     Con_Type varchar(10) NOT NULL,
     San_Load varchar(18) NOT NULL,
     Susbsidy_Percent float,
@@ -147,7 +147,10 @@ createNoSlabCharges = """ CREATE TABLE No_Slab_Charges (
     NS_Charges varchar(11) NOT NULL,
     From_Date Date NOT NULL,
     Created Date NOT NULL,
-    Updated Date NOT NULL
+    Updated Date NOT NULL,
+    CONSTRAINT FK_noslabchargecontypeid
+    FOREIGN KEY (Con_Type_ID)
+    REFERENCES Con_Type(Con_Type_ID)
 );
 """
 
@@ -160,7 +163,9 @@ createSlabCharges = """ CREATE TABLE Slab_Charges (
     Slab_ID integer(3) NOT NULL,
     Created Date NOT NULL,
     Updated Date NOT NULL,
-
+    CONSTRAINT FK_slabchargecontypeid
+    FOREIGN KEY (Con_Type_ID)
+    REFERENCES Con_Type(Con_Type_ID),
     CONSTRAINT FK_slabchargesslabid
     FOREIGN KEY (Slab_ID)
     REFERENCES Slab_Types(Slab_ID)
@@ -220,8 +225,8 @@ createPaymentInfo = """ CREATE TABLE Payment_Info (
 # cursor.execute(createConnectionTable)
 #cursor.execute(createMeterReading)
 #cursor.execute(createSlabTypes)
-#cursor.execute(createSlabCharges)
-#cursor.execute(createNoSlabCharges)
+# cursor.execute(createSlabCharges)
+# cursor.execute(createNoSlabCharges)
 #cursor.execute(createBillsData)
 
 #cursor.execute(createDistributorTable)
