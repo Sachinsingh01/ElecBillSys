@@ -13,17 +13,20 @@ cursor = conn.cursor()
 #FK for contype to be added
 #createConsumerTable stores the query to create a new consumer table
 createConsumerTable = """ CREATE TABLE Consumer (
-    ConID varchar(12) PRIMARY KEY,
-    ConFirstName varchar(30) NOT NULL,
-    ConLastName varchar(30) NOT NULL,
-    ConAddress varchar(30) NOT NULL,
-    ConTaluka varchar(15) NOT NULL,
-    ConDistrict varchar(15) NOT NULL,
-    ConPinCode varchar(6) NOT NULL,
-    MeterID varchar(15) NOT NULL UNIQUE,
-    ConType varchar(3) NOT NULL,
-    ConSanctionedLoad integer NOT NULL,
-    ConContact varchar(10) NOT NULL UNIQUE
+    Con_ID varchar(12) PRIMARY KEY,
+    Consumer_No varchar(12) NOT NULL,
+    Con_First_Name varchar(30) NOT NULL,
+    Con_Last_Name varchar(30) NOT NULL,
+    Con_Address varchar(30) NOT NULL,
+    Con_Taluka varchar(15) NOT NULL,
+    Con_District varchar(15) NOT NULL,
+    Con_Pin_Code varchar(6) NOT NULL,
+    Meter_ID varchar(15) NOT NULL UNIQUE,
+    Con_Type_ID varchar(3) NOT NULL,
+    Con_Sanctioned_Load real NOT NULL,
+    ConContact varchar(10) NOT NULL UNIQUE,
+    Created Date NOT NULL,
+    Updated Date NOT NULL
 );
 """
 
@@ -38,35 +41,6 @@ createDistributorTable = """ CREATE TABLE Distributor (
     SupplyPerMonth real NOT NULL,
     DisContact varchar(10) NOT NULL UNIQUE,
     SupplyRate real NOT NULL
-);
-"""
-
-#createSubsidy stores the query to create a new subsidy table
-createSubsidy = """ CREATE TABLE Subsidy (
-    SubsidyID varchar(12) PRIMARY KEY,
-    SubPercent float NOT NULL
-);
-"""
-#createCWMRMonthReading stores the query to create a new consumer wise meter reading  table to store monthly reading values
-createCWMRMonthReading =  """ CREATE TABLE CwmrMonthReading (
-    ReadingID varchar(12) PRIMARY KEY,
-    Reading varchar(30) NOT NULL,
-    CONSTRAINT FK_ReadingID 
-    FOREIGN KEY (ReadingID)
-    REFERENCES CwmrMonthDate(ReadingID)
-    ON DELETE CASCADE
-);
-"""
-
-#createCWMRMonthDate stores the query to create a new cwmrMonthDate table to store the reading date
-createCWMRMonthDate = """ CREATE TABLE CwmrMonthDate (
-    ReadingID varchar(12) PRIMARY KEY,
-    ReadDate DATE NOT NULL,
-    ConID varchar(12) NOT NULL,
-    CONSTRAINT FK_cwmrconID 
-    FOREIGN KEY (ConID)
-    REFERENCES Consumer(ConID)
-    ON DELETE CASCADE
 );
 """
 
@@ -120,52 +94,76 @@ createBillingCalInfo = """ CREATE TABLE BillingCalendarInfo (
     TimeDelta varchar(4) NOT NULL
 );
 """
-#createElectricityRates stores query to create a new ElectricityRates table
-createElectricityRates = """ CREATE TABLE ElectricityRates (
-    RatesRefID varchar(12),
-    ConType varchar(3),
-    ApplicationFrom DATE,
-    GenChargeID varchar(12) NOT NULL,
-    FPPCAChargeID varchar(12) NOT NULL,
-    FixedChargeID varchar(12) NOT NULL,
-    SusbsidyID varchar(12) NOT NULL,
-    CONSTRAINT PK_elecrates PRIMARY KEY (RatesRefID,ConType,ApplicationFrom),
-    CONSTRAINT FK_elecratesgencharge
-    FOREIGN KEY (GenChargeID)
-    REFERENCES GenCharges(GenChargeID),
-    CONSTRAINT FK_elecratesfppcacharge 
-    FOREIGN KEY (FPPCAChargeID)
-    REFERENCES FPPCACharges(FPPCAChargeID),
-    CONSTRAINT FK_elecratesfixedcharge 
-    FOREIGN KEY (FixedChargeID)
-    REFERENCES FixedCharges(FixedChargeID)
+
+createConType = """ CREATE TABLE Con_Type (
+    Con_Type_ID integer(3) NOT NULL,
+    Con_Type varchar(10) NOT NULL,
+    San_Load varchar(18) NOT NULL,
+    Susbsidy_Percent float,
+    Created Date NOT NULL,
+    Updated Date NOT NULL
 );
 """
 
-#createGenCharges stores query to create a new General Charges table
-createGenCharges = """ CREATE TABLE GenCharges (
-    GenChargeID varchar(3),
-    MaxUnits real,
-    GenCharges real NOT NULL,
-    CONSTRAINT PK_gencharges PRIMARY KEY (GenChargeID, MaxUnits)
+createMeterReading = """ CREATE TABLE Meter_Reading (
+    Meter_No varchar(12) PRIMARY KEY,
+    Co_ID integer(18) NOT NULL,
+    Meter_Reading varchar(18) NOT NULL,
+    Read_Date DATE NOT NULL,
+    Meter_Status varchar(10) NOT NULL,
+    Created Date NOT NULL,
+    Updated Date NOT NULL
 );
 """
 
-#createFPPCACharges stores query to create a new FPPCA charges table
-createFPPCACharges = """ CREATE TABLE FPPCACharges (
-    FPPCAChargeID varchar(3),
-    MaxUnits real,
-    FPPCACharges real NOT NULL,
-    CONSTRAINT PK_fppcacharge PRIMARY KEY (FPPCAChargeID,MaxUnits)
+createNoSlabCharges = """ CREATE TABLE No_Slab_Charges (
+    NSC_ID integer(10) PRIMARY KEY,
+    Con_Type_ID integer(3) NOT NULL,
+    NS_Charge_Type varchar(10) NOT NULL,
+    NS_Charges varchar(11) NOT NULL,
+    From_Date Date NOT NULL,
+    Created Date NOT NULL,
+    Updated Date NOT NULL,
 );
 """
 
-#createFixedCharges stores query to create a new Fixed Charges table
-createFixedCharges = """ CREATE TABLE FixedCharges (
-    FixedChargeID varchar(3) PRIMARY KEY,
-    FixedCharges real NOT NULL
+createSlabCharges = """ CREATE TABLE Slab_Charges (
+    SC_ID integer(10) PRIMARY KEY,
+    Con_Type_ID integer(3) NOT NULL,
+    From_Date DATE NOT NULL,
+    S_Charge_Type varchar(10) NOT NULL,
+    Slab_ID integer(3) NOT NULL,
+    Created Date NOT NULL,
+    Updated Date NOT NULL
 );
 """
+
+createSlabTypes = """ CREATE TABLE SlabTypes (
+    Slab_ID integer(3) PRIMARY KEY,
+    Units_From integer(11) NOT NULL,
+    Units_To integer(11) NOT NULL,
+    S_Charges varchar(11) NOT NULL,
+    Created DATE NOT NULL,
+    Updated DATE NOT NULL
+);
+"""
+
+createBillsData = """ CREATE TABLE Bills_Data (
+    BD_ID int(18) PRIMARY KEY,
+    Meter_No varchar(12),
+    Unit varchar(12),
+    Current_Read_Date Date,
+    Prev_Read_Date Date,
+    Prev_Reading varchar(18),
+    Reading_Diff varchar(18),
+    Consumption varchar(12),
+    Reading_Remark varchar(12),
+    Created Date NOT NULL,
+    Updated Date NOT NULL
+);
+"""
+
+#TABLE BILL CLACULATION TABLE TO BE ADDED HERE
 
 #createDiscoms stores query to create a new Discoms table
 createDiscoms = """ CREATE TABLE Discoms (
