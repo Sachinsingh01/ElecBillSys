@@ -1,34 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
     <title>Document</title>
-</head>
-<body>
-    <div class="container">
-        <div class="row">
-          <div class="col">
-            <h1>Upload the file</h1>
-            <hr>
-      
-            <form action="/uploadFile" method="POST" enctype="multipart/form-data">
-      
-              <div class="form-group">
-                <label>Select doc</label>
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" name="csvfile" id="csvfile">
-                  <label class="custom-file-label" for="csvfile">Select file</label>
-                </div>
+  </head>
+  <body>
+    <div class="container-fluid rounded">
+      <div class="row">
+        <div class="col">
+          <form
+            action="/uploadFile"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="form-group shadow p-5 mb-5 bg-body rounded mt-5">
+              <h2 class="mb-3">Consumer Reading</h2>
+              <label for="sampleFileDownload" class="form-label"
+                >Download Consumer List File</label
+              >
+              <div class="d-grid gap-2 d-block col-3">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                >
+                  <i class="bi bi-download me-2"></i> Download
+                </button>
               </div>
-      
-              <button type="submit" class="btn btn-primary">Upload</button>
-      
-            </form>
-      
-          </div>
+              <label>Select doc</label>
+              <div class="custom-file">
+                <input
+                  type="file"
+                  class="custom-file-input"
+                  name="csvfile"
+                  id="csvfile"
+                />
+                <label class="custom-file-label" for="csvfile">Select</label>
+              </div>
+              <div class="d-grid gap-2 d-block">
+                <button type="submit" class="btn btn-primary col-3">Upload</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-</body>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>

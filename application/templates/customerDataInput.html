@@ -29,9 +29,15 @@
                     </div>              
                     <input type="text" class="d-none" id="task" name="task" value= {{val}}> 
                     <input type="text" class="d-none" id="state" name="state" value= "0"> 
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for message in messages %}
+                    <p class="font-monospace d-none" id="alertMsg" >{{message}}</p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
                     {% include "includes/consumerInputs/consumerAdd.html" %}
                     {% include "includes/consumerInputs/consumerFilter.html" %}
-                </form>
             </section>
         </section>
     </div>
@@ -50,6 +56,9 @@
         })
         document.getElementById("addBtn").addEventListener("click", (e)=>{
             document.getElementById("state").value = "1"
+            alertMsg = document.getElementById("alertMsg").innerText
+            console.log(alertMsg)
+            alert(alertMsg)
         })
         document.getElementById("custAdd").addEventListener("click", (e)=>{            
             document.getElementById("addEl").style.display = "flex"
