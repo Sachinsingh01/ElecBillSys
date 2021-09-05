@@ -10,20 +10,44 @@ conn = pymysql.connect(
 
 cursor = conn.cursor()
 
+
+createConnectionTable = """ CREATE TABLE Connection (
+    Co_ID integer(18) PRIMARY KEY,
+    Co_Address varchar(40) NOT NULL,
+    Co_Taluka varchar(20) NOT NULL,
+    Co_District varchar(20) NOT NULL,
+    Co_Pin integer(6) NOT NULL,
+    Meter_No integer(18) NOT NULL,
+    Conn_Type_ID int(3) NOT NULL,
+    Con_ID int(18) NOT NULL,
+    Installation_ID integer(18) NOT NULL,
+    Installation_Date Date NOT NULL,
+    Connection_Status varchar(8) NOT NULL,
+    Created DATE NOT NULL,
+    Updated DATE NOT NULL,
+    CONSTRAINT FK_connectionconID 
+    FOREIGN KEY (Con_ID)
+    REFERENCES Consumer(Con_ID)
+);
+"""
+
 #FK for contype to be added
 #createConsumerTable stores the query to create a new consumer table
 createConsumerTable = """ CREATE TABLE Consumer (
-    ConID varchar(12) PRIMARY KEY,
-    ConFirstName varchar(30) NOT NULL,
-    ConLastName varchar(30) NOT NULL,
-    ConAddress varchar(30) NOT NULL,
-    ConTaluka varchar(15) NOT NULL,
-    ConDistrict varchar(15) NOT NULL,
-    ConPinCode varchar(6) NOT NULL,
-    MeterID varchar(15) NOT NULL UNIQUE,
-    ConType varchar(3) NOT NULL,
-    ConSanctionedLoad integer NOT NULL,
-    ConContact varchar(10) NOT NULL UNIQUE
+    Con_ID integer(18) PRIMARY KEY AUTO_INCREMENT,
+    Consumer_No varchar(12) NOT NULL,
+    Con_First_Name varchar(30) NOT NULL,
+    Con_Last_Name varchar(30) NOT NULL,
+    Con_Address varchar(30) NOT NULL,
+    Con_Taluka varchar(15) NOT NULL,
+    Con_District varchar(15) NOT NULL,
+    Con_Pin_Code varchar(6) NOT NULL,
+    Meter_ID varchar(15) NOT NULL UNIQUE,
+    Con_Type_ID varchar(3) NOT NULL,
+    Con_Sanctioned_Load real NOT NULL,
+    ConContact varchar(10) NOT NULL UNIQUE,
+    Created DATE NOT NULL,
+    Updated DATE NOT NULL
 );
 """
 
@@ -41,62 +65,33 @@ createDistributorTable = """ CREATE TABLE Distributor (
 );
 """
 
-#createSubsidy stores the query to create a new subsidy table
-createSubsidy = """ CREATE TABLE Subsidy (
-    SubsidyID varchar(12) PRIMARY KEY,
-    SubPercent float NOT NULL
-);
-"""
-#createCWMRMonthReading stores the query to create a new consumer wise meter reading  table to store monthly reading values
-createCWMRMonthReading =  """ CREATE TABLE CwmrMonthReading (
-    ReadingID varchar(12) PRIMARY KEY,
-    Reading varchar(30) NOT NULL,
-    CONSTRAINT FK_ReadingID 
-    FOREIGN KEY (ReadingID)
-    REFERENCES CwmrMonthDate(ReadingID)
-    ON DELETE CASCADE
-);
-"""
-
-#createCWMRMonthDate stores the query to create a new cwmrMonthDate table to store the reading date
-createCWMRMonthDate = """ CREATE TABLE CwmrMonthDate (
-    ReadingID varchar(12) PRIMARY KEY,
-    ReadDate DATE NOT NULL,
-    ConID varchar(12) NOT NULL,
-    CONSTRAINT FK_cwmrconID 
-    FOREIGN KEY (ConID)
-    REFERENCES Consumer(ConID)
-    ON DELETE CASCADE
-);
-"""
-
 #createConBillsDetails stores the query to create a new consumer bills details table
-createConBillsDetails = """ CREATE TABLE ConBillsDetails (
-    BillID varchar(12) PRIMARY KEY,
+createConBillsDetails = """ CREATE TABLE Con_Bills_Details (
+    Bill_ID varchar(12) PRIMARY KEY,
     Amount float NOT NULL,
-    DueDate DATE NOT NULL,
-    StartDate DATE NOT NULL,
-    EndDate DATE NOT NULL,
-    ConID varchar(12) NOT NULL,
+    Due_Date DATE NOT NULL,
+    Start_Date DATE NOT NULL,
+    End_Date DATE NOT NULL,
+    Con_ID integer(18) NOT NULL,
     CONSTRAINT FK_conbilldetailsconID 
-    FOREIGN KEY (ConID)
-    REFERENCES Consumer(ConID)
+    FOREIGN KEY (Con_ID)
+    REFERENCES Consumer(Con_ID)
     ON DELETE CASCADE
 );
 """
 
 #createConsumerTable stores the query to create a new Bill correction details table
-createBillCorrecDetails = """ CREATE TABLE BillCorrecDetails (
-    BillCorrID integer(10) PRIMARY KEY,
-    BillID varchar(12) NOT NULL,
+createBillCorrecDetails = """ CREATE TABLE Bill_Correc_Details (
+    Bill_Corr_ID integer(10) PRIMARY KEY,
+    Bill_ID varchar(12) NOT NULL,
     Status varchar(10) NOT NULL,
     Comment varchar(500),
-    FieldToCorrect varchar(20) NOT NULL,
-    ConID varchar(12) NOT NULL,
+    Field_To_Correct varchar(20) NOT NULL,
+    Con_ID integer(18) NOT NULL,
     Amount float NOT NULL,
     CONSTRAINT FK_billcorrecdetconID 
-    FOREIGN KEY (ConID)
-    REFERENCES Consumer(ConID)
+    FOREIGN KEY (Con_ID)
+    REFERENCES Consumer(Con_ID)
     ON DELETE CASCADE
 );
 """
@@ -112,105 +107,134 @@ createBillCorrecDetails = """ CREATE TABLE BillCorrecDetails (
 #
 
 #billingCalInfo stores query to create a new BillingCalendarInfo table
-createBillingCalInfo = """ CREATE TABLE BillingCalendarInfo (
-    BillTypeID integer(3) PRIMARY KEY,
-    StartFrom DATE NOT NULL,
-    BillType varchar(8) NOT NULL,
-    TimeUnitPassed integer(2) NOT NULL,
-    TimeDelta varchar(4) NOT NULL
-);
-"""
-#createElectricityRates stores query to create a new ElectricityRates table
-createElectricityRates = """ CREATE TABLE ElectricityRates (
-    RatesRefID varchar(12),
-    ConType varchar(3),
-    ApplicationFrom DATE,
-    GenChargeID varchar(12) NOT NULL,
-    FPPCAChargeID varchar(12) NOT NULL,
-    FixedChargeID varchar(12) NOT NULL,
-    SusbsidyID varchar(12) NOT NULL,
-    CONSTRAINT PK_elecrates PRIMARY KEY (RatesRefID,ConType,ApplicationFrom),
-    CONSTRAINT FK_elecratesgencharge
-    FOREIGN KEY (GenChargeID)
-    REFERENCES GenCharges(GenChargeID),
-    CONSTRAINT FK_elecratesfppcacharge 
-    FOREIGN KEY (FPPCAChargeID)
-    REFERENCES FPPCACharges(FPPCAChargeID),
-    CONSTRAINT FK_elecratesfixedcharge 
-    FOREIGN KEY (FixedChargeID)
-    REFERENCES FixedCharges(FixedChargeID)
+createBillingCalInfo = """ CREATE TABLE Billing_Calendar_Info (
+    Bill_Type_ID integer(3) PRIMARY KEY,
+    Start_From DATE NOT NULL,
+    Bill_Type varchar(8) NOT NULL,
+    Time_Unit_Passed integer(2) NOT NULL,
+    Time_Delta varchar(4) NOT NULL
 );
 """
 
-#createGenCharges stores query to create a new General Charges table
-createGenCharges = """ CREATE TABLE GenCharges (
-    GenChargeID varchar(3),
-    MaxUnits real,
-    GenCharges real NOT NULL,
-    CONSTRAINT PK_gencharges PRIMARY KEY (GenChargeID, MaxUnits)
+createConType = """ CREATE TABLE Con_Type (
+    Con_Type_ID integer(3) PRIMARY KEY,
+    Con_Type varchar(10) NOT NULL,
+    San_Load varchar(18) NOT NULL,
+    Susbsidy_Percent float,
+    Created Date NOT NULL,
+    Updated Date NOT NULL
 );
 """
 
-#createFPPCACharges stores query to create a new FPPCA charges table
-createFPPCACharges = """ CREATE TABLE FPPCACharges (
-    FPPCAChargeID varchar(3),
-    MaxUnits real,
-    FPPCACharges real NOT NULL,
-    CONSTRAINT PK_fppcacharge PRIMARY KEY (FPPCAChargeID,MaxUnits)
+createMeterReading = """ CREATE TABLE Meter_Reading (
+    Meter_No varchar(12) PRIMARY KEY,
+    Co_ID integer(18) NOT NULL,
+    Meter_Reading varchar(18) NOT NULL,
+    Read_Date DATE NOT NULL,
+    Meter_Status varchar(10) NOT NULL,
+    Created Date NOT NULL,
+    Updated Date NOT NULL,
+    CONSTRAINT FK_meterreadcoid 
+    FOREIGN KEY (Co_ID)
+    REFERENCES Connection(Co_ID)
 );
 """
 
-#createFixedCharges stores query to create a new Fixed Charges table
-createFixedCharges = """ CREATE TABLE FixedCharges (
-    FixedChargeID varchar(3) PRIMARY KEY,
-    FixedCharges real NOT NULL
+createNoSlabCharges = """ CREATE TABLE No_Slab_Charges (
+    NSC_ID integer(10) PRIMARY KEY,
+    Con_Type_ID integer(3) NOT NULL,
+    NS_Charge_Type varchar(10) NOT NULL,
+    NS_Charges varchar(11) NOT NULL,
+    From_Date Date NOT NULL,
+    Created Date NOT NULL,
+    Updated Date NOT NULL,
+    CONSTRAINT FK_noslabchargecontypeid
+    FOREIGN KEY (Con_Type_ID)
+    REFERENCES Con_Type(Con_Type_ID)
 );
 """
+
+
+createSlabCharges = """ CREATE TABLE Slab_Charges (
+    SC_ID integer(10) PRIMARY KEY,
+    Con_Type_ID integer(3) NOT NULL,
+    From_Date DATE NOT NULL,
+    S_Charge_Type varchar(10) NOT NULL,
+    Slab_ID integer(3) NOT NULL,
+    Created Date NOT NULL,
+    Updated Date NOT NULL,
+    CONSTRAINT FK_slabchargecontypeid
+    FOREIGN KEY (Con_Type_ID)
+    REFERENCES Con_Type(Con_Type_ID),
+    CONSTRAINT FK_slabchargesslabid
+    FOREIGN KEY (Slab_ID)
+    REFERENCES Slab_Types(Slab_ID)
+);
+"""
+
+createSlabTypes = """ CREATE TABLE Slab_Types (
+    Slab_ID integer(3) PRIMARY KEY,
+    Units_From integer(11) NOT NULL,
+    Units_To integer(11) NOT NULL,
+    S_Charges varchar(11) NOT NULL,
+    Created DATE NOT NULL,
+    Updated DATE NOT NULL
+);
+"""
+
+createBillsData = """ CREATE TABLE Bills_Data (
+    BD_ID int(18) PRIMARY KEY,
+    Meter_No varchar(12),
+    Unit varchar(12),
+    Current_Read_Date Date,
+    Prev_Read_Date Date,
+    Prev_Reading varchar(18),
+    Reading_Diff varchar(18),
+    Consumption varchar(12),
+    Reading_Remark varchar(12),
+    Created Date NOT NULL,
+    Updated Date NOT NULL
+);
+"""
+
+#TABLE BILL CLACULATION TABLE TO BE ADDED HERE
 
 #createDiscoms stores query to create a new Discoms table
 createDiscoms = """ CREATE TABLE Discoms (
-    DiscomID varchar(12) PRIMARY KEY,
-    DiscomName varchar(20) NOT NULL,
-    DiscomAdd varchar(30) NOT NULL,
-    DiscomTaluka varchar(15) NOT NULL,
-    DiscomDistrict varchar(15) NOT NULL,
-    DiscomPin varchar(6) NOT NULL,
-    DiscomContact varchar(10) NOT NULL
+    Discom_ID varchar(12) PRIMARY KEY,
+    Discom_Name varchar(20) NOT NULL,
+    Discom_Add varchar(30) NOT NULL,
+    Discom_Taluka varchar(15) NOT NULL,
+    Discom_District varchar(15) NOT NULL,
+    Discom_Pin varchar(6) NOT NULL,
+    Discom_Contact varchar(10) NOT NULL
 );
 """
 
 #createPaymentInfo stores query to create a new payment information table
-createPaymentInfo = """ CREATE TABLE PaymentInfo (
-    TransactionID varchar(12) PRIMARY KEY,
-    BillID varchar(12) NOT NULL,
-    ModeOfPayment varchar(8) NOT NULL,
-    PaymentDate DATE NOT NULL,
-    AmountPaid float NOT NULL,
-    CONSTRAINT FK_paymentinfobillID 
-    FOREIGN KEY (BillID)
-    REFERENCES ConBillsDetails(BillID)
-    ON DELETE CASCADE
+createPaymentInfo = """ CREATE TABLE Payment_Info (
+    Transaction_ID varchar(12) PRIMARY KEY,
+    Bill_ID varchar(12) NOT NULL,
+    Mode_Of_Payment varchar(8) NOT NULL,
+    Payment_Date DATE NOT NULL,
+    Amount_Paid float NOT NULL
 );
 """
-# testTable =  """ CREATE TABLE user (
-#     id integer PRIMARY KEY,
-#     password varchar(12) NOT NULL
-# );
-# """
-#testInsert = """ INSERT INTO user VALUES (1,"rajesh");
-#"""
-# cursor.execute(createGenCharges)
-# cursor.execute(createFPPCACharges)
-#cursor.execute(createFixedCharges)
-#cursor.execute(createElectricityRates)
-#cursor.execute(createConsumerTable)
+# cursor.execute(createConsumerTable)
+# cursor.execute(createConType)
+# cursor.execute(createConnectionTable)
+#cursor.execute(createMeterReading)
+#cursor.execute(createSlabTypes)
+# cursor.execute(createSlabCharges)
+# cursor.execute(createNoSlabCharges)
+#cursor.execute(createBillsData)
+
 #cursor.execute(createDistributorTable)
-#cursor.execute(createSubsidy)
-#cursor.execute(createCWMRMonthDate)
-#cursor.execute(createCWMRMonthReading)
+
 #cursor.execute(createConBillsDetails)
-#cursor.execute(createBillCorrecDetails)
-#cursor.execute(createBillingCalInfo)
-#cursor.execute(createDiscoms)
-#cursor.execute(createPaymentInfo)
+# cursor.execute(createBillCorrecDetails)
+# cursor.execute(createBillingCalInfo)
+# cursor.execute(createDiscoms)
+# cursor.execute(createPaymentInfo)
+
 conn.close()
