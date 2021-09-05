@@ -139,7 +139,7 @@ createMeterReading = """ CREATE TABLE Meter_Reading (
     REFERENCES Connection(Co_ID)
 );
 """
-#fkcontype to be added
+
 createNoSlabCharges = """ CREATE TABLE No_Slab_Charges (
     NSC_ID integer(10) PRIMARY KEY,
     Con_Type_ID integer(3) NOT NULL,
@@ -154,7 +154,7 @@ createNoSlabCharges = """ CREATE TABLE No_Slab_Charges (
 );
 """
 
-#fk ontypeid to be added
+
 createSlabCharges = """ CREATE TABLE Slab_Charges (
     SC_ID integer(10) PRIMARY KEY,
     Con_Type_ID integer(3) NOT NULL,
