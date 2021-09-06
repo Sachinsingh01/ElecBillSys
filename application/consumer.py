@@ -1,4 +1,5 @@
 
+from re import S
 import pymysql 
 from datetime import date
 
@@ -14,17 +15,19 @@ class Consumer():
             self.fname = request.form['inputConFName']
             self.lname = request.form['inputConLName']
             self.address = request.form['inputConAddress']
+            print(request.form['inputConAddress'])
+            print(self.address)
             self.taluka = request.form['inputConTaluka']
             self.district = request.form['inputConDistrict']
             self.pinCode = request.form['inputConPin']
             self.contact = request.form['inputConContact']
             self.email = request.form['inputConEmail']
-            self.cno = self.createConsumerNo()
+            
         except:
             print("Unable to initialize consumer")
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
-
+        self.cno = self.createConsumerNo()
 
             
     def insertConsumer(self):
@@ -32,24 +35,27 @@ class Consumer():
         print(today)
         print(self.cno)
         print(self.contact)
+        cid = int(self.cno[3:])
+        print(cid)
         # INSERT INTO consumer(Con_No,Con_First_Name,Con_Last_Name,Con_Address,Con_Taluka,Con_District,Con_Pin_Code,Con_Contact,Created,Updated) VALUES("PO1000000001","Sachin","Tendulkar", "HS NO 10 TOP COLA", "PONDA", "SOUTH GOA", "403401", "9876543210", "2021-09-05", "2021-09-05")
         try:
-            self.cursor.execute("INSERT INTO consumer(Con_No,Con_First_Name,Con_Last_Name,Con_Address,Con_Taluka,Con_District,Con_Pin_Code,Con_Contact,Con_Email,Created,Updated) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.cno,self.fname,self.lname,self.address,self.taluka,self.district,self.contact,self.email,today,today))
+            print("Executing Insert Query")
+            self.cursor.execute("INSERT INTO consumer(Con_No,Con_First_Name,Con_Last_Name,Con_Address,Con_Taluka,Con_District,Con_Pin_Code,Con_Contact,Created,Updated,Con_Email) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.cno,self.fname,self.lname,self.address,self.taluka,self.district,self.pinCode,self.contact,today,today,self.email))
             self.conn.commit()
             return True
-        except:
-            print("Exception")
+        except Exception as e:
+            print(e)
             return False
     
 
     def deleteConsumer(self, cid):
         try:
             print("deleting inside cons")
-            self.cursor.execute('DELETE FROM consumer WHERE ConID = %s', (cid))
+            self.cursor.execute('DELETE FROM consumer WHERE Con_No = %s', (cid))
             self.conn.commit()
             return True
-        except:
-            print("Exception")
+        except Exception as e:
+            print(e)
             return False 
 
 
@@ -59,15 +65,18 @@ class Consumer():
             self.cursor.execute('SELECT * FROM consumer WHERE Con_No = %s', (cid))
             acc = self.cursor.fetchone()
             self.cid = cid
-            self.fname = acc['ConFirstName']
-            self.lname = acc['ConLastName']
-            self.address = acc['ConAddress']
-            self.taluka = acc['ConTaluka']
-            self.district = acc['ConDistrict']
-            self.pinCode = acc['ConPinCode']
-            self.contact = acc['ConContact'] 
+            self.fname = acc['Con_First_Name']
+            self.lname = acc['Con_Last_Name']
+            self.address = acc['Con_Address']
+            print(acc['Con_Address'])
+            self.taluka = acc['Con_Taluka']
+            self.district = acc['Con_District']
+            self.pinCode = acc['Con_Pin_Code']
+            self.contact = acc['Con_Contact'] 
+            self.email = acc["Con_Email"]
             return True
-        except:
+        except Exception as e:
+            print(e)
             print("Unable to get consumer")
             return False
 
@@ -81,16 +90,16 @@ class Consumer():
             self.taluka = request.form['inputConTaluka']
             self.district = request.form['inputConDistrict']
             self.pinCode = request.form['inputConPin']
-            self.meterId = request.form['inputMeterId']
-            self.conType = request.form['inputConType']
-            self.sanctionedLoad = request.form['inputSancLoad']
             self.contact = request.form['inputConContact']
+            self.email = request.form['inputConEmail']
+            today = str(date.today())
             print(cid)
             print("Done")
-            self.cursor.execute("UPDATE consumer SET ConFirstName = %s, ConLastName = %s, ConAddress = %s, ConTaluka = %s, ConDistrict = %s, ConPinCode = %s,MeterID = %s,ConType = %s,ConSanctionedLoad = %s,ConContact = %s WHERE ConID = %s",(self.fname,self.lname,self.address,self.taluka,self.district,self.pinCode,self.meterId,self.conType,int(self.sanctionedLoad),self.contact,cid))
+            self.cursor.execute("UPDATE consumer SET Con_First_Name = %s, Con_Last_Name = %s, Con_Address = %s, Con_Taluka = %s, Con_District = %s, Con_Pin_Code = %s,Con_Contact = %s, Con_Email= %s, Updated = %s WHERE Con_No = %s",(self.fname,self.lname,self.address,self.taluka,self.district,self.pinCode,self.contact,self.email,today,cid))
             self.conn.commit()
             return True
-        except:
+        except Exception as e:
+            print(e)
             print("Exception")
             return False
     
@@ -102,7 +111,7 @@ class Consumer():
             acc = self.cursor.fetchone()
             print(acc)
             id = acc['Con_ID']
-            cno = f'{self.taluka[:3]}{id}'
+            cno = f'{self.taluka[:2].upper()}{id+1}'
             print(cno)
             return cno
         except:

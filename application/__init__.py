@@ -1,7 +1,8 @@
 from flask import Flask, request, session, redirect, url_for, render_template
 from flask.helpers import flash
 from flaskext.mysql import MySQL
-import pymysql 
+import pymysql
+from pymysql import cursors 
 from werkzeug.utils import secure_filename
 import os
 from .consumer import Consumer
@@ -107,6 +108,9 @@ def adminCust():
             # Begin Add
             if task == "add":
                 conn = mysql.connect()
+                # cursor = conn.cursor(pymysql.cursors.DictCursor)
+                # cursor.execute("SELECT MAX(Con_ID) as Con_ID FROM consumer")
+                # print(cursor.fetchone()["Con_ID"])
                 consumer = Consumer(conn,request)
                 msg = None
                 try:
@@ -128,12 +132,10 @@ def adminCust():
                 conn = mysql.connect()
                 consumer = Consumer(conn, request)
                 msg = None
-
                 # Messages for testing
                 print("in Update")
                 print(cid)
                 print(request.form['state'])
-
                 if request.form['state'] == "1":
                     try:
                         try:
@@ -155,7 +157,7 @@ def adminCust():
                     if not findCon:
                         msg = "Unable to find the consumer"
 
-                js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
+                js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                 print(js)
                 print(msg)
                 return render_template("customerDataInput.html", val = task, js = js)
@@ -191,7 +193,7 @@ def adminCust():
                         conn.close()
                 else:
                     val2 = consumer.getConsumer(cid)
-                    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
+                    js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                     if not val2:
                         msg = "Unable to find the consumer"
                 
