@@ -104,35 +104,20 @@ def adminCust():
             session["task"] = request.form['task']
             task = session["task"]
             print(session["task"])
-
             # Begin Add
             if task == "add":
                 conn = mysql.connect()
-
                 consumer = Consumer(conn,request)
                 msg = None
-                if not consumer.validateCId():
-                    msg = "Invalid User ID"
-                elif not consumer.validateMeterID():
-                    msg = "Invalid Meter ID"
-                elif not consumer.validateDistrict():
-                    msg = "Invalid District"
-                elif not consumer.validateTaluka():
-                    msg = "Invalid Taluka"
-                elif not consumer.validateContact():
-                    msg = "Please Check Contact Details"
-                
-                if msg == None:
-                    try:
-                        val = consumer.insertConsumer()
-                        if val:
-                            conn.commit()
-                            msg = "Consumer Succefully Added"
-                        else:
-                            msg = "Unable to Add Consumer"
-                    finally:
-                        conn.close()
-
+                try:
+                    val = consumer.insertConsumer()
+                    if val:
+                        conn.commit()
+                        msg = "Consumer Succefully Added"
+                    else:
+                        msg = "Unable to Add Consumer"
+                finally:
+                    conn.close()
                 print(msg)
                 return render_template("customerDataInput.html", msg = msg, val = task, js = js)
             # End Add

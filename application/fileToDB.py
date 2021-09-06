@@ -20,7 +20,7 @@ class MeterReading():
                     print(s)
                     #check if row[2] contains date else change it
                     date = datetime.strptime(row[2], '%m/%d/%Y').strftime('%Y-%m-%d')
-                    #change the query according to table
+                    #change the query according to table and staging table? how to use
                     cursor.execute("INSERT INTO cwmr_month VALUES(%s,%s,%s,%s)",(row[0],row[1],date,row[3]))
                 except:
                     return False
