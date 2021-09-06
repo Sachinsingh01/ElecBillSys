@@ -35,7 +35,7 @@ createConnectionTable = """ CREATE TABLE Connection (
 #createConsumerTable stores the query to create a new consumer table
 createConsumerTable = """ CREATE TABLE Consumer (
     Con_ID integer(18) PRIMARY KEY AUTO_INCREMENT,
-    Consumer_No varchar(12) NOT NULL,
+    Con_No varchar(12) NOT NULL UNIQUE,
     Con_First_Name varchar(30) NOT NULL,
     Con_Last_Name varchar(30) NOT NULL,
     Con_Address varchar(30) NOT NULL,

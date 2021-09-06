@@ -1,4 +1,5 @@
 from flask import Flask, request, session, redirect, url_for, render_template
+from flask.helpers import flash
 from flaskext.mysql import MySQL
 import pymysql 
 from werkzeug.utils import secure_filename
@@ -103,35 +104,20 @@ def adminCust():
             session["task"] = request.form['task']
             task = session["task"]
             print(session["task"])
-
             # Begin Add
             if task == "add":
                 conn = mysql.connect()
-
                 consumer = Consumer(conn,request)
                 msg = None
-                if not consumer.validateCId():
-                    msg = "Invalid User ID"
-                elif not consumer.validateMeterID():
-                    msg = "Invalid Meter ID"
-                elif not consumer.validateDistrict():
-                    msg = "Invalid District"
-                elif not consumer.validateTaluka():
-                    msg = "Invalid Taluka"
-                elif not consumer.validateContact():
-                    msg = "Please Check Contact Details"
-                
-                if msg == None:
-                    try:
-                        val = consumer.insertConsumer()
-                        if val:
-                            conn.commit()
-                            msg = "Consumer Succefully Added"
-                        else:
-                            msg = "Unable to Add Consumer"
-                    finally:
-                        conn.close()
-
+                try:
+                    val = consumer.insertConsumer()
+                    if val:
+                        conn.commit()
+                        msg = "Consumer Succefully Added"
+                    else:
+                        msg = "Unable to Add Consumer"
+                finally:
+                    conn.close()
                 print(msg)
                 return render_template("customerDataInput.html", msg = msg, val = task, js = js)
             # End Add
@@ -266,6 +252,11 @@ def billDetail():
     consumer.getConsumer(cid)
     js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
     return render_template("billDetail.html" ,js=js) 
+
+@app.route("/adminConn", methods=["POST", "GET"])
+def adminConn():
+    js = {"cno": "", "connType":"", "meterNo":"", "caddress":"", "cdistrict":"", "ctaluka":"", "cpinCode":"", "installationDate":"", "connStatus":""}
+    return render_template("connectionDataInput.html", js=js, val="add")
 
 @app.route("/test")
 def test():
