@@ -1,4 +1,5 @@
 from flask import Flask, request, session, redirect, url_for, render_template
+from flask.helpers import flash
 from flaskext.mysql import MySQL
 import pymysql 
 from werkzeug.utils import secure_filename
@@ -133,7 +134,8 @@ def adminCust():
                         conn.close()
 
                 print(msg)
-                return render_template("customerDataInput.html", msg = msg, val = task, js = js)
+                return {"Message":msg}
+                # return render_template("customerDataInput.html", msg = msg, val = task, js = js)
             # End Add
 
             # Begin Update
