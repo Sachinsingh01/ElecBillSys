@@ -8,6 +8,7 @@ import os
 from .consumer import Consumer
 from .fileToDB import MeterReading
 import re 
+from .connection import Connection
 
 
 
@@ -65,6 +66,7 @@ def login():
             session['role'] = role
             if role == "1":
                 session["task"] = "add"
+                session["taskC"] = "add"
                 return redirect(url_for('adminCust'))
             elif account and role == "2":
                 return redirect(url_for('billDetail'))
@@ -257,7 +259,73 @@ def billDetail():
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
-    js = {"cno": "", "connType":"", "meterNo":"", "caddress":"", "cdistrict":"", "ctaluka":"", "cpinCode":"", "installationDate":"", "connStatus":""}
+    if 'loggedin' in session and session['role'] == "1":
+        taskC = session["taskC"]
+
+        js = {"cid": "", "cno":"", "connType":"", "meterNo":"","caddress":"", "cdistrict":"", "ctaluka":"", "connStatus":"", "cpinCode":"", "installationDate":""}
+    
+
+        if request.method == "POST" and 'taskC' in request.form:
+                session["taskC"] = request.form['taskC']
+                taskC = session["taskC"]
+                print(session["taskC"])
+                # Begin Add
+                if taskC == "add":
+                    conn = mysql.connect()
+
+                    connection = Connection(conn, request)
+                    msg = None
+                    try:
+                        val = connection.insertConnection()
+                        if val:
+                            conn.commit()
+                            msg = "Connection Succefully Added"
+                        else:
+                            msg = "Unable to Add Connection"
+                    finally:
+                        conn.close()
+                    print(msg)
+                    return render_template("connectionDataInput.html", msg = msg, val = taskC, js = js)
+                # End Add
+
+                # Begin Delete
+                elif taskC == "del":
+                    
+                    conid = request.form['inputConnFilID']
+                    print(conid)
+                    conn = mysql.connect()
+                    connection = Connection(conn, request)
+                    connection.getConnection(conid)
+                    msg = None
+                    print("in Delete")
+                    print(request.form['stateC'])
+                    if request.form['stateC'] == "1":
+                        try:
+                            try:
+                                print("actually deleting")
+                                print(request.form['realID'])
+                                conid = request.form['realID']
+                                
+                                val = connection.deleteConnection(conid)
+                                
+                                if val:
+                                    msg = "connection deleted Sucessfully"
+                                else:
+                                    msg = "Unable to delete connection 1"
+                            except:
+                                msg = "Unable to delete connection 2"
+                        finally:
+                            conn.close()
+                    else:
+                        val2 = connection.getConnection(conid)
+                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":connection.conType, "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
+                        if not val2:
+                            msg = "Unable to find the connection" 
+                    print(js)
+                    print(msg)
+                    return render_template("connectionDataInput.html", val = taskC, js = js) 
+                #Delete end
+
     return render_template("connectionDataInput.html", js=js, val="add")
 
 @app.route("/test")
