@@ -1,71 +1,73 @@
-<div class="row" id="addEl">
+<div class="row" id="addElC">
     <input type="text" class="d-none" id="realID" name="realID" value = {{js.cid}}> 
-    {% if val == "del" %} <fieldset class="row" id="fieldSet" disabled> {% endif %}
+    {% if val == "del" %} <fieldset class="row" id="fieldSetC" disabled> {% endif %}
 <div class="mb-3 col-4">
-    <label for="inputConFName" class="form-label">Consumer First Name</label>
-    <input type="text" class="form-control" id="inputConFName" name="inputConFName" {% if val != "add" %} value = {{js.fname}} {% endif %}>
+    <label for="inputConNo" class="form-label">Consumer Number</label>
+    <input type="text" class="form-control" id="inputConNo" name="inputConNo" {% if val != "add" %} value = {{js.cno}} {% endif %}>
 </div>
 <div class="mb-3 col-4">
-    <label for="inputConLName" class="form-label">Consumer Last Name</label>
-    <input type="text" class="form-control" id="inputConLName" name="inputConLName" {% if val != "add" %} value = {{js.lname}} {% endif %}>
-</div>
-<div class="mb-3 col-4"></div>
-<div class="mb-3 col-12">
-    <label for="inputConAddress" class="form-label">Consumer Address</label>
-    <input type="text" class="form-control" id="inputConAddress" name="inputConAddress" {% if val != "add" %} value = {{js.address}} {% endif %}>
-</div>
-<div class="mb-3 col-4">
-    <label for="inputConDistrict" class="form-label">Consumer District</label>
-    <select id="inputConDistrict" class="form-select" name="inputConDistrict">
+    <label for="inputConnType" class="form-label">Consumer Type</label>
+    <select id="inputConnType" class="form-select" name="inputConnType">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
-        <option {% if val != "add" and js.district == "North Goa" %} selected {% endif %} value="North Goa">North Goa</option>
-        <option {% if val != "add" and js.district == "South Goa" %} selected {% endif %} value="South Goa">South Goa</option>
+        <option {% if val != "add" and js.connType == "dom" %} selected {% endif %} value="dom">Domestic</option>
+        <option {% if val != "add" and js.connType == "com" %} selected {% endif %} value="com">Commercial</option>
+        <option {% if val != "add" and js.connType == "ind" %} selected {% endif %} value="ind">Industrial</option>
+    </select>
+</div>
+<div class="mb-3 col-4">
+    <label for="inputMeterNo" class="form-label">Meter Number</label>
+    <input type="text" class="form-control" id="inputMeterNo" name="inputMeterNo" {% if val != "add" %} value = {{js.meterNo}} {% endif %}>
+</div>
+<div class="mb-3 col-12">
+    <label for="inputConnAddress" class="form-label">Connection Address</label>
+    <input type="text" class="form-control" id="inputConnAddress" name="inputConnAddress" {% if val != "add" %} value = {{js.caddress}} {% endif %}>
+</div>
+<div class="mb-3 col-4">
+    <label for="inputConnDistrict" class="form-label">Connection District</label>
+    <select id="inputConnDistrict" class="form-select" name="inputConnDistrict">
+        <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
+        <option {% if val != "add" and js.cdistrict == "North Goa" %} selected {% endif %} value="North Goa">North Goa</option>
+        <option {% if val != "add" and js.cdistrict == "South Goa" %} selected {% endif %} value="South Goa">South Goa</option>
     </select>
 </div>   
 <div class="mb-3 col-4">
-    <label for="inputConTaluka" class="form-label">Consumer Taluka</label>
-    <select id="inputConTaluka" class="form-select" name="inputConTaluka">
+    <label for="inputConnTaluka" class="form-label">Connection Taluka</label>
+    <select id="inputConnTaluka" class="form-select" name="inputConnTaluka">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
-        <option {% if val != "add" and js.taluka == "Bardez" %} selected {% endif %} value="Bardez">Bardez</option>
-        <option {% if val != "add" and js.taluka == "Bicholim" %} selected {% endif %} value="Bicholim">Bicholim</option>
-        <option {% if val != "add" and js.taluka == "Canacona" %} selected {% endif %} value="Canacona">Canacona</option>
-        <option {% if val != "add" and js.taluka == "Dharbandora" %} selected {% endif %} value="Dharbandora">Dharbandora</option>
-        <option {% if val != "add" and js.taluka == "Mormugao" %} selected {% endif %} value="Mormugao">Mormugao</option>
-        <option {% if val != "add" and js.taluka == "Pernem" %} selected {% endif %} value="Pernem">Pernem</option>
-        <option {% if val != "add" and js.taluka == "Ponda" %} selected {% endif %} value="Ponda">Ponda</option>
-        <option {% if val != "add" and js.taluka == "Quepem" %} selected {% endif %} value="Quepem">Quepem</option>
-        <option {% if val != "add" and js.taluka == "Salcette" %} selected {% endif %} value="Salcette">Salcette</option>
-        <option {% if val != "add" and js.taluka == "Sanguem" %} selected {% endif %} value="Sanguem">Sanguem</option>
-        <option {% if val != "add" and js.taluka == "Sattari" %} selected {% endif %} value="Sattari">Sattari</option>
-        <option {% if val != "add" and js.taluka == "Tiswadi" %} selected {% endif %} value="Tiswadi">Tiswadi</option>
+        <option {% if val != "add" and js.ctaluka == "Bardez" %} selected {% endif %} value="Bardez">Bardez</option>
+        <option {% if val != "add" and js.ctaluka == "Bicholim" %} selected {% endif %} value="Bicholim">Bicholim</option>
+        <option {% if val != "add" and js.ctaluka == "Canacona" %} selected {% endif %} value="Canacona">Canacona</option>
+        <option {% if val != "add" and js.ctaluka == "Dharbandora" %} selected {% endif %} value="Dharbandora">Dharbandora</option>
+        <option {% if val != "add" and js.ctaluka == "Mormugao" %} selected {% endif %} value="Mormugao">Mormugao</option>
+        <option {% if val != "add" and js.ctaluka == "Pernem" %} selected {% endif %} value="Pernem">Pernem</option>
+        <option {% if val != "add" and js.ctaluka == "Ponda" %} selected {% endif %} value="Ponda">Ponda</option>
+        <option {% if val != "add" and js.ctaluka == "Quepem" %} selected {% endif %} value="Quepem">Quepem</option>
+        <option {% if val != "add" and js.ctaluka == "Salcette" %} selected {% endif %} value="Salcette">Salcette</option>
+        <option {% if val != "add" and js.ctaluka == "Sanguem" %} selected {% endif %} value="Sanguem">Sanguem</option>
+        <option {% if val != "add" and js.ctaluka == "Sattari" %} selected {% endif %} value="Sattari">Sattari</option>
+        <option {% if val != "add" and js.ctaluka == "Tiswadi" %} selected {% endif %} value="Tiswadi">Tiswadi</option>
     </select>
 </div>       
 <div class="mb-3 col-4">
-    <label for="inputConPin" class="form-label">Consumer Pin Code</label>
-    <input type="text" class="form-control" id="inputConPin" name="inputConPin" {% if val != "add" %} value = {{js.pinCode}} {% endif %}>
-</div>                       
-<!-- <div class="mb-3 col-4">
-    <label for="inputConType" class="form-label">Consumer Type</label>
-    <select id="inputConType" class="form-select" name="inputConType">
-        <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
-        <option {% if val != "add" and js.conType == "dom" %} selected {% endif %} value="dom">Domestic</option>
-        <option {% if val != "add" and js.conType == "com" %} selected {% endif %} value="com">Commercial</option>
-        <option {% if val != "add" and js.conType == "ind" %} selected {% endif %} value="ind">Industrial</option>
+    <label for="inputConnPin" class="form-label">Connection Pin Code</label>
+    <input type="text" class="form-control" id="inputConnPin" name="inputConnPin" {% if val != "add" %} value = {{js.cpinCode}} {% endif %}>
+</div>   
+<div class="mb-3 col-4">
+    <label for="inputInstallationDate" class="form-label">Installation Date</label>
+    <input type="text" class="form-control" id="inputInstallationDate" name="inputInstallationDate" {% if val != "add" %} value = {{js.installationDate}} {% endif %}>
+</div>  
+<div class="mb-3 col-4">
+    <label for="inputConnStatus" class="form-label">Connection Status</label>
+    <select id="inputConnStatus" class="form-select" name="inputConnStatus">
+        <option {% if val == "add" %} selected {% endif %} value="Active">Active</option>
+        <option {% if val != "add" and js.connStatus == "Inactive" %} selected {% endif %} value="Inactive">Inactive</option>
     </select>
-</div>   -->
-<div class="mb-3 col-4">
-    <label for="inputConContact" class="form-label">Consumer Contact</label>
-    <input type="text" class="form-control" id="inputConContact" name="inputConContact" {% if val != "add" %} value = {{js.contact}} {% endif %}>
-</div>  
-<div class="mb-3 col-4">
-    <label for="inputConEmail" class="form-label">Consumer Email</label>
-    <input type="text" class="form-control" id="inputConEmail" name="inputConEmail" {% if val != "add" %} value = {{js.email}} {% endif %}>
-</div>  
+</div>   
 <div class="mb-3 col-4"></div>
 {% if val == "del" %} </fieldset> {% endif %}
 <div class="mb-3 col-4"></div>
 <div class="d-grid gap-2 col-4 d-block">
-    <button type="submit" class="btn btn-primary" id="addBtn">Submit</button>
+    <button type="submit" class="btn btn-primary" id="addBtnC">Submit</button>
 </div> 
 <div class="mb-3 col-4"></div>
 </div>

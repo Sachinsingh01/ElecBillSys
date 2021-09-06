@@ -134,8 +134,7 @@ def adminCust():
                         conn.close()
 
                 print(msg)
-                return {"Message":msg}
-                # return render_template("customerDataInput.html", msg = msg, val = task, js = js)
+                return render_template("customerDataInput.html", msg = msg, val = task, js = js)
             # End Add
 
             # Begin Update
@@ -268,6 +267,11 @@ def billDetail():
     consumer.getConsumer(cid)
     js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
     return render_template("billDetail.html" ,js=js) 
+
+@app.route("/adminConn", methods=["POST", "GET"])
+def adminConn():
+    js = {"cno": "", "connType":"", "meterNo":"", "caddress":"", "cdistrict":"", "ctaluka":"", "cpinCode":"", "installationDate":"", "connStatus":""}
+    return render_template("connectionDataInput.html", js=js)
 
 @app.route("/test")
 def test():
