@@ -134,8 +134,8 @@ def adminCust():
                         conn.close()
 
                 print(msg)
-                flash(msg)
-                return render_template("customerDataInput.html", msg = msg, val = task, js = js)
+                return {"Message":msg}
+                # return render_template("customerDataInput.html", msg = msg, val = task, js = js)
             # End Add
 
             # Begin Update
