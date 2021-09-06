@@ -1,7 +1,8 @@
-from flask import Flask, request, session, redirect, url_for, render_template
+from flask import Flask, request, session, redirect, url_for, render_template, Response
 from flask.helpers import flash
 from flaskext.mysql import MySQL
-import pymysql 
+import pymysql
+from pymysql import cursors 
 from werkzeug.utils import secure_filename
 import os
 from .consumer import Consumer
@@ -22,7 +23,7 @@ app.config['MYSQL_DATABASE_DB'] = 'test'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
-app.config["CSV_UPLOADS"] = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file"
+app.config["CSV_UPLOADS"] = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
 # app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["CSV"]
 
 def allowed_file(filename):
@@ -107,6 +108,9 @@ def adminCust():
             # Begin Add
             if task == "add":
                 conn = mysql.connect()
+                # cursor = conn.cursor(pymysql.cursors.DictCursor)
+                # cursor.execute("SELECT MAX(Con_ID) as Con_ID FROM consumer")
+                # print(cursor.fetchone()["Con_ID"])
                 consumer = Consumer(conn,request)
                 msg = None
                 try:
@@ -128,12 +132,10 @@ def adminCust():
                 conn = mysql.connect()
                 consumer = Consumer(conn, request)
                 msg = None
-
                 # Messages for testing
                 print("in Update")
                 print(cid)
                 print(request.form['state'])
-
                 if request.form['state'] == "1":
                     try:
                         try:
@@ -155,7 +157,7 @@ def adminCust():
                     if not findCon:
                         msg = "Unable to find the consumer"
 
-                js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
+                js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                 print(js)
                 print(msg)
                 return render_template("customerDataInput.html", val = task, js = js)
@@ -191,7 +193,7 @@ def adminCust():
                         conn.close()
                 else:
                     val2 = consumer.getConsumer(cid)
-                    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
+                    js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                     if not val2:
                         msg = "Unable to find the consumer"
                 
@@ -257,6 +259,40 @@ def billDetail():
 def adminConn():
     js = {"cno": "", "connType":"", "meterNo":"", "caddress":"", "cdistrict":"", "ctaluka":"", "cpinCode":"", "installationDate":"", "connStatus":""}
     return render_template("connectionDataInput.html", js=js, val="add")
+
+@app.route("/meterReading", methods=["GET", "POST"])
+def meterReading():
+    if request.method=="POST":
+        if 'formStateGet' in request.form:
+            csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
+            return Response(csv,
+                            mimetype="text/csv",
+                            headers={"Content-disposition":
+                                    "attachment; filename=consumerList.csv"})
+        elif 'formStatePost' in request.form:
+            if request.files:
+                file = request.files["uploadCsv"]
+
+                if file.filename == "":
+                    print("No filename")
+                    return redirect(request.url)
+
+                if allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+
+                    file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
+                    conn = mysql.connect()
+                    meterReading = MeterReading(conn)
+                    val = meterReading.readFile()
+                    if val:
+                        print("file saved")
+                        return redirect(request.url)
+
+                else:
+                    print("That file extension is not allowed")
+                    return redirect(request.url)
+
+    return render_template("meterReading.html")
 
 @app.route("/test")
 def test():
