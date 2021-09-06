@@ -11,16 +11,16 @@ class Consumer():
 
     def __init__(self,conn,request):
         try:
-            self.cid = request.form['inputConID']
+            # self.cid = request.form['inputConID']
             self.fname = request.form['inputConFName']
             self.lname = request.form['inputConLName']
             self.address = request.form['inputConAddress']
             self.taluka = request.form['inputConTaluka']
             self.district = request.form['inputConDistrict']
             self.pinCode = request.form['inputConPin']
-            self.meterId = request.form['inputMeterId']
-            self.conType = request.form['inputConType']
-            self.sanctionedLoad = request.form['inputSancLoad']
+            # self.meterId = request.form['inputMeterId'] #NR
+            # self.conType = request.form['inputConType'] #NR
+            # self.sanctionedLoad = request.form['inputSancLoad'] #NR
             self.contact = request.form['inputConContact']
         except:
             print("Unable to initialize consumer")
@@ -70,6 +70,7 @@ class Consumer():
 
             
     def insertConsumer(self):
+        # INSERT INTO consumer(Con_No,Con_First_Name,Con_Last_Name,Con_Address,Con_Taluka,Con_District,Con_Pin_Code,Con_Contact,Created,Updated) VALUES("PO1000000001","Sachin","Tendulkar", "HS NO 10 TOP COLA", "PONDA", "SOUTH GOA", "403401", "9876543210", "2021-09-05", "2021-09-05")
         try:
             self.cursor.execute("INSERT INTO Consumer VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.cid,self.fname,self.lname,self.address,self.taluka,self.district,self.pinCode,self.meterId,self.conType,int(self.sanctionedLoad),self.contact))
             return True
@@ -91,7 +92,8 @@ class Consumer():
 
     def getConsumer(self, cid):
         try:
-            self.cursor.execute('SELECT * FROM consumer WHERE ConID = %s', (cid))
+            #check is consumer number or consumer ID is to be used
+            self.cursor.execute('SELECT * FROM consumer WHERE Con_No = %s', (cid))
             acc = self.cursor.fetchone()
             self.cid = cid
             self.fname = acc['ConFirstName']
@@ -100,9 +102,9 @@ class Consumer():
             self.taluka = acc['ConTaluka']
             self.district = acc['ConDistrict']
             self.pinCode = acc['ConPinCode']
-            self.meterId = acc['MeterID']
-            self.conType = acc['ConType']
-            self.sanctionedLoad = acc['ConSanctionedLoad']
+            # self.meterId = acc['MeterID']
+            # self.conType = acc['ConType']
+            # self.sanctionedLoad = acc['ConSanctionedLoad']
             self.contact = acc['ConContact'] 
             return True
         except:
@@ -132,3 +134,15 @@ class Consumer():
         except:
             print("Exception")
             return False
+    
+    #create a consumer No for consumer 
+    def createConsumerNo(self):
+        pass
+
+    #create a password using provided calculations
+    def createDefaultPassword(self):
+        pass
+
+    #take the created consumerID and password and store the hash of password in Login Table
+    def insertLoginCredentials(self):
+        pass
