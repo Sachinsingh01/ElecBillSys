@@ -116,11 +116,10 @@ createBillingCalInfo = """ CREATE TABLE Billing_Calendar_Info (
 );
 """
 
-createConType = """ CREATE TABLE Con_Type (
+createConType = """ CREATE TABLE Connection_Type (
     Con_Type_ID integer(3) PRIMARY KEY,
     Con_Type varchar(10) NOT NULL,
     San_Load varchar(18) NOT NULL,
-    Susbsidy_Percent float,
     Created Date NOT NULL,
     Updated Date NOT NULL
 );
@@ -150,7 +149,7 @@ createNoSlabCharges = """ CREATE TABLE No_Slab_Charges (
     Updated Date NOT NULL,
     CONSTRAINT FK_noslabchargecontypeid
     FOREIGN KEY (Con_Type_ID)
-    REFERENCES Con_Type(Con_Type_ID)
+    REFERENCES Connection_Type(Con_Type_ID)
 );
 """
 
@@ -158,27 +157,16 @@ createNoSlabCharges = """ CREATE TABLE No_Slab_Charges (
 createSlabCharges = """ CREATE TABLE Slab_Charges (
     SC_ID integer(10) PRIMARY KEY,
     Con_Type_ID integer(3) NOT NULL,
-    From_Date DATE NOT NULL,
     S_Charge_Type varchar(10) NOT NULL,
-    Slab_ID integer(3) NOT NULL,
+    Units_From integer(11) NOT NULL,
+    Units_To integer(11) NOT NULL,
+    S_Charges varchar(11) NOT NULL,
+    From_Date DATE NOT NULL,
     Created Date NOT NULL,
     Updated Date NOT NULL,
     CONSTRAINT FK_slabchargecontypeid
     FOREIGN KEY (Con_Type_ID)
-    REFERENCES Con_Type(Con_Type_ID),
-    CONSTRAINT FK_slabchargesslabid
-    FOREIGN KEY (Slab_ID)
-    REFERENCES Slab_Types(Slab_ID)
-);
-"""
-
-createSlabTypes = """ CREATE TABLE Slab_Types (
-    Slab_ID integer(3) PRIMARY KEY,
-    Units_From integer(11) NOT NULL,
-    Units_To integer(11) NOT NULL,
-    S_Charges varchar(11) NOT NULL,
-    Created DATE NOT NULL,
-    Updated DATE NOT NULL
+    REFERENCES Connection_Type(Con_Type_ID)
 );
 """
 
@@ -221,12 +209,12 @@ createPaymentInfo = """ CREATE TABLE Payment_Info (
 );
 """
 # cursor.execute(createConsumerTable)
-# cursor.execute(createConType)
+#cursor.execute(createConType)
 # cursor.execute(createConnectionTable)
 #cursor.execute(createMeterReading)
-#cursor.execute(createSlabTypes)
-# cursor.execute(createSlabCharges)
-# cursor.execute(createNoSlabCharges)
+
+#cursor.execute(createSlabCharges)
+#cursor.execute(createNoSlabCharges)
 #cursor.execute(createBillsData)
 
 #cursor.execute(createDistributorTable)
@@ -236,5 +224,44 @@ createPaymentInfo = """ CREATE TABLE Payment_Info (
 # cursor.execute(createBillingCalInfo)
 # cursor.execute(createDiscoms)
 # cursor.execute(createPaymentInfo)
+
+#sample data inserted into the tables
+#connection_type
+# cursor.execute(""" INSERT INTO connection_type VALUES(1,'Domestic','5.5','2021-09-06','2021-09-06'),
+# 								  (2,'Agricultural','7.2','2021-09-06','2021-09-06'),
+#                                   (3,'Commercial','20.3','2021-09-06','2021-09-06');) """)
+
+# #no_slab_charges
+# cursor.execute("""INSERT INTO no_slab_charges VALUES(101,1,'Fixed','60','2021-09-01','2021-09-06','2021-09-06'),
+# 								  (102,2,'Fixed','30','2021-09-01','2021-09-06','2021-09-06'),
+#                                   (103,3,'Fixed','100','2021-09-01','2021-09-06','2021-09-06'),
+#                                   (104,1,'Subsidy','20','2021-09-01','2021-09-06','2021-09-06'),
+# 								  (105,2,'Subsidy','50','2021-09-01','2021-09-06','2021-09-06'),
+#                                   (106,3,'Subsidy','0','2021-09-01','2021-09-06','2021-09-06');""")
+
+#
+
+##slab charges
+
+# cursor.execute("""INSERT INTO slab_charges VALUES(201,1,'EC',0,100,'1.40','2021-09-01','2021-09-06','2021-09-06'),
+#  							   (202,1,'EC',101,200,'2.10','2021-09-01','2021-09-06','2021-09-06'),
+#                                (203,1,'EC',201,300,'2.65','2021-09-01','2021-09-06','2021-09-06'),
+#                                (204,1,'EC',301,400,'3.45','2021-09-01','2021-09-06','2021-09-06'),
+#  						       (205,1,'EC',400,200000,'4.00','2021-09-01','2021-09-06','2021-09-06'),
+#                                (206,1,'FPPCA',0,100,'0.1632','2021-09-01','2021-09-06','2021-09-06'),
+#  							   (207,1,'FPPCA',101,200,'0.2398','2021-09-01','2021-09-06','2021-09-06'),
+#                                (208,1,'FPPCA',201,300,'0.3233','2021-09-01','2021-09-06','2021-09-06'),
+#                                (209,1,'FPPCA',301,400,'0.1640','2021-09-01','2021-09-06','2021-09-06'),
+#  						       (210,1,'FPPCA',400,200000,'0.2410','2021-09-01','2021-09-06','2021-09-06'),
+#                                (211,3,'EC',0,100,'3.40','2021-09-01','2021-09-06','2021-09-06'),
+#  							   (212,3,'EC',101,200,'4.10','2021-09-01','2021-09-06','2021-09-06'),
+#                                (213,3,'EC',201,300,'4.60','2021-09-01','2021-09-06','2021-09-06'),
+#                                (214,3,'EC',301,400,'4.60','2021-09-01','2021-09-06','2021-09-06'),
+#  						       (215,3,'EC',400,200000,'5.00','2021-09-01','2021-09-06','2021-09-06'),
+#                                (216,3,'FPPCA',0,100,'0.1632','2021-09-01','2021-09-06','2021-09-06'),
+#  							   (217,3,'FPPCA',101,200,'0.2398','2021-09-01','2021-09-06','2021-09-06'),
+#                                (218,3,'FPPCA',201,300,'0.3233','2021-09-01','2021-09-06','2021-09-06'),
+#                                (219,3,'FPPCA',301,400,'0.1640','2021-09-01','2021-09-06','2021-09-06'),
+#  						       (220,3,'FPPCA',400,200000,'0.2410','2021-09-01','2021-09-06','2021-09-06');""")
 
 conn.close()
