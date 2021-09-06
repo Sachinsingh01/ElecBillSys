@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 import os
 from .consumer import Consumer
 from .fileToDB import MeterReading
+from .Billing import Bill
 import re 
 
 
@@ -108,9 +109,6 @@ def adminCust():
             # Begin Add
             if task == "add":
                 conn = mysql.connect()
-                # cursor = conn.cursor(pymysql.cursors.DictCursor)
-                # cursor.execute("SELECT MAX(Con_ID) as Con_ID FROM consumer")
-                # print(cursor.fetchone()["Con_ID"])
                 consumer = Consumer(conn,request)
                 msg = None
                 try:
@@ -250,8 +248,9 @@ def billTimeline():
 def billDetail():
     cid = session["id"]
     conn = mysql.connect()
-    consumer = Consumer(conn, request)
-    consumer.getConsumer(cid)
+    bill = Bill(conn, request,cid)
+    print(bill.getAmount())
+    # amount = pass
     js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
     return render_template("billDetail.html" ,js=js) 
 

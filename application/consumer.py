@@ -22,7 +22,6 @@ class Consumer():
             self.pinCode = request.form['inputConPin']
             self.contact = request.form['inputConContact']
             self.email = request.form['inputConEmail']
-            
         except:
             print("Unable to initialize consumer")
         self.conn = conn
