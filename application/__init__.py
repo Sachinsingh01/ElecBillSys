@@ -1,4 +1,4 @@
-from flask import Flask, request, session, redirect, url_for, render_template
+from flask import Flask, request, session, redirect, url_for, render_template, Response
 from flask.helpers import flash
 from flaskext.mysql import MySQL
 import pymysql
@@ -9,6 +9,7 @@ from .consumer import Consumer
 from .fileToDB import MeterReading
 from .Billing import Bill
 import re 
+from .connection import Connection
 
 
 
@@ -24,7 +25,7 @@ app.config['MYSQL_DATABASE_DB'] = 'test'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
-app.config["CSV_UPLOADS"] = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file"
+app.config["CSV_UPLOADS"] = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
 # app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["CSV"]
 
 def allowed_file(filename):
@@ -66,6 +67,7 @@ def login():
             session['role'] = role
             if role == "1":
                 session["task"] = "add"
+                session["taskC"] = "add"
                 return redirect(url_for('adminCust'))
             elif account and role == "2":
                 return redirect(url_for('billDetail'))
@@ -256,8 +258,108 @@ def billDetail():
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
-    js = {"cno": "", "connType":"", "meterNo":"", "caddress":"", "cdistrict":"", "ctaluka":"", "cpinCode":"", "installationDate":"", "connStatus":""}
+    if 'loggedin' in session and session['role'] == "1":
+        taskC = session["taskC"]
+
+        js = {"cid": "", "cno":"", "connType":"", "meterNo":"","caddress":"", "cdistrict":"", "ctaluka":"", "connStatus":"", "cpinCode":"", "installationDate":""}
+    
+
+        if request.method == "POST" and 'taskC' in request.form:
+                session["taskC"] = request.form['taskC']
+                taskC = session["taskC"]
+                print(session["taskC"])
+                # Begin Add
+                if taskC == "add":
+                    conn = mysql.connect()
+
+                    connection = Connection(conn, request)
+                    msg = None
+                    try:
+                        val = connection.insertConnection()
+                        if val:
+                            conn.commit()
+                            msg = "Connection Succefully Added"
+                        else:
+                            msg = "Unable to Add Connection"
+                    finally:
+                        conn.close()
+                    print(msg)
+                    return render_template("connectionDataInput.html", msg = msg, val = taskC, js = js)
+                # End Add
+
+                # Begin Delete
+                elif taskC == "del":
+                    
+                    conid = request.form['inputConnFilID']
+                    print(conid)
+                    conn = mysql.connect()
+                    connection = Connection(conn, request)
+                    connection.getConnection(conid)
+                    msg = None
+                    print("in Delete")
+                    print(request.form['stateC'])
+                    if request.form['stateC'] == "1":
+                        try:
+                            try:
+                                print("actually deleting")
+                                print(request.form['realID'])
+                                conid = request.form['realID']
+                                
+                                val = connection.deleteConnection(conid)
+                                
+                                if val:
+                                    msg = "connection deleted Sucessfully"
+                                else:
+                                    msg = "Unable to delete connection 1"
+                            except:
+                                msg = "Unable to delete connection 2"
+                        finally:
+                            conn.close()
+                    else:
+                        val2 = connection.getConnection(conid)
+                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":connection.conType, "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
+                        if not val2:
+                            msg = "Unable to find the connection" 
+                    print(js)
+                    print(msg)
+                    return render_template("connectionDataInput.html", val = taskC, js = js) 
+                #Delete end
+
     return render_template("connectionDataInput.html", js=js, val="add")
+
+@app.route("/meterReading", methods=["GET", "POST"])
+def meterReading():
+    if request.method=="POST":
+        if 'formStateGet' in request.form:
+            csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
+            return Response(csv,
+                            mimetype="text/csv",
+                            headers={"Content-disposition":
+                                    "attachment; filename=consumerList.csv"})
+        elif 'formStatePost' in request.form:
+            if request.files:
+                file = request.files["uploadCsv"]
+
+                if file.filename == "":
+                    print("No filename")
+                    return redirect(request.url)
+
+                if allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+
+                    file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
+                    conn = mysql.connect()
+                    meterReading = MeterReading(conn)
+                    val = meterReading.readFile()
+                    if val:
+                        print("file saved")
+                        return redirect(request.url)
+
+                else:
+                    print("That file extension is not allowed")
+                    return redirect(request.url)
+
+    return render_template("meterReading.html")
 
 @app.route("/test")
 def test():
