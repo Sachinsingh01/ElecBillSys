@@ -271,7 +271,7 @@ def billDetail():
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
     js = {"cno": "", "connType":"", "meterNo":"", "caddress":"", "cdistrict":"", "ctaluka":"", "cpinCode":"", "installationDate":"", "connStatus":""}
-    return render_template("connectionDataInput.html", js=js)
+    return render_template("connectionDataInput.html", js=js, val="add")
 
 @app.route("/test")
 def test():
