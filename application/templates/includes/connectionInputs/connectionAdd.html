@@ -1,11 +1,16 @@
 <div class="row" id="addElC">
     <input type="text" class="d-none" id="realID" name="realID" value = {{js.cid}}> 
     {% if val == "del" %} <fieldset class="row" id="fieldSetC" disabled> {% endif %}
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputConNo" class="form-label">Consumer Number</label>
     <input type="text" class="form-control" id="inputConNo" name="inputConNo" {% if val != "add" %} value = {{js.cno}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputConnType" class="form-label">Consumer Type</label>
     <select id="inputConnType" class="form-select" name="inputConnType">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
@@ -13,24 +18,40 @@
         <option {% if val != "add" and js.connType == "com" %} selected {% endif %} value="com">Commercial</option>
         <option {% if val != "add" and js.connType == "ind" %} selected {% endif %} value="ind">Industrial</option>
     </select>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputMeterNo" class="form-label">Meter Number</label>
     <input type="text" class="form-control" id="inputMeterNo" name="inputMeterNo" {% if val != "add" %} value = {{js.meterNo}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>
-<div class="mb-3 col-12">
+<div class="mb-4 col-12">
+    <div class="formControl" id="formControl">
     <label for="inputConnAddress" class="form-label">Connection Address</label>
     <input type="text" class="form-control" id="inputConnAddress" name="inputConnAddress" {% if val != "add" %} value = {{js.caddress}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputConnDistrict" class="form-label">Connection District</label>
     <select id="inputConnDistrict" class="form-select" name="inputConnDistrict">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
         <option {% if val != "add" and js.cdistrict == "North Goa" %} selected {% endif %} value="North Goa">North Goa</option>
         <option {% if val != "add" and js.cdistrict == "South Goa" %} selected {% endif %} value="South Goa">South Goa</option>
     </select>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>   
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputConnTaluka" class="form-label">Connection Taluka</label>
     <select id="inputConnTaluka" class="form-select" name="inputConnTaluka">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
@@ -47,27 +68,42 @@
         <option {% if val != "add" and js.ctaluka == "Sattari" %} selected {% endif %} value="Sattari">Sattari</option>
         <option {% if val != "add" and js.ctaluka == "Tiswadi" %} selected {% endif %} value="Tiswadi">Tiswadi</option>
     </select>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>       
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputConnPin" class="form-label">Connection Pin Code</label>
     <input type="text" class="form-control" id="inputConnPin" name="inputConnPin" {% if val != "add" %} value = {{js.cpinCode}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>   
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputInstallationDate" class="form-label">Installation Date</label>
     <input type="text" class="form-control" id="inputInstallationDate" name="inputInstallationDate" {% if val != "add" %} value = {{js.installationDate}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>  
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputConnStatus" class="form-label">Connection Status</label>
     <select id="inputConnStatus" class="form-select" name="inputConnStatus">
         <option {% if val == "add" %} selected {% endif %} value="Active">Active</option>
         <option {% if val != "add" and js.connStatus == "Inactive" %} selected {% endif %} value="Inactive">Inactive</option>
     </select>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>   
-<div class="mb-3 col-4"></div>
+<div class="mb-4 col-4"></div>
 {% if val == "del" %} </fieldset> {% endif %}
-<div class="mb-3 col-4"></div>
-<div class="d-grid gap-2 col-4 d-block">
+<div class="mt-3 col-4"></div>
+<div class="d-grid mt-3 gap-2 col-4 d-block">
     <button type="submit" class="btn btn-primary" id="addBtnC">Submit</button>
 </div> 
-<div class="mb-3 col-4"></div>
+<div class="mt-3 col-4"></div>
 </div>

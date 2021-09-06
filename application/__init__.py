@@ -258,7 +258,9 @@ def billDetail():
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
-    if 'loggedin' in session and session['role'] == "1":
+    js = {"cid": "", "cno":"", "connType":"", "meterNo":"","caddress":"", "cdistrict":"", "ctaluka":"", "connStatus":"", "cpinCode":"", "installationDate":""}
+
+    if 'loggedin' in session and session['role'] == "1" and False:
         taskC = session["taskC"]
 
         js = {"cid": "", "cno":"", "connType":"", "meterNo":"","caddress":"", "cdistrict":"", "ctaluka":"", "connStatus":"", "cpinCode":"", "installationDate":""}
