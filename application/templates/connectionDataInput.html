@@ -15,29 +15,29 @@
         <section class="row justify-content-center">
             <section class="col-12 col-sm-11 col-md-11" id="loaderfn">
                 <form method="POST" class="shadow p-5 mb-5 bg-body rounded mt-5">
-                    <h2 class="text-start mb-3">Consumer Details</h2>
+                    <h2 class="text-start mb-3">Connection Details</h2>
                     <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="custFuncType" id="custAdd" value="custAdd" autocomplete="off"
+                        <input type="radio" class="btn-check" name="connFuncType" id="connAdd" value="connAdd" autocomplete="off"
                             {% if val == "add"%} checked {%endif%}>
-                        <label class="btn btn-outline-primary" for="custAdd">Add Consumer</label>
+                        <label class="btn btn-outline-primary" for="connAdd">Add Connection</label>
 
-                        <input type="radio" class="btn-check" name="custFuncType" id="custDel" autocomplete="off" value="custDel" {% if val == "del"%} checked {%endif%}>
-                        <label class="btn btn-outline-primary" for="custDel">Delete Consumer</label>
+                        <input type="radio" class="btn-check" name="connFuncType" id="connDel" autocomplete="off" value="connDel" {% if val == "del"%} checked {%endif%}>
+                        <label class="btn btn-outline-primary" for="connDel">Delete Connection</label>
 
-                        <input type="radio" class="btn-check" name="custFuncType" id="custUpd" value="custUpd" autocomplete="off" {% if val == "upd"%} checked {%endif%}>
-                        <label class="btn btn-outline-primary" for="custUpd">Update Consumer</label>
+                        <input type="radio" class="btn-check" name="connFuncType" id="connUpd" value="connUpd" autocomplete="off" {% if val == "upd"%} checked {%endif%}>
+                        <label class="btn btn-outline-primary" for="connUpd">Update Connection</label>
                     </div>              
-                    <input type="text" class="d-none" id="task" name="task" value= {{val}}> 
-                    <input type="text" class="d-none" id="state" name="state" value= "0"> 
+                    <input type="text" class="d-none" id="taskC" name="taskC" value= {{val}}> 
+                    <input type="text" class="d-none" id="stateC" name="stateC" value= "0"> 
                     {% with messages = get_flashed_messages() %}
                     {% if messages %}
                     {% for message in messages %}
-                    <p class="font-monospace d-none" id="alertMsg" >{{message}}</p>
+                    <p class="font-monospace d-none" id="alertMsgC" >{{message}}</p>
                     {% endfor %}
                     {% endif %}
                     {% endwith %}
-                    {% include "includes/consumerInputs/consumerAdd.html" %}
-                    {% include "includes/consumerInputs/consumerFilter.html" %}
+                    {% include "includes/connectionInputs/connectionAdd.html" %}
+                    {% include "includes/connectionInputs/connectionFilter.html" %}
             </section>
         </section>
     </div>
@@ -51,47 +51,44 @@
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
     <script type="text/javascript">
-        document.getElementById("filBtn").addEventListener("click", (e)=>{
-            document.getElementById("state").value = "0"
-            alertMsg = document.getElementById("alertMsg").innerText
+        document.getElementById("filBtnC").addEventListener("click", (e)=>{
+            document.getElementById("stateC").value = "0"
+            alertMsg = document.getElementById("alertMsgC").innerText
             console.log(alertMsg)
             alert(alertMsg)
         })
-        document.getElementById("addBtn").addEventListener("click", (e)=>{
-            document.getElementById("state").value = "1"
-            alertMsg = document.getElementById("alertMsg").innerText
+        document.getElementById("addBtnC").addEventListener("click", (e)=>{
+            document.getElementById("stateC").value = "1"
+            alertMsg = document.getElementById("alertMsgC").innerText
             console.log(alertMsg)
             alert(alertMsg)
         })
-        document.getElementById("custAdd").addEventListener("click", (e)=>{            
-            document.getElementById("addEl").style.display = "flex"
-            document.getElementById("filterEl").style.display = "none"
-            if(document.getElementById("task").value != "add"){
-                document.getElementById("inputConID").value = ""
-                document.getElementById("inputConFName").value = ""
-                document.getElementById("inputConLName").value = ""
-                document.getElementById("inputConAddress").value = ""
-                document.getElementById("inputConTaluka").value = ""
-                document.getElementById("inputConDistrict").value = ""
-                document.getElementById("inputConPin").value = ""
-                document.getElementById("inputMeterId").value = ""
-                document.getElementById("inputConType").value = ""
-                document.getElementById("inputConContact").value = ""
-                document.getElementById("inputSancLoad").value = ""
-                document.getElementById("inputConFilID").value = ""
+        document.getElementById("connAdd").addEventListener("click", (e)=>{            
+            document.getElementById("addElC").style.display = "flex"
+            document.getElementById("filterElC").style.display = "none"
+            if(document.getElementById("taskC").value != "add"){
+                document.getElementById("inputConNo").value = ""
+                document.getElementById("inputConnType").value = ""
+                document.getElementById("inputMeterNo").value = ""
+                document.getElementById("inputConnAddress").value = ""
+                document.getElementById("inputConnTaluka").value = ""
+                document.getElementById("inputConnDistrict").value = ""
+                document.getElementById("inputConnPin").value = ""
+                document.getElementById("inputInstallationDate").value = ""
+                document.getElementById("inputConnStatus").value = ""
             }           
-            document.getElementById("task").value = "add"
-            document.getElementById("fieldSet").disabled = false
+            document.getElementById("taskC").value = "add"
+            document.getElementById("fieldSetC").disabled = false
         })
-        document.getElementById("custUpd").addEventListener("click", (e)=>{
-            document.getElementById("addEl").style.display = "none"            
-            document.getElementById("filterEl").style.display = "flex"
-            document.getElementById("task").value = "upd"
+        document.getElementById("connUpd").addEventListener("click", (e)=>{
+            document.getElementById("addElC").style.display = "none"            
+            document.getElementById("filterElC").style.display = "flex"
+            document.getElementById("taskC").value = "upd"
         })
-        document.getElementById("custDel").addEventListener("click", (e)=>{
-            document.getElementById("addEl").style.display = "none"         
-            document.getElementById("filterEl").style.display = "flex"
-            document.getElementById("task").value = "del"
+        document.getElementById("connDel").addEventListener("click", (e)=>{
+            document.getElementById("addElC").style.display = "none"         
+            document.getElementById("filterElC").style.display = "flex"
+            document.getElementById("taskC").value = "del"
         })
     </script>
 </body>
