@@ -166,6 +166,8 @@
 
         document.getElementById("connFormInp").addEventListener("submit", (e)=>{
             // e.preventDefault()
+            let error = false
+            let error2 = false
 
             const connNoVal = connNo.value.trim()
             const connTypeVal = connType.value.trim()
@@ -180,72 +182,64 @@
 
             if(connNoVal===""){
                 setError(connNo, "Connection Number can't be blank")
+                error=true
             }
-            else{
-                setSuccess(connNo)
-            }
-
-            if(connTypeVal==="none"){
+            else if(connTypeVal==="none"){
                 setError(connType, "Connection Type can't be blank")
-            }
-            else{
-                setSuccess(connType)
-            }
-            
-            if(meterNoVal===""){
+                error=true
+            }            
+            else if(meterNoVal===""){
                 setError(meterNo, "Meter Number can't be blank")
-            }
-            else{
-                setSuccess(meterNo)
-            }
-            
-            if(cAddressVal===""){
+                error=true
+            }            
+            else if(cAddressVal===""){
                 setError(cAddress, "Connection address can't be blank")
-            }
-            else{
-                setSuccess(cAddress)
-            }
-            
-            if(cTalukaVal==="none"){
+                error=true
+            }            
+            else if(cTalukaVal==="none"){
                 setError(cTaluka, "Connection taluka can't be blank")
+                error=true
+            }            
+            else if(cPinVal===""){
+                setError(cPin, "Connection pin can't be blank")
+                error=true
+            }
+            else if(cInstDtVal===""){
+                setError(cInstDt, "Installation Date can't be blank")
+                error=true
+            }            
+            else if(cDistrictVal==="none"){
+                setError(cDistrict, "Connection district can't be blank")
+                error=true
+            }
+            else if(cStatusVal==="none"){
+                setError(cStatus, "Connection Status can't be blank")
+                error=true
             }
             else{
                 setSuccess(cTaluka)
-            }
-            
-            if(cPinVal===""){
-                setError(cPin, "Connection pin can't be blank")
-            }
-            else{
-                setSuccess(cPin)
-            }
-            
-            if(cInstDtVal===""){
-                setError(cInstDt, "Installation Date can't be blank")
-            }
-            else{
-                setSuccess(cInstDt)
-            }
-            
-            if(cDistrictVal==="none"){
-                setError(cDistrict, "Connection district can't be blank")
-            }
-            else{
-                setSuccess(cDistrict)
-            }
-
-            if(cStatusVal==="none"){
-                setError(cStatus, "Connection Status can't be blank")
-            }
-            else{
                 setSuccess(cStatus)
+                setSuccess(connNo)
+                setSuccess(cDistrict)
+                setSuccess(cInstDt)
+                setSuccess(cPin)
+                setSuccess(cAddress)
+                setSuccess(meterNo)
+                setSuccess(meterNo)
+                error=false
             }
 
             if(connIdVal===""){
                 setError(connId, "Connection Number can't be blank")
+                error2 = true
             }
             else{
-                setSuccess(connId)
+                setSuccess(connId)                
+                error2=false
+            }
+            if(error2 || error)
+            {
+                e.preventDefault()
             }
         })
     </script>
