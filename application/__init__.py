@@ -418,4 +418,4 @@ def test():
 
 @app.route("/nav")
 def nav():
-    return render_template("navbar.html")
+    return render_template(".html")
