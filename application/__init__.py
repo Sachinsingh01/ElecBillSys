@@ -340,8 +340,8 @@ def adminConn():
                     print("in Update")
                     print("ConnectionID : ",connid)
 
-                    print(request.form['state'])
-                    if request.form['state'] == "1":
+                    print(request.form['stateC'])
+                    if request.form['stateC'] == "1":
                         try:
                             try:
                                 print("actually updating")
@@ -359,7 +359,7 @@ def adminConn():
                             conn.close()
                     else:
                         findConn = connection.getConnection(connid)
-                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":connection.conType, "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
+                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":str(connection.conType), "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
                         if not findConn:
                             msg = "Unable to find the connection"
                     
