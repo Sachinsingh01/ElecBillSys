@@ -1,21 +1,19 @@
+from pymysql.cursors import Cursor
 from .consumer import Consumer
 from .connection import Connection
 from datetime import timedelta
 from datetime import date
 from datetime import datetime
+import pymysql
 # from .fileToDB import MeterReading
 class Bill():
 
     def __init__(self,conn,meterNo,prevDate,prevReading,readDate,reading):
-        # self.connection = Connection(conn,request)
-        # self.connection.getConnection(connId)
 
-
-        # self.consumer = Consumer(conn,request)
-        # self.consumer.getConsumer(cid)
-
-
-        # self.billId = self.generateID()
+        self.conn = conn
+        self.cursor = conn.cursor(pymysql.cursors.DictCursor)
+        self.cursor.execute("SELECT Co_Type_ID from connection where Meter_No = %s",(meterNo))
+        self.connType = self.cursor.fetchone()['Co_Type_ID']
         self.prevDate = self.getDate(prevDate)
         self.currDate = self.getDate(readDate)
         self.prevReading = prevReading
@@ -26,9 +24,16 @@ class Bill():
 
     
     def getAmount(self):
-        slabs = [100,200,300,400] #get from the dataBase  
-        #define this functions
+
         consumption = self.currReading - self.prevReading
+        self.cursor.execute("SELECT Units_To from slab_charges WHERE From_Date = (SELECT MAX(From_Date) from slab_charges) and S_Charge_Type = %s and Con_Type_ID = %s",("EC",self.connType)) 
+        temp = self.cursor.fetchall()
+        slabs=[]
+        for t in temp:
+            slabs.append(t['Units_To'])
+
+        print(slabs)
+        #define this functions
         #find the days passed between prev and current date
         #if prev reading date >= last change of slabs 
             #simple calculations 
