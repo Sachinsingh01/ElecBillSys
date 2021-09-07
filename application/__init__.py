@@ -379,7 +379,7 @@ def adminConn():
 def meterReading():
     conn = mysql.connect()
     meterRead = MeterReading(conn,session['id'])
-    meterRead.createMeterReadingFile()
+    meterRead.readFile()
     if request.method=="POST":
         if 'formStateGet' in request.form:
             csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"

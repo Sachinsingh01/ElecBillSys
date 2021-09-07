@@ -3,22 +3,23 @@ from .connection import Connection
 from datetime import timedelta
 from datetime import date
 from datetime import datetime
-from .fileToDB import MeterReading
+# from .fileToDB import MeterReading
 class Bill():
 
-    def __init__(self,conn,request,cid):
+    def __init__(self,conn,meterNo,prevDate,prevReading,readDate,reading):
         # self.connection = Connection(conn,request)
         # self.connection.getConnection(connId)
 
 
-        self.consumer = Consumer(conn,request)
-        self.meterReading = MeterReading(conn)
-        self.consumer.getConsumer(cid)
+        # self.consumer = Consumer(conn,request)
+        # self.consumer.getConsumer(cid)
 
 
         # self.billId = self.generateID()
-        self.prevDate = self.getPrevDate()
-        self.currDate = self.getCurrDate()
+        self.prevDate = prevDate
+        self.currDate = readDate
+        self.prevReading = prevReading
+        self.currReading = reading
         self.dueDate = self.generateDueDate()
         # self.amount = self.getAmount()
 
@@ -35,13 +36,11 @@ class Bill():
         d2 = datetime.strftime(currDate, '%Y-%m-%d')
         #find the days passed between prev and current date
         delta = int((d2-d1).days)
+        print(f"d1 = {d1} d2= {d2} delta = {delta}")
         #if prev reading date >= last change of slabs 
             #simple calculations 
         #else 
             #go uptill prev date >= last change and calculate for every change
-        for slab in slabs:
-            pass
-
         #fill the required tables  or return amount 
         #do not forget to update the billing calender
 
@@ -72,3 +71,6 @@ class Bill():
 
     def generateDueDate(self):
         return date.strftime(self.currDate,'%Y-%m-%d' + timedelta(days = 15))
+    
+    def jadoo(self):
+        pass
