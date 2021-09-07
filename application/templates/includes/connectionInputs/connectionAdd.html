@@ -11,12 +11,12 @@
 </div>
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConnType" class="form-label">Consumer Type</label>
+    <label for="inputConnType" class="form-label">Connection Type</label>
     <select id="inputConnType" class="form-select" name="inputConnType">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
-        <option {% if val != "add" and js.connType == "dom" %} selected {% endif %} value="dom">Domestic</option>
-        <option {% if val != "add" and js.connType == "com" %} selected {% endif %} value="com">Commercial</option>
-        <option {% if val != "add" and js.connType == "ind" %} selected {% endif %} value="ind">Industrial</option>
+        <option {% if val != "add" and js.connType == "1" %} selected {% endif %} value="1">Domestic</option>
+        <option {% if val != "add" and js.connType == "2" %} selected {% endif %} value="2">Agriculture</option>
+        <option {% if val != "add" and js.connType == "3" %} selected {% endif %} value="3">Commercial</option>
     </select>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
@@ -83,7 +83,7 @@
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
     <label for="inputInstallationDate" class="form-label">Installation Date</label>
-    <input type="text" class="form-control" id="inputInstallationDate" name="inputInstallationDate" {% if val != "add" %} value = {{js.installationDate}} {% endif %}>
+    <input type="date" class="form-control" id="inputInstallationDate" name="inputInstallationDate" {% if val != "add" %} value = {{js.installationDate}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
     <p class="mb-0" id="errMsg">Error Message</p></div>

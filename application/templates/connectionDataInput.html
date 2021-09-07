@@ -53,6 +53,11 @@
                 color: #e74c3c;
                 visibility: visible;
             }
+            #container{
+                position: absolute;
+                width: calc(100vw - 80px);
+                right: 0;
+            }
         </style>
     <title>Admin Dash</title>
 </head>
@@ -62,7 +67,7 @@
     <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
             <section class="col-12 col-sm-11 col-md-11" id="loaderfn">
-                <form method="POST" class="shadow p-5 mb-5 bg-body rounded mt-5" id="connFormInp">
+                <form method="POST" class="shadow p-5 m-3 bg-body rounded " id="connFormInp">
                     <h2 class="text-start mb-3">Connection Details</h2>
                     <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="connFuncType" id="connAdd" value="connAdd" autocomplete="off"
@@ -86,6 +91,7 @@
                     {% endwith %}
                     {% include "includes/connectionInputs/connectionAdd.html" %}
                     {% include "includes/connectionInputs/connectionFilter.html" %}
+                    {% include "navbar.html" %}
             </section>
         </section>
     </div>
@@ -165,7 +171,17 @@
         }
 
         document.getElementById("connFormInp").addEventListener("submit", (e)=>{
-            e.preventDefault()
+            let connNoErr = true
+            let connTypeErr = true
+            let meterNoErr = true
+            let cAddressErr = true
+            let cTalukaErr = true
+
+            let cPinErr = true
+            let cInstDtErr = true
+            let cDistrictErr = true
+            let cStatusErr = true
+            let connIdErr = true
 
             const connNoVal = connNo.value.trim()
             const connTypeVal = connType.value.trim()
@@ -180,73 +196,102 @@
 
             if(connNoVal===""){
                 setError(connNo, "Connection Number can't be blank")
+                connNoErr = true
             }
             else{
                 setSuccess(connNo)
+                connNoErr = false
             }
 
             if(connTypeVal==="none"){
                 setError(connType, "Connection Type can't be blank")
-            }
+                connTypeErr=true
+            }       
             else{
                 setSuccess(connType)
-            }
+                connTypeErr=false
+            }     
             
             if(meterNoVal===""){
                 setError(meterNo, "Meter Number can't be blank")
-            }
+                meterNoErr = true
+            }    
             else{
                 setSuccess(meterNo)
-            }
-            
+                meterNoErr = false
+            }        
+
             if(cAddressVal===""){
                 setError(cAddress, "Connection address can't be blank")
-            }
+                cAddressErr=true
+            }  
             else{
                 setSuccess(cAddress)
-            }
-            
+                cAddressErr=false
+            }          
+
             if(cTalukaVal==="none"){
                 setError(cTaluka, "Connection taluka can't be blank")
-            }
+                cTalukaErr=true
+            }    
             else{
                 setSuccess(cTaluka)
-            }
-            
+                cTalukaErr=false
+            }        
+
             if(cPinVal===""){
                 setError(cPin, "Connection pin can't be blank")
+                cPinErr=true
             }
             else{
                 setSuccess(cPin)
+                cPinErr=false
             }
-            
+
             if(cInstDtVal===""){
                 setError(cInstDt, "Installation Date can't be blank")
-            }
+                cInstDtErr=true
+            }   
             else{
                 setSuccess(cInstDt)
-            }
-            
+                cInstDtErr=false
+            }  
+
             if(cDistrictVal==="none"){
                 setError(cDistrict, "Connection district can't be blank")
+                cDistrictErr=true
             }
             else{
                 setSuccess(cDistrict)
+                cDistrictErr=false
             }
 
             if(cStatusVal==="none"){
                 setError(cStatus, "Connection Status can't be blank")
+                cStatusErr=true
             }
             else{
                 setSuccess(cStatus)
+                cStatusErr=false
             }
 
             if(connIdVal===""){
                 setError(connId, "Connection Number can't be blank")
+                connIdErr = true
             }
             else{
-                setSuccess(connId)
+                setSuccess(connId)                
+                connIdErr=false
             }
+            let allErr = connNoErr||connTypeErr||meterNoErr||cAddressErr||cTalukaErr||cPinErr||cInstDtErr||cDistrictErr||cStatusErr
+            if(!connIdErr){
+                alert("submitted")
+            }else if(!allErr){
+                alert("submitted")
+            }else{                
+                e.preventDefault()
+            }
+                
         })
     </script>
 </body>
