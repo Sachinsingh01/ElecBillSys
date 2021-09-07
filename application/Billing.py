@@ -16,27 +16,20 @@ class Bill():
 
 
         # self.billId = self.generateID()
-        self.prevDate = prevDate
-        self.currDate = readDate
+        self.prevDate = self.getDate(prevDate)
+        self.currDate = self.getDate(readDate)
         self.prevReading = prevReading
         self.currReading = reading
         self.dueDate = self.generateDueDate()
+        print(f"prev: {self.prevDate}, curr:{self.currDate},due:{self.dueDate}")
         # self.amount = self.getAmount()
 
     
     def getAmount(self):
         slabs = [100,200,300,400] #get from the dataBase  
         #define this functions
-        prevReading = self.meterReading.getPreviousReading()
-        currentReading = self.meterReading.getCurrentReading()
-        consumption = currentReading - prevReading
-        prevDate = self.meterReading.getPrevDate()
-        currDate = self.meterReading.getCurrDate()
-        d1 = datetime.strftime(prevDate, '%Y-%m-%d')
-        d2 = datetime.strftime(currDate, '%Y-%m-%d')
+        consumption = self.currReading - self.prevReading
         #find the days passed between prev and current date
-        delta = int((d2-d1).days)
-        print(f"d1 = {d1} d2= {d2} delta = {delta}")
         #if prev reading date >= last change of slabs 
             #simple calculations 
         #else 
@@ -70,7 +63,13 @@ class Bill():
             return 0
 
     def generateDueDate(self):
-        return date.strftime(self.currDate,'%Y-%m-%d' + timedelta(days = 15))
+        return self.currDate + timedelta(days = 15)
+
     
     def jadoo(self):
         pass
+
+    def getDate(self,date):
+        temp = date.split("/")
+        dat = f"{temp[2]}-{temp[0]}-{temp[1]}"
+        return datetime.strptime(dat,'%Y-%m-%d').date()
