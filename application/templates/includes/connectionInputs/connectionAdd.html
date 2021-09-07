@@ -83,7 +83,7 @@
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
     <label for="inputInstallationDate" class="form-label">Installation Date</label>
-    <input type="text" class="form-control" id="inputInstallationDate" name="inputInstallationDate" {% if val != "add" %} value = {{js.installationDate}} {% endif %}>
+    <input type="date" class="form-control" id="inputInstallationDate" name="inputInstallationDate" {% if val != "add" %} value = {{js.installationDate}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
     <p class="mb-0" id="errMsg">Error Message</p></div>
