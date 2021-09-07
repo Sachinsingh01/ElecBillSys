@@ -31,10 +31,18 @@ class Bill():
         slabs=[]
         for t in temp:
             slabs.append(t['Units_To'])
-
         print(slabs)
-        #define this functions
+
         #find the days passed between prev and current date
+        billingPeriod = (self.currDate - self.prevDate).days
+        print(billingPeriod)
+        print(str(self.prevDate))
+        self.cursor.execute("SELECT DISTINCT From_Date FROM slab_charges WHERE (From_Date >%s and From_Date <%s) or From_Date =(SELECT MAX(From_Date) from slab_charges where From_Date <=%s) ORDER BY From_Date Desc ",(str(self.prevDate),str(self.currDate),str(self.prevDate)))
+        Temp = self.cursor.fetchall()
+        dates = []
+        for t in Temp:
+            print(t)
+            dates.append(t['From_Date'])
         #if prev reading date >= last change of slabs 
             #simple calculations 
         #else 
@@ -78,3 +86,4 @@ class Bill():
         temp = date.split("/")
         dat = f"{temp[2]}-{temp[0]}-{temp[1]}"
         return datetime.strptime(dat,'%Y-%m-%d').date()
+    
