@@ -371,3 +371,7 @@ def test():
     sql = consumer.validateCId()
     print(sql)
     return "<h1>testing<h1>"
+
+@app.route("/nav")
+def nav():
+    return render_template("navbar.html")
