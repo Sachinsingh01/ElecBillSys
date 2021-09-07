@@ -263,6 +263,9 @@ def billDetail():
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
+    
+    js = {"cid": "", "cno":"", "connType":"", "meterNo":"","caddress":"", "cdistrict":"", "ctaluka":"", "connStatus":"", "cpinCode":"", "installationDate":""}
+
     if 'loggedin' in session and session['role'] == "1":
         taskC = session["taskC"]
 
@@ -328,9 +331,49 @@ def adminConn():
                     print(js)
                     print(msg)
                     return render_template("connectionDataInput.html", val = taskC, js = js) 
-                #Delete end
+                # End Delete
 
-    return render_template("connectionDataInput.html", js=js, val="add")
+                # Begin Update
+                elif taskC == "upd":
+                    connid = request.form['inputConnFilID']
+
+                    conn = mysql.connect()
+                    connection = Connection(conn, request)
+                    msg = None
+
+                    # Messages for testing
+                    print("in Update")
+                    print("ConnectionID : ",connid)
+
+                    print(request.form['state'])
+                    if request.form['state'] == "1":
+                        try:
+                            try:
+                                print("actually updating")
+                                connid = request.form['realID']
+                                print("ConnectionID : ",connid)
+
+                                updateConn = connection.updateConnection(connid, request)
+                                if updateConn:
+                                    msg = "Connection updated Sucessfully"
+                                else:
+                                    msg = "Unable to update connection 1"
+                            except:
+                                msg = "Unable to update connection 2"
+                        finally:
+                            conn.close()
+                    else:
+                        findConn = connection.getConnection(connid)
+                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":connection.conType, "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
+                        if not findConn:
+                            msg = "Unable to find the connection"
+                    
+                    print(js)
+                    print(msg)
+                    return render_template("connectionDataInput.html", val = taskC, js = js)
+                # End Update
+
+    return render_template("connectionDataInput.html", js=js, val=taskC)
 
 @app.route("/meterReading", methods=["GET", "POST"])
 def meterReading():
@@ -372,3 +415,7 @@ def test():
     sql = consumer.validateCId()
     print(sql)
     return "<h1>testing<h1>"
+
+@app.route("/nav")
+def nav():
+    return render_template("navbar.html")

@@ -6,6 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <style>
+        .formControl{
+            position: relative;
+        }
+        .formControl i{
+            position: absolute;
+            bottom: 0.7rem;
+            right: 1rem;
+            visibility: hidden;
+        }
+        .formControl p{
+            position: absolute;
+            bottom: -1.3rem;
+            left: 0.5rem;
+            visibility: hidden;
+            font-size: 0.8rem;
+        }
+        .formControl.success input{
+            border-color: #2ecc71;
+        }
+        .formControl.error input{
+            border-color: #e74c3c;
+        }
+        .formControl.success select{
+            border-color: #2ecc71;
+            background: none;
+        }
+        .formControl.error select{
+            border-color: #e74c3c;
+            background: none;
+        }
+        .formControl.success i.bi.bi-check-circle{
+            color: #2ecc71;
+            visibility: visible;
+        }
+        .formControl.error i.bi.bi-exclamation-circle{
+            color: #e74c3c;
+            visibility: visible;
+        }
+        .formControl.error p{
+            color: #e74c3c;
+            visibility: visible;
+        }
+        #container{
+            position: absolute;
+            width: calc(100vw - 80px);
+            right: 0;
+        }
+    </style>
     <title>Admin Dash</title>
 </head>
 
@@ -14,7 +67,7 @@
     <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
             <section class="col-12 col-sm-11 col-md-11" id="loaderfn">
-                <form method="POST" class="shadow p-5 mb-5 bg-body rounded mt-5">
+                <form method="POST" class="shadow p-5 m-3 bg-body rounded" id="conFormInp">
                     <h2 class="text-start mb-3">Consumer Details</h2>
                     <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="custFuncType" id="custAdd" value="custAdd" autocomplete="off"
@@ -38,6 +91,7 @@
                     {% endwith %}
                     {% include "includes/consumerInputs/consumerAdd.html" %}
                     {% include "includes/consumerInputs/consumerFilter.html" %}
+                    {% include "navbar.html" %}
             </section>
         </section>
     </div>
@@ -59,9 +113,10 @@
         })
         document.getElementById("addBtn").addEventListener("click", (e)=>{
             document.getElementById("state").value = "1"
-            alertMsg = document.getElementById("alertMsg").innerText
-            console.log(alertMsg)
-            alert(alertMsg)
+            if(document.getElementById("alertMsg")){
+                var alertMsg = document.getElementById("alertMsg").innerText  
+                alert(alertMsg)
+            }
         })
         document.getElementById("custAdd").addEventListener("click", (e)=>{            
             document.getElementById("addEl").style.display = "flex"
@@ -93,6 +148,144 @@
             document.getElementById("filterEl").style.display = "flex"
             document.getElementById("task").value = "del"
         })
+        var fname = document.getElementById("inputConFName")
+        var lname = document.getElementById("inputConLName")
+        var address = document.getElementById("inputConAddress")
+        var district = document.getElementById("inputConDistrict")
+        var taluka = document.getElementById("inputConTaluka")
+        var pin = document.getElementById("inputConPin")
+        var contact = document.getElementById("inputConContact")
+        var email = document.getElementById("inputConEmail")
+        var cid = document.getElementById("inputConFilID")
+
+        function setError(elt, msg){
+            const fc = elt.parentElement
+            const pTag = fc.querySelector('p')
+            if(pTag){
+                pTag.innerText = msg
+            }
+            fc.className = "formControl error"
+        }
+
+        function setSuccess(elt){
+            const fc = elt.parentElement
+            fc.className = "formControl success"
+        }
+
+        document.getElementById("conFormInp").addEventListener("submit", (e)=>{
+        
+            let fnameErr = true
+            let lnameErr = true
+            let contactErr = true
+            let addressErr = true
+            let talukaErr = true
+
+            let pinErr = true
+            let emailErr = true
+            let districtErr = true
+            let cidErr = true
+
+            const fnameVal = fname.value.trim()
+            const lnameVal = lname.value.trim()
+            const addressVal = address.value.trim()
+            const districtVal = district.value.trim()
+            const talukaVal = taluka.value.trim()
+            const pinVal = pin.value.trim()
+            const contactVal = contact.value.trim()
+            const emailVal = email.value.trim()
+            const cidVal = cid.value.trim()
+
+            if(fnameVal===""){
+                setError(fname, "Consumer First Name can't be blank")
+                fnameErr=true
+            }
+            else{
+                setSuccess(fname)           
+                fnameErr=false
+            }
+
+            if(lnameVal===""){
+                setError(lname, "Consumer Last Name can't be blank")
+                lnameErr=true
+            }
+            else{
+                setSuccess(lname)
+                lnameErr=false
+            }
+            
+            if(addressVal===""){
+                setError(address, "Consumer Address can't be blank")
+                addressErr=true
+            }
+            else{
+                setSuccess(address)
+                addressErr=false
+            }
+            
+            if(districtVal==="none"){
+                setError(district, "Consumer District can't be blank")
+                districtErr=true
+            }
+            else{
+                setSuccess(district)
+                districtErr=false
+            }
+            
+            if(talukaVal==="none"){
+                setError(taluka, "Consumer Taluka can't be blank")
+                talukaErr=true
+            }
+            else{
+                setSuccess(taluka)
+                talukaErr=false
+            }
+            
+            if(contactVal===""){
+                setError(contact, "Consumer Contact can't be blank")
+                contactErr=true
+            }
+            else{
+                setSuccess(contact)
+                contactErr=false
+            }
+            
+            if(emailVal===""){
+                setError(email, "Consumer Email can't be blank")
+                emailErr=true
+            }
+            else{
+                setSuccess(email)
+                emailErr=false
+            }
+            
+            if(pinVal===""){
+                setError(pin, "Consumer Pin can't be blank")
+                pinErr=true
+            }
+            else{
+                setSuccess(pin)
+                pinErr=false
+            }
+
+            if(cidVal===""){
+                setError(cid, "Consumer Number can't be blank")
+                cidErr=true
+            }
+            else{
+                setSuccess(cid)
+                cidErr=false
+            }
+
+            let allErr = fnameErr||lnameErr||contactErr||addressErr||talukaErr||pinErr||emailErr||districtErr
+            if(!cidErr){
+                alert("submitted")
+            }else if(!allErr){
+                alert("submitted")
+            }else{                
+                e.preventDefault()
+            }
+        })
+
     </script>
 </body>
 
