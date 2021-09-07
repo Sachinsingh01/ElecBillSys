@@ -6,9 +6,10 @@
     height: 100vh;
     background-color: #0d6efd;
     transition: 0.2s ease-in-out;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
+    z-index: 1000;
 }
 
 
