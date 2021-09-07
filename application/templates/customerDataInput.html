@@ -167,7 +167,17 @@
         }
 
         document.getElementById("conFormInp").addEventListener("submit", (e)=>{
-            e.preventDefault()
+        
+            let fnameErr = true
+            let lnameErr = true
+            let contactErr = true
+            let addressErr = true
+            let talukaErr = true
+
+            let pinErr = true
+            let emailErr = true
+            let districtErr = true
+            let cidErr = true
 
             const fnameVal = fname.value.trim()
             const lnameVal = lname.value.trim()
@@ -181,65 +191,92 @@
 
             if(fnameVal===""){
                 setError(fname, "Consumer First Name can't be blank")
+                fnameErr=true
             }
             else{
-                setSuccess(fname)
+                setSuccess(fname)           
+                fnameErr=false
             }
 
             if(lnameVal===""){
                 setError(lname, "Consumer Last Name can't be blank")
+                lnameErr=true
             }
             else{
                 setSuccess(lname)
+                lnameErr=false
             }
             
             if(addressVal===""){
                 setError(address, "Consumer Address can't be blank")
+                addressErr=true
             }
             else{
                 setSuccess(address)
+                addressErr=false
             }
             
             if(districtVal==="none"){
                 setError(district, "Consumer District can't be blank")
+                districtErr=true
             }
             else{
                 setSuccess(district)
+                districtErr=false
             }
             
             if(talukaVal==="none"){
                 setError(taluka, "Consumer Taluka can't be blank")
+                talukaErr=true
             }
             else{
                 setSuccess(taluka)
+                talukaErr=false
             }
             
             if(contactVal===""){
                 setError(contact, "Consumer Contact can't be blank")
+                contactErr=true
             }
             else{
                 setSuccess(contact)
+                contactErr=false
             }
             
             if(emailVal===""){
                 setError(email, "Consumer Email can't be blank")
+                emailErr=true
             }
             else{
                 setSuccess(email)
+                emailErr=false
             }
             
             if(pinVal===""){
                 setError(pin, "Consumer Pin can't be blank")
+                pinErr=true
             }
             else{
                 setSuccess(pin)
+                pinErr=false
             }
 
             if(cidVal===""){
                 setError(cid, "Consumer Number can't be blank")
+                cidErr=true
             }
             else{
                 setSuccess(cid)
+                cidErr=false
+            }
+
+            let allErr = fnameErr||lnameErr||contactErr||addressErr||talukaErr||pinErr||emailErr||districtErr
+            if(!cidErr){
+                alert("submitted")
+            }else if(!allErr){
+                alert("submitted")
+            }else{                
+                e.preventDefault()
             }
         })
 
