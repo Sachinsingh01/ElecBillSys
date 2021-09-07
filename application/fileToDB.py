@@ -12,9 +12,10 @@ class MeterReading():
     Talukas = {"PO":"Ponda", "TI":"Tiswadi"}
     def __init__(self, conn, id):
         # self.filename = 
-        self.path = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file"
+        self.path = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
         #take filename from {decide later}
         self.id = id
+        print(f'id:{self.id}')
         self.fileName = f'{self.id[:2]}-{date.today()}.csv'
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
