@@ -1,3 +1,4 @@
+from pymysql import cursors
 from pymysql.cursors import Cursor
 from .consumer import Consumer
 from .connection import Connection
@@ -34,7 +35,7 @@ class Bill():
         print(slabs)
 
         #find the days passed between prev and current date
-        billingPeriod = (self.currDate - self.prevDate).days
+        billingPeriod = int((self.currDate - self.prevDate).days)
         print(billingPeriod)
         print(str(self.prevDate))
         self.cursor.execute("SELECT DISTINCT From_Date FROM slab_charges WHERE (From_Date >%s and From_Date <%s) or From_Date =(SELECT MAX(From_Date) from slab_charges where From_Date <=%s) ORDER BY From_Date Desc ",(str(self.prevDate),str(self.currDate),str(self.prevDate)))
@@ -43,10 +44,72 @@ class Bill():
         for t in Temp:
             print(t)
             dates.append(t['From_Date'])
-        #if prev reading date >= last change of slabs 
-            #simple calculations 
-        #else 
-            #go uptill prev date >= last change and calculate for every change
+
+        i = len(dates) - 2
+        frm = self.prevDate
+        to = self.currDate
+        days = []
+        sum = 0
+        while(i>=0):
+            to = dates[i]
+            d = (to - frm).days
+            sum += int(d)
+            frm = dates[i]
+            days.append(d)
+            i -=1
+        days.append(billingPeriod-sum)
+        print(days)
+
+        dates.reverse()
+        print(f"Reversed dates = {dates}")
+
+        #calculate fixed charge
+        #calculate Subsidy charge
+        fixedCharges = []
+        subsidy = []
+        for d in dates:
+            self.cursor.execute("SELECT NS_Charges from no_slab_charges WHERE From_Date= %s and NS_Charge_Type = %s and Con_Type_ID = %s ",(str(d),"Fixed",self.connType))
+            fixedCharges.append(self.cursor.fetchone()['NS_Charges'])
+            self.cursor.execute("SELECT NS_Charges from no_slab_charges WHERE From_Date= %s and NS_Charge_Type = %s and Con_Type_ID = %s ",(str(d),"Subsidy",self.connType))
+            subsidy.append(self.cursor.fetchone()['NS_Charges'])
+        
+        print(f"fixedCharges = {fixedCharges}")
+        print(f"subsidy = {subsidy}")
+
+        #calculate EC values
+        ECs = []
+        for d in dates:
+            self.cursor.execute("SELECT S_Charges, Units_To from slab_charges WHERE From_Date= %s and S_Charge_Type = %s and Con_Type_ID = %s ORDER BY Units_To",(str(d),"EC",self.connType))
+            records = self.cursor.fetchall()
+            ls = []
+            for record in records:
+                ls.append(float(record['S_Charges']))
+            ECs.append(ls)
+        print(f"ECs: {ECs}")
+
+        #calculate FPPCA values
+        FPPCAs = []
+        for d in dates:
+            self.cursor.execute("SELECT S_Charges, Units_To from slab_charges WHERE From_Date= %s and S_Charge_Type = %s and Con_Type_ID = %s ORDER BY Units_To",(str(d),"FPPCA",self.connType))
+            records = self.cursor.fetchall()
+            ls = []
+            for record in records:
+                ls.append(float(record['S_Charges']))
+            FPPCAs.append(ls)
+        print(f"FPPCAs: {FPPCAs}")
+        
+        #weighted fixedCharge and Subsidy
+        t1 = 0
+        t2 = 0
+        for d,f,s in zip(days,fixedCharges,subsidy):
+            t1 += int(d)*int(f)
+            t2 += int(d)*int(s)
+    
+        fixChargeRate = t1/billingPeriod
+        subsidyRate = t2/billingPeriod
+        print(f"fcr:{fixChargeRate}, sr:{subsidyRate}")
+
+        #weighted EC and FPPCA
         #fill the required tables  or return amount 
         #do not forget to update the billing calender
 
