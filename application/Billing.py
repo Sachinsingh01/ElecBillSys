@@ -1,23 +1,30 @@
 from .consumer import Consumer
-import datetime
+from .connection import Connection
+from datetime import timedelta
+from datetime import date
+from datetime import datetime
 from .fileToDB import MeterReading
 class Bill():
 
-    def __init__(self,conn,request):
+    def __init__(self,conn,request,cid):
+        # self.connection = Connection(conn,request)
+        # self.connection.getConnection(connId)
+
+
         self.consumer = Consumer(conn,request)
         self.meterReading = MeterReading(conn)
-        cid = request.form['inputConFilID']
         self.consumer.getConsumer(cid)
-        self.BillID = self.generateID()
-        self.StartDate = self.getStartDate()
-        self.EndDate = self.getEndDate()
-        self.DueDate = self.generateDueDate()
-        self.Amount = self.getAmount()
+
+
+        # self.billId = self.generateID()
+        self.prevDate = self.getPrevDate()
+        self.currDate = self.getCurrDate()
+        self.dueDate = self.generateDueDate()
+        # self.amount = self.getAmount()
+
     
     def getAmount(self):
-
-        from datetime import datetime
-        slabs = [100,200,300,400] #get from the data base  
+        slabs = [100,200,300,400] #get from the dataBase  
         #define this functions
         prevReading = self.meterReading.getPreviousReading()
         currentReading = self.meterReading.getCurrentReading()
@@ -38,3 +45,30 @@ class Bill():
         #fill the required tables  or return amount 
         #do not forget to update the billing calender
 
+    def getCurrDate(self):
+        try:
+            print("Trying to Get Current Reading date")
+            self.cursor.execute('SELECT Max(Read_Date) as currDate, Meter_Reading FROM Meter_Reading where Co_ID = %s',(self.connection.connID))
+            acc = self.cursor.fetchone()
+            currDate = acc['currDate']
+            currReading = acc['Meter_Reading']
+            return currDate
+        except:
+            print("unable to create cno")
+            return 0
+
+    def getPrevDate(self):
+        #check for prev data in billing table
+        #if no data then get the installation date asa prev date and make prev reading 0
+        try:
+            print("Trying to Get prev Reading date")
+            self.cursor.execute('SELECT Installation_ID as prevDate FROM Connection where Co_ID = %s',(self.connection.connID))
+            acc = self.cursor.fetchone()
+            prevDate = acc['prevDate']
+            return prevDate, 0
+        except:
+            print("unable to create cno")
+            return 0
+
+    def generateDueDate(self):
+        return date.strftime(self.currDate,'%Y-%m-%d' + timedelta(days = 15))

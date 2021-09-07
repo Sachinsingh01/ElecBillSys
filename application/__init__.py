@@ -57,14 +57,19 @@ def login():
     msg = ''
     if request.method == 'POST'and 'inputCredentials' in request.form and 'inputId' in request.form and 'inputPassword' in request.form:
         username = request.form['inputId']
+        print(username)
         password = request.form['inputPassword']
+        print(password)
         role = request.form['inputCredentials']
+        print(role)
         cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (username, password))
         account = cursor.fetchone()
+        print(f"Account {account}")
         if account:
             session['loggedin'] = True
             session['id'] = account['id']
             session['role'] = role
+            print(role)
             if role == "1":
                 session["task"] = "add"
                 session["taskC"] = "add"
@@ -72,7 +77,7 @@ def login():
             elif account and role == "2":
                 return redirect(url_for('billDetail'))
             elif role == "3":
-                return redirect(url_for('uploadFile'))
+                return redirect(url_for('meterReading'))
         else:
             msg = 'Incorrect username/password!'  
     return render_template('login.html', msg=msg)
@@ -329,6 +334,9 @@ def adminConn():
 
 @app.route("/meterReading", methods=["GET", "POST"])
 def meterReading():
+    conn = mysql.connect()
+    meterRead = MeterReading(conn,session['id'])
+    meterRead.createMeterReadingFile()
     if request.method=="POST":
         if 'formStateGet' in request.form:
             csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
@@ -339,14 +347,11 @@ def meterReading():
         elif 'formStatePost' in request.form:
             if request.files:
                 file = request.files["uploadCsv"]
-
                 if file.filename == "":
                     print("No filename")
                     return redirect(request.url)
-
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-
                     file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
                     conn = mysql.connect()
                     meterReading = MeterReading(conn)
@@ -354,11 +359,9 @@ def meterReading():
                     if val:
                         print("file saved")
                         return redirect(request.url)
-
                 else:
                     print("That file extension is not allowed")
                     return redirect(request.url)
-
     return render_template("meterReading.html")
 
 @app.route("/test")
