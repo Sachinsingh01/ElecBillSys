@@ -25,7 +25,7 @@ app.config['MYSQL_DATABASE_DB'] = 'test'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
-app.config["CSV_UPLOADS"] = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
+app.config["CSV_UPLOADS"] = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file\\get"
 # app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["CSV"]
 
 def allowed_file(filename):
@@ -57,22 +57,28 @@ def login():
     msg = ''
     if request.method == 'POST'and 'inputCredentials' in request.form and 'inputId' in request.form and 'inputPassword' in request.form:
         username = request.form['inputId']
+        print(username)
         password = request.form['inputPassword']
+        print(password)
         role = request.form['inputCredentials']
+        print(role)
         cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (username, password))
         account = cursor.fetchone()
+        print(f"Account {account}")
         if account:
             session['loggedin'] = True
             session['id'] = account['id']
             session['role'] = role
+            print(role)
             if role == "1":
                 session["task"] = "add"
                 session["taskC"] = "add"
                 return redirect(url_for('adminCust'))
             elif account and role == "2":
-                return redirect(url_for('billDetail'))
+                return redirect(url_for('billsList'))
+                # return redirect(url_for('billDetail'))
             elif role == "3":
-                return redirect(url_for('uploadFile'))
+                return redirect(url_for('meterReading'))
         else:
             msg = 'Incorrect username/password!'  
     return render_template('login.html', msg=msg)
@@ -246,6 +252,26 @@ def complainDetail():
 def billTimeline():
     return render_template("billTimeline.html")  
 
+
+@app.route("/billsList")
+def billsList():
+    # cid = session["id"]
+    # conn = mysql.connect()
+    # bill = Bill(conn,request,cid)
+    # billNos = bill.getBillNos() #to be added; returns an array of bill numbers
+    # billDates = bill.getBillDates() # should return an array of bill dates
+    billNos=[1,2,3,4,5,6]
+    length = len(billNos)
+    billDates=['2021-09-07','2021-09-11','2021-09-10','2021-09-20','2021-09-30','2021-08-03']
+    BillPaymentStatus = [True,False,False,True,False]   #should be taken from the db too
+    meterNos=[1001,1002,1003,1004,1005,1006]
+    amountDues=[100,150,170,300,270,990]
+    unitsConsumed=[80,110,130,200,180,350]
+    connectionIDs=[1111,1112,1113,1114,1115,1117]
+    billingPeriods=[3,5,8,2,8,1]
+    
+    return render_template("billslist.html",billingPeriods=billingPeriods,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs)
+
 @app.route("/billDetail")
 def billDetail():
     cid = session["id"]
@@ -254,7 +280,7 @@ def billDetail():
     print(bill.getAmount())
     # amount = pass
     js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
-    return render_template("billDetail.html" ,js=js) 
+    return render_template("billDetail.html" ) 
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
@@ -372,36 +398,33 @@ def adminConn():
 
 @app.route("/meterReading", methods=["GET", "POST"])
 def meterReading():
+    conn = mysql.connect()
+    meterRead = MeterReading(conn,session['id'])
     if request.method=="POST":
         if 'formStateGet' in request.form:
-            csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
+            csv,filename = meterRead.createMeterReadingFile()
             return Response(csv,
                             mimetype="text/csv",
                             headers={"Content-disposition":
-                                    "attachment; filename=consumerList.csv"})
+                                    f"attachment; filename={filename}"})
         elif 'formStatePost' in request.form:
             if request.files:
                 file = request.files["uploadCsv"]
-
                 if file.filename == "":
                     print("No filename")
                     return redirect(request.url)
-
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-
                     file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
                     conn = mysql.connect()
-                    meterReading = MeterReading(conn)
+                    meterReading = MeterReading(conn,session['id'])
                     val = meterReading.readFile()
                     if val:
                         print("file saved")
                         return redirect(request.url)
-
                 else:
                     print("That file extension is not allowed")
                     return redirect(request.url)
-
     return render_template("meterReading.html")
 
 @app.route("/test")
@@ -415,4 +438,6 @@ def test():
 
 @app.route("/nav")
 def nav():
-    return render_template("navbar.html")
+    return render_template(".html")
+
+            # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
