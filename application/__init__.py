@@ -382,7 +382,7 @@ def meterReading():
     meterRead.readFile()
     if request.method=="POST":
         if 'formStateGet' in request.form:
-            csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
+            csv = meterRead.createMeterReadingFile()
             return Response(csv,
                             mimetype="text/csv",
                             headers={"Content-disposition":
@@ -419,3 +419,5 @@ def test():
 @app.route("/nav")
 def nav():
     return render_template(".html")
+
+            # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"

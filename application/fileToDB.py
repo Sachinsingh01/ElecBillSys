@@ -15,15 +15,24 @@ class MeterReading():
         self.path = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file"
         #take filename from {decide later}
         self.id = id
-        self.fileName = f'{self.id[:2]}-{date.today()}.csv'
+        d = str(date.today())
+        d = d.split('-')
+        filename = f"{d[0]}{d[1]}"
+        self.fileName = f'{self.id[:2]}-{filename}.csv'
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
 
     def readFile(self):
-        # filename = f"C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file\\{self.filename}"
+        path = f"C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file\\get\\{self.filename}"
         df = pd.read_csv(f'{self.path}\\{self.fileName}')
         print(df.columns == MeterReading.columns)
         cursor = self.conn.cursor()
+        for _, row in df.iterrows():
+            print(f'row: {_}')
+            print(row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
+            # bill = Bill(self.conn,row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
+            # bill.getAmount()
+        return True
         # try:
         #     for _, row in df.iterrows():
         #         try:
@@ -42,12 +51,7 @@ class MeterReading():
         #             return False
         # finally:
         #     self.conn.commit()
-        for _, row in df.iterrows():
-            print(f'row: {_}')
-            print(row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
-            bill = Bill(self.conn,row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
-            bill.getAmount()
-        return True
+        
 
     def createMeterReadingFile(self): 
         #get meter guy login id
@@ -75,9 +79,10 @@ class MeterReading():
             print(temp)
             ls.append(temp)
         df = pd.DataFrame(data=ls,columns=self.columns)
+        csvData = df.to_csv()
         path_file = f'{self.path}\\{self.fileName}'
         df.to_csv(path_file,index=False)
-       
+        return csvData, 
         
         #create the file name according to month and region
         #get the connection ID, meter number address, connection type, ... 

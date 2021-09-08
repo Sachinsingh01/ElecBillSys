@@ -1,3 +1,5 @@
+from os import pardir
+from numpy.lib.function_base import select
 from pymysql import cursors
 from pymysql.cursors import Cursor
 from .consumer import Consumer
@@ -6,6 +8,7 @@ from datetime import timedelta
 from datetime import date
 from datetime import datetime
 import pymysql
+import numpy as np
 # from .fileToDB import MeterReading
 class Bill():
 
@@ -13,27 +16,28 @@ class Bill():
 
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
-        self.cursor.execute("SELECT Co_Type_ID from connection where Meter_No = %s",(meterNo))
+        self.meterNo = meterNo
+        self.cursor.execute("SELECT Co_Type_ID from connection where Meter_No = %s",(self.meterNo))
         self.connType = self.cursor.fetchone()['Co_Type_ID']
         self.prevDate = self.getDate(prevDate)
         self.currDate = self.getDate(readDate)
         self.prevReading = prevReading
         self.currReading = reading
-        self.dueDate = self.generateDueDate()
+        self.dueDate = self.generateDueDate() #due date can be generated using todays date
         print(f"prev: {self.prevDate}, curr:{self.currDate},due:{self.dueDate}")
         # self.amount = self.getAmount()
 
     
     def getAmount(self):
-
-        consumption = self.currReading - self.prevReading
+        self.consumption = self.currReading - self.prevReading
+        print(f"self.consumption: {self.consumption}")
         self.cursor.execute("SELECT Units_To from slab_charges WHERE From_Date = (SELECT MAX(From_Date) from slab_charges) and S_Charge_Type = %s and Con_Type_ID = %s",("EC",self.connType)) 
         temp = self.cursor.fetchall()
         slabs=[]
         for t in temp:
             slabs.append(t['Units_To'])
         print(slabs)
-
+        slabs = np.array(slabs)
         #find the days passed between prev and current date
         billingPeriod = int((self.currDate - self.prevDate).days)
         print(billingPeriod)
@@ -97,7 +101,6 @@ class Bill():
                 ls.append(float(record['S_Charges']))
             FPPCAs.append(ls)
         print(f"FPPCAs: {FPPCAs}")
-        
         #weighted fixedCharge and Subsidy
         t1 = 0
         t2 = 0
@@ -109,8 +112,78 @@ class Bill():
         subsidyRate = t2/billingPeriod
         print(f"fcr:{fixChargeRate}, sr:{subsidyRate}")
 
+
         #weighted EC and FPPCA
+        tt1 = [0,0,0,0,0]
+        tt2 = [0,0,0,0,0]
+        ECs = np.array(ECs)
+        FPPCAs = np.array(FPPCAs)
+        for d,ec,fppca in zip(days,ECs,FPPCAs):
+            tt1 += ec*d
+            tt2 += fppca*d
+        
+        ECRates = tt1/billingPeriod
+        FPPCARates = tt2/billingPeriod
+
+        print(f"ECs: {ECRates}")
+        print(f"FPPCAs: {FPPCARates}")
+
+        #calculating new slabs
+        c = billingPeriod /30.0
+        newSlabs = slabs * c
+        print(f"New Slabs: {newSlabs}")
+
+        #calculate the slabs used by connection
+        i = 0
+        c = self.consumption
+        for slab in newSlabs:
+            if slab > c:
+                index = i
+                break
+            i += 1
+        newSlabs[i] = self.consumption
+        prev = 0
+        j = 0
+        while(j<5):
+            newSlabs[j] -= prev
+            prev += newSlabs[j]
+            j +=1
+
+        i += 1
+        while(i<5):
+            newSlabs[i] = 0
+            i += 1
+        print("newSlabs")
+        print(f"{newSlabs} * {ECRates} = {np.sum(newSlabs * ECRates)}")
+        self.amount = fixChargeRate + subsidyRate + np.sum(newSlabs * ECRates) + np.sum(newSlabs * FPPCARates)
+        print(f"amount = {fixChargeRate} + {subsidyRate} + {np.sum(newSlabs * ECRates)} + {np.sum(newSlabs * FPPCARates)}")
+        print(self.amount)
+    
         #fill the required tables  or return amount 
+        self.BDID = self.generateBDID()
+        print(self.BDID)
+        self.cursor.execute("INSERT INTO bill_master VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.BDID,self.meterNo,self.currDate,self.currReading,self.prevDate,self.prevReading,self.consumption,"OK",str(date.today()),str(date.today()),self.amount))
+        # insert fixedCharge and subsidy 
+        temp = self.generateBDDID()
+        print(temp)
+        self.cursor.execute("INSERT INTO bill_detail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",(temp,self.BDID,"Fixed",1,(fixChargeRate*30)/billingPeriod,0,str(date.today()),str(date.today()),fixChargeRate))
+        temp = self.generateBDDID()
+        print(temp)
+        self.cursor.execute("INSERT INTO bill_detail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",(temp,self.BDID,"Subsidy",1,(subsidyRate*30)/billingPeriod,0,str(date.today()),str(date.today()),subsidyRate))
+        
+        #insert EC
+        #insert FPPCA
+        i=0
+        while(i <= index):
+            temp = self.generateBDDID()
+            print(temp)
+            self.cursor.execute("INSERT INTO bill_detail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",(temp,self.BDID,"EC",newSlabs[i],ECRates[i],slabs[i],str(date.today()),str(date.today()),newSlabs[i] * ECRates[i]))
+            temp = self.generateBDDID()
+            print(temp)
+            self.cursor.execute("INSERT INTO bill_detail VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",(temp,self.BDID,"FPPCA",newSlabs[i],FPPCARates[i],slabs[i],str(date.today()),str(date.today()),newSlabs[i] * FPPCARates[i]))
+            i += 1
+        
+        self.conn.commit()
         #do not forget to update the billing calender
 
     def getCurrDate(self):
@@ -142,11 +215,39 @@ class Bill():
         return self.currDate + timedelta(days = 15)
 
     
-    def jadoo(self):
-        pass
+    def generateBDID(self):
+        self.cursor.execute("SELECT max(BD_ID) as BD_ID from bill_master")
+        record = self.cursor.fetchone()
+        print(record)
+        if record["BD_ID"] == None:
+            return 60000000000001
+        else:
+            return int(record['BD_ID']) + 1
+    
+    def generateBDDID(self):
+        self.cursor.execute("SELECT max(BDD_ID) as BDD_ID from bill_detail")
+        record = self.cursor.fetchone()
+        if record['BDD_ID'] == None:
+            return 4000000000000001
+        else:
+            return int(record['BDD_ID']) + 1
 
     def getDate(self,date):
         temp = date.split("/")
         dat = f"{temp[2]}-{temp[0]}-{temp[1]}"
         return datetime.strptime(dat,'%Y-%m-%d').date()
     
+    """ i =0
+        c = self.consumption
+        prev = 0
+        while (c > 0):
+            c = c - (newSlabs[i] - prev)
+            prev = newSlabs[i]
+            i += 1
+        i -= 1
+        newSlabs[i] += c - newSlabs[i-1] if i > 0 else prev
+        i +=1
+        while(i<5):
+            newSlabs[i] = 0
+            i += 1
+        print(newSlabs) """
