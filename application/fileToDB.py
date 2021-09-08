@@ -46,7 +46,7 @@ class MeterReading():
             print(f'row: {_}')
             print(row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
             bill = Bill(self.conn,row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
-            bill.jadoo()
+            bill.getAmount()
         return True
 
     def createMeterReadingFile(self): 
