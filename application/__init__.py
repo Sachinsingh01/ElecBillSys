@@ -263,8 +263,14 @@ def billsList():
     billNos=[1,2,3,4,5,6]
     length = len(billNos)
     billDates=['2021-09-07','2021-09-11','2021-09-10','2021-09-20','2021-09-30','2021-08-03']
-    BillPaymentStatus = [True,True,False,False,True]   #should be taken from the db too
-    return render_template("billslist.html",billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus)
+    BillPaymentStatus = [True,False,False,True,False]   #should be taken from the db too
+    meterNos=[1001,1002,1003,1004,1005,1006]
+    amountDues=[100,150,170,300,270,990]
+    unitsConsumed=[80,110,130,200,180,350]
+    connectionIDs=[1111,1112,1113,1114,1115,1117]
+    billingPeriods=[3,5,8,2,8,1]
+    
+    return render_template("billslist.html",billingPeriods=billingPeriods,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs)
 
 @app.route("/billDetail")
 def billDetail():
