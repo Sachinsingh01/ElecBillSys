@@ -15,15 +15,10 @@ class MeterReading():
         self.path = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
         #take filename from {decide later}
         self.id = id
-<<<<<<< HEAD
-        print(f'id:{self.id}')
-        self.fileName = f'{self.id[:2]}-{date.today()}.csv'
-=======
         d = str(date.today())
         d = d.split('-')
         filename = f"{d[0]}{d[1]}"
         self.fileName = f'{self.id[:2]}-{filename}.csv'
->>>>>>> 8886568c074706baa0a2dd1167fe382f88834161
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
 
