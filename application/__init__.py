@@ -25,7 +25,7 @@ app.config['MYSQL_DATABASE_DB'] = 'test'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
-app.config["CSV_UPLOADS"] = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
+app.config["CSV_UPLOADS"] = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file\\get"
 # app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["CSV"]
 
 def allowed_file(filename):
@@ -280,7 +280,7 @@ def billDetail():
     print(bill.getAmount())
     # amount = pass
     js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
-    return render_template("billDetail.html" ,js=js) 
+    return render_template("billDetail.html" ) 
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
@@ -400,14 +400,13 @@ def adminConn():
 def meterReading():
     conn = mysql.connect()
     meterRead = MeterReading(conn,session['id'])
-    meterRead.readFile()
     if request.method=="POST":
         if 'formStateGet' in request.form:
-            csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
+            csv,filename = meterRead.createMeterReadingFile()
             return Response(csv,
                             mimetype="text/csv",
                             headers={"Content-disposition":
-                                    "attachment; filename=consumerList.csv"})
+                                    f"attachment; filename={filename}"})
         elif 'formStatePost' in request.form:
             if request.files:
                 file = request.files["uploadCsv"]
@@ -418,7 +417,7 @@ def meterReading():
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
                     conn = mysql.connect()
-                    meterReading = MeterReading(conn)
+                    meterReading = MeterReading(conn,session['id'])
                     val = meterReading.readFile()
                     if val:
                         print("file saved")
@@ -440,3 +439,5 @@ def test():
 @app.route("/nav")
 def nav():
     return render_template(".html")
+
+            # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
