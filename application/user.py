@@ -6,11 +6,15 @@ import hashlib
 import os
 
 class User:
-    def __init__(self, conn):
+    def __init__(self, conn, cid):
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
-        self.cursor.execute("SELECT * FROM consumer WHERE Con_ID = %s",(cid))
-        record = self.cursor.fetchone()
+        try:
+            self.cursor.execute("SELECT * FROM consumer WHERE Con_ID = %s",(cid))
+            record = self.cursor.fetchone()
+        except Exception as e:
+            print(e)
+            print("Unable to fetch record ")
         self.userId = self.generateUserId()
         self.userType = "Consumer"
         self.userName = record['Con_No']
