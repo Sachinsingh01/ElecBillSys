@@ -75,7 +75,8 @@ def login():
                 session["taskC"] = "add"
                 return redirect(url_for('adminCust'))
             elif account and role == "2":
-                return redirect(url_for('billDetail'))
+                return redirect(url_for('billsList'))
+                # return redirect(url_for('billDetail'))
             elif role == "3":
                 return redirect(url_for('meterReading'))
         else:
@@ -250,6 +251,20 @@ def complainDetail():
 @app.route("/billTimeline")
 def billTimeline():
     return render_template("billTimeline.html")  
+
+
+@app.route("/billsList")
+def billsList():
+    # cid = session["id"]
+    # conn = mysql.connect()
+    # bill = Bill(conn,request,cid)
+    # billNos = bill.getBillNos() #to be added; returns an array of bill numbers
+    # billDates = bill.getBillDates() # should return an array of bill dates
+    billNos=[1,2,3,4,5,6]
+    length = len(billNos)
+    billDates=['2021-09-07','2021-09-11','2021-09-10','2021-09-20','2021-09-30','2021-08-03']
+    BillPaymentStatus = [True,True,False,False,True]   #should be taken from the db too
+    return render_template("billslist.html",billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus)
 
 @app.route("/billDetail")
 def billDetail():
