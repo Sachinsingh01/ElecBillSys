@@ -25,7 +25,7 @@ app.config['MYSQL_DATABASE_DB'] = 'test'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
-app.config["CSV_UPLOADS"] = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
+app.config["CSV_UPLOADS"] = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file\\get"
 # app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["CSV"]
 
 def allowed_file(filename):
@@ -394,14 +394,13 @@ def adminConn():
 def meterReading():
     conn = mysql.connect()
     meterRead = MeterReading(conn,session['id'])
-    meterRead.readFile()
     if request.method=="POST":
         if 'formStateGet' in request.form:
-            csv = meterRead.createMeterReadingFile()
+            csv,filename = meterRead.createMeterReadingFile()
             return Response(csv,
                             mimetype="text/csv",
                             headers={"Content-disposition":
-                                    "attachment; filename=consumerList.csv"})
+                                    f"attachment; filename={filename}"})
         elif 'formStatePost' in request.form:
             if request.files:
                 file = request.files["uploadCsv"]
@@ -412,7 +411,7 @@ def meterReading():
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(app.config["CSV_UPLOADS"], filename))
                     conn = mysql.connect()
-                    meterReading = MeterReading(conn)
+                    meterReading = MeterReading(conn,session['id'])
                     val = meterReading.readFile()
                     if val:
                         print("file saved")

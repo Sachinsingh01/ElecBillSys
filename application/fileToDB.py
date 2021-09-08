@@ -23,34 +23,23 @@ class MeterReading():
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
 
     def readFile(self):
-        path = f"C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file\\get\\{self.filename}"
         df = pd.read_csv(f'{self.path}\\{self.fileName}')
         print(df.columns == MeterReading.columns)
-        cursor = self.conn.cursor()
         for _, row in df.iterrows():
             print(f'row: {_}')
-            print(row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
-            # bill = Bill(self.conn,row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
-            # bill.getAmount()
+            print(row['MeterReadingId'],row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
+            self.cursor.execute("SELECT CO_ID from connection where Meter_No = %s",(row["MeterNo"]))
+            connID = self.cursor.fetchone()['CO_ID']
+            id = self.generateID()
+            try:
+                self.cursor.execute("INSERT INTO meter_reading VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(id,row["MeterNo"],connID,row["Meter_Reading"],self.getDate(row["Read_Date"]),"Active",str(date.today()),str(date.today()),self.getDate(row["prev_date"]),row["prev_reading"]))
+                bill = Bill(self.conn,row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
+                bill.getAmount()
+            except Exception as e:
+                print(e)
+        self.conn.commit()
         return True
-        # try:
-        #     for _, row in df.iterrows():
-        #         try:
-        #             print(f'row: {_}')
-        #             print(row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
-        #             bill = Bill(self.conn,row["MeterNo"],row["prev_date"],row["prev_reading"],row["Read_Date"],row["Meter_Reading"])
-        #             bill.jadoo()
-        #             # s = f"inserting row: {_}"
-        #             # print(s)
-        #             #check if row[2] contains date else change it
-        #             # date = datetime.strptime(row[], '%m/%d/%Y').strftime('%Y-%m-%d')
-        #             #change the query according to table and staging table? how to use
-        #             # cursor.execute("INSERT INTO cwmr_month VALUES(%s,%s,%s,%s)",(row[0],row[1],date,row[3]))
-        #         except:
 
-        #             return False
-        # finally:
-        #     self.conn.commit()
         
 
     def createMeterReadingFile(self): 
@@ -67,7 +56,6 @@ class MeterReading():
             print(row)
             #generate a meter reading ID
             id = id + 1
-            # ['MeterReadingId', 'MeterNo', 'Fname', 'Lname','Address','Taluka','District','Pin', 'Contact', 'prev_date', 'prev_reading', 'Meter_Reading', 'Read_Date']
              #create database connection with pymysql dictionary
             self.cursor.execute("select Meter_Reading,Read_Date,Meter_Status from meter_reading where Co_ID = %s and Read_Date = (SELECT max(Read_Date) from Meter_Reading WHERE Co_ID = %s);",(row['Co_ID'],row['Co_ID']))
             reading = self.cursor.fetchone()
@@ -82,8 +70,18 @@ class MeterReading():
         csvData = df.to_csv()
         path_file = f'{self.path}\\{self.fileName}'
         df.to_csv(path_file,index=False)
-        return csvData, 
+        return csvData, self.fileName
         
-        #create the file name according to month and region
-        #get the connection ID, meter number address, connection type, ... 
-        #just leave the "Meter_Reading", "Read_Date", "Meter_Status" empty for the guy to fill in
+    def getDate(self,date):
+        temp = date.split("/")
+        dat = f"{temp[2]}-{temp[0]}-{temp[1]}"
+        return datetime.strptime(dat,'%Y-%m-%d').date()
+
+    def generateID(self):
+        self.cursor.execute("SELECT max(Meter_Reading_id ) as mid from meter_reading")
+        record = self.cursor.fetchone()
+        print(record)
+        if record["mid"] == None:
+            return 60000000000001
+        else:
+            return int(record['mid']) + 1
