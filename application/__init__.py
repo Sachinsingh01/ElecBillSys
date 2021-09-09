@@ -268,11 +268,18 @@ def billsList():
 
 @app.route("/billDetail")
 def billDetail():
-    cid = session["id"]
+    bid = request.args['id']
+    print(f"BID : {bid}")
+    conNo = session["id"]
     conn = mysql.connect()
-    bill = Bill(conn, request,cid)
-    print(bill.getAmount())
-    # amount = pass
+    consumer = Consumer(conn, request)
+    consumer.getConsumer(conNo)
+    connection = Connection(conn,request)
+    
+    connection.getConnectionByMeterNo()
+    # bill = Bill(conn)
+    # data = 
+    # # amount = pass
     js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
     return render_template("billDetail.html" ,js=js) 
 

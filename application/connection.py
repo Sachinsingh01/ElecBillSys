@@ -141,4 +141,7 @@ class Connection:
             print("Unable to update connection")
             return False
 
+    def getConnectionByMeterNo(self):
+        self.cursor.execute("SELECT * from connection where Meter_No = %s",(self.meterNo))
+        self.connType = self.cursor.fetchone()
     

@@ -236,6 +236,9 @@ class Bill():
         temp = date.split("/")
         dat = f"{temp[2]}-{temp[0]}-{temp[1]}"
         return datetime.strptime(dat,'%Y-%m-%d').date()
+
+    def getBill(self,bid):
+        pass
     
     """ i =0
         c = self.consumption
