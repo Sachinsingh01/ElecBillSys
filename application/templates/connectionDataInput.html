@@ -56,7 +56,9 @@
             #container{
                 position: absolute;
                 width: calc(100vw - 80px);
+                height: calc(100vh - 70px);
                 right: 0;
+                bottom: 0;
             }
         </style>
     <title>Admin Dash</title>
@@ -83,19 +85,19 @@
                     <input type="text" class="d-none" id="taskC" name="taskC" value= {{val}}> 
                     <input type="text" class="d-none" id="stateC" name="stateC" value= "0"> 
                     {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    {% for message in messages %}
-                    <p class="font-monospace d-none" id="alertMsgC" >{{message}}</p>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
-                    {% include "includes/connectionInputs/connectionAdd.html" %}
-                    {% include "includes/connectionInputs/connectionFilter.html" %}
-                    {% include "navbar.html" %}
+										{% if messages %}
+										{% for message in messages %}
+										<p class="font-monospace d-none" id="alertMsgC" >{{message}}</p>
+										{% endfor %}
+										{% endif %}
+										{% endwith %}
+										{% include "includes/connectionInputs/connectionAdd.html" %}
+										{% include "includes/connectionInputs/connectionFilter.html" %}
             </section>
         </section>
     </div>
-
+    
+		{% include "navbar.html" %}
 
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"

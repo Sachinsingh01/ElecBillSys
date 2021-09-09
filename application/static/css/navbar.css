@@ -12,7 +12,6 @@
     z-index: 1000;
 }
 
-
 .ctn-body{
     padding: 0.6rem;
     height: 100%;
@@ -117,3 +116,69 @@
 #hamburger:hover{
     background-color:rgb(2,86,212);
 }
+
+/* Appbar */
+#ctn-appbar{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    width: calc(100vw - 90px);
+    height: 70px;
+    background-color: #0d6efd;
+    transition: 0.2s ease-in-out;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 800;
+}
+
+#ctn-body-appbar{
+    width: 100%;
+    overflow: hidden;
+}
+
+
+#app-logo{
+    font-size: 1.5rem;
+    color:#fff;
+    padding: 0.5rem;
+}
+#app-name{
+    font-size: 1.5rem;
+    color:#fff;
+}
+
+#app-list{
+    display: flex;
+    align-content: center;
+}
+
+#search-btn:hover,
+#logout-btn:hover{
+    background-color: rgb(2,86,212);
+}
+
+#search-btn,
+#logout-btn{
+    color: #fff;
+    font-size: 1.3rem;
+}
+
+#search-form{
+    display: flex;
+}
+
+#search{
+    margin: 0.2rem 0.5rem;
+    width: 80%;
+    height: 85%;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.2rem;
+    border: none;
+    outline: none;
+}
+
+#search::placeholder{
+    color:#948f8f;
+}
+
