@@ -258,20 +258,10 @@ def billsList():
     cNo = session["id"]
     conn = mysql.connect()
     bill = Bill(conn)
-    bill.getBillsByCNo(cNo)
-    # billNos = bill.getBillNos() #to be added; returns an array of bill numbers
-    # billDates = bill.getBillDates() # should return an array of bill dates
-    billNos=[1,2,3,4,5,6]
+    billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = bill.getBillsByCNo(cNo)
     length = len(billNos)
-    billDates=['2021-09-07','2021-09-11','2021-09-10','2021-09-20','2021-09-30','2021-08-03']
     BillPaymentStatus = [True,False,False,True,False]   #should be taken from the db too
-    meterNos=[1001,1002,1003,1004,1005,1006]
-    amountDues=[100,150,170,300,270,990]
-    unitsConsumed=[80,110,130,200,180,350]
-    connectionIDs=[1111,1112,1113,1114,1115,1117]
-    billingPeriods=[3,5,8,2,8,1]
-    
-    return render_template("billslist.html",billingPeriods=billingPeriods,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs)
+    return render_template("billslist.html",prevDates=prevDates,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs)
 
 @app.route("/billDetail")
 def billDetail():
@@ -279,16 +269,19 @@ def billDetail():
     print(f"BID : {bid}")
     conNo = session["id"]
     conn = mysql.connect()
+    bill = Bill(conn)
+    breakUP = bill.getBillBreakUp(bid)
     consumer = Consumer(conn, request)
     consumer.getConsumer(conNo)
     connection = Connection(conn,request)
-    
-    connection.getConnectionByMeterNo()
-    # bill = Bill(conn)
-    # data = 
-    # # amount = pass
-    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
-    return render_template("billDetail.html" ) 
+    connection.getConnectionByMeterNo(bill.meterNo)
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT San_Load, Con_Type FROM connection_type WHERE Con_Type_ID = %s ",(connection.conType))
+    temp = cursor.fetchone()
+    sancLoad = temp["San_Load"]
+    conType = temp["Con_Type"]
+    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad,"breakUP" = breakUP}
+    return render_template("billDetail.html") 
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
