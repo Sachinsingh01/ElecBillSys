@@ -40,3 +40,6 @@ thead {
   tr:nth-child(even) {
     background-color: #f4f6fb;
   }
+  #billInput,#complaintInput,#consumerInput,#connectionInput{
+    cursor: pointer;
+  }

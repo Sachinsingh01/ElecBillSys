@@ -28,7 +28,9 @@
           <div
             class="row shadow p-3 mt-3 mx-auto col-md-11 bg-body rounded"
           >
+            <a class="d-none" id="gotoLink"></a>
             <div
+              id="consumerInput"
               class="card mb-4 mx-auto mt-3 p-0 col-5"
               style="max-width: 540px"
             >
@@ -56,6 +58,7 @@
               </div>
             </div>
             <div
+              id="connectionInput"
               class="card mb-4 mx-auto mt-3 p-0 col-5"
               style="max-width: 540px"
             >
@@ -83,7 +86,7 @@
                 </div>
               </div>
             </div>
-            <div class="card mb-4 mx-auto p-0 col-5" style="max-width: 540px">
+            <div class="card mb-4 mx-auto p-0 col-5" id="billInput" style="max-width: 540px">
               <div class="row g-0">
                 <div class="col-md-4">
                   <img
@@ -105,7 +108,7 @@
                 </div>
               </div>
             </div>
-            <div class="card mb-4 mx-auto p-0 col-5" style="max-width: 540px">
+            <div class="card mb-4 mx-auto p-0 col-5" id="complaintInput" style="max-width: 540px">
               <div class="row g-0">
                 <div class="col-md-4">
                   <img
@@ -174,7 +177,28 @@
       </section>
     </div>
     {% include "navbar.html" %}
-
+    <script>
+      document.getElementById("consumerInput").addEventListener("click", e=>{
+        var link = document.getElementById("gotoLink")
+        link.href="/adminCust"
+        link.click()
+      })
+      document.getElementById("connectionInput").addEventListener("click", e=>{
+        var link = document.getElementById("gotoLink")
+        link.href="/adminConn"
+        link.click()
+      })
+      document.getElementById("billInput").addEventListener("click", e=>{
+        var link = document.getElementById("gotoLink")
+        link.href="/billsList"
+        link.click()
+      })
+      document.getElementById("complaintInput").addEventListener("click", e=>{
+        var link = document.getElementById("gotoLink")
+        link.href="/complainList"
+        link.click()
+      })
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
       integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
