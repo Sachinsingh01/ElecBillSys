@@ -467,8 +467,8 @@ def test():
     print(sql)
     return "<h1>testing<h1>"
 
-@app.route("/nav")
-def nav():
-    return render_template(".html")
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dash.html")
 
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
