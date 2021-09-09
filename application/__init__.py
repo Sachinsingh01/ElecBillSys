@@ -10,7 +10,10 @@ from .fileToDB import MeterReading
 from .Billing import Bill
 import re 
 from .connection import Connection
-
+import hashlib
+import os
+import bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
@@ -59,13 +62,19 @@ def login():
         username = request.form['inputId']
         print(username)
         password = request.form['inputPassword']
-        print(password)
+        # hash_password = generate_password_hash(password)
+        # print(hash_password)
         role = request.form['inputCredentials']
         print(role)
-        cursor.execute('SELECT * FROM user WHERE id = %s AND password = %s', (username, password))
+        
+        cursor.execute('SELECT * FROM user WHERE id = %s', (username))
         account = cursor.fetchone()
+        pwd = account['password']
         print(f"Account {account}")
-        if account:
+        print(pwd)
+        print(check_password_hash(pwd,password))
+        
+        if account and check_password_hash(pwd,password):
             session['loggedin'] = True
             session['id'] = account['id']
             session['role'] = role
@@ -80,7 +89,7 @@ def login():
             elif role == "3":
                 return redirect(url_for('meterReading'))
         else:
-            msg = 'Incorrect username/password!'  
+            msg = 'Incorrect Username or Password!'  
     return render_template('login.html', msg=msg)
 
 @app.route("/logout")
