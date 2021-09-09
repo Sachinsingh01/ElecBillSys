@@ -43,3 +43,21 @@ thead {
   #billInput,#complaintInput,#consumerInput,#connectionInput{
     cursor: pointer;
   }
+
+  .status {
+    border-radius: 0.2rem;
+    background-color: red;
+    padding: 0.2rem 1rem;
+    text-align: center;
+    margin: auto 0;
+  }
+
+  .status.paid{
+    background-color: #c8e6c9;
+    color: #388e3c;
+  }
+
+  .status.unpaid{
+    background-color: #ffcdd2;
+    color: #c62828;
+  }

@@ -471,4 +471,8 @@ def test():
 def dashboard():
     return render_template("dash.html")
 
+@app.route("/dashboardCon")
+def dashboardCon():
+    return render_template("consumerDash.html")
+
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
