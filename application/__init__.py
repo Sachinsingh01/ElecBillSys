@@ -12,10 +12,7 @@ import re
 from .connection import Connection
 import hashlib
 import os
-<<<<<<< HEAD
 # import bcrypt
-=======
->>>>>>> f338b55e5361856c2d0d984949f889af03f9b467
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -260,7 +257,24 @@ def complainList():
 
 @app.route("/complainDetail")
 def complainDetail():
-    return render_template("complainDetail.html")
+    bid = request.args['id']
+    print(f"BID : {bid}")
+    conNo = session["id"]
+    conn = mysql.connect()
+    bill = Bill(conn)
+    breakUP = bill.getBillBreakUp(bid)
+    consumer = Consumer(conn)
+    consumer.getConsumer(conNo)
+    connection = Connection(conn,request)
+    connection.getConnectionByMeterNo(bill.meterNo)
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT San_Load, Con_Type FROM connection_type WHERE Con_Type_ID = %s ",(connection.conType))
+    temp = cursor.fetchone()
+    sancLoad = temp["San_Load"]
+    conType = temp["Con_Type"]
+    js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
+    print(js)
+    return render_template("complainDetail.html", js=js, consumer=consumer, connection=connection, bill=bill)
 
 @app.route("/billTimeline")
 def billTimeline():

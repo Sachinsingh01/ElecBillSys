@@ -154,12 +154,12 @@
 }
 
 #search-btn:hover,
-#logout-btn:hover{
+#accountUser:hover{
     background-color: rgb(2,86,212);
 }
 
 #search-btn,
-#logout-btn{
+#accountUser{
     color: #fff;
     font-size: 1.3rem;
 }
@@ -182,3 +182,54 @@
     color:#948f8f;
 }
 
+#userDropdown{
+    margin: 0 auto;
+}
+#accountUser{
+    padding: 1rem;
+    border-radius: 0.2rem;
+}
+
+.dropdownMenu{
+    display: none;
+    list-style: none;
+    position: absolute;
+    top: 10;
+}
+
+.dropdownMenu.down{
+    display: block;
+    position: absolute;
+    top: 73px;
+    right: 10px;
+    background-color: #0d6efd;
+    padding: 1rem;
+    border-radius: 0.2rem;
+}
+
+#dropdown-item{
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+#dropdown-link{
+    text-decoration: none;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 0.2rem;
+}
+
+#dropdown-link:hover{
+    background-color: rgb(2,86,212);
+}
+
+#dropdown-divider{
+    color: #fff;
+    border: 3px solid;
+    border-top: none;
+    margin: 0.5rem 0;
+}
+
+.dropdownMenu.down li{
+    padding: 0.5rem 0;
+}
