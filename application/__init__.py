@@ -12,7 +12,6 @@ import re
 from .connection import Connection
 import hashlib
 import os
-import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -290,7 +289,7 @@ def billDetail():
     temp = cursor.fetchone()
     sancLoad = temp["San_Load"]
     conType = temp["Con_Type"]
-    js = {"fname":consumer.fname, "instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
+    js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
     print(js)
     return render_template("billDetail.html", js=js, connection = connection, consumer=consumer, bill = bill) 
 

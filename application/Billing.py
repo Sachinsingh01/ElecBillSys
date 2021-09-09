@@ -160,7 +160,6 @@ class Bill():
         self.amount = fixChargeRate + subsidyRate + np.sum(newSlabs * ECRates) + np.sum(newSlabs * FPPCARates)
         print(f"amount = {fixChargeRate} + {subsidyRate} + {np.sum(newSlabs * ECRates)} + {np.sum(newSlabs * FPPCARates)}")
         print(self.amount)
-    
         #fill the required tables  or return amount 
         self.BDID = self.generateBDID()
         print(self.BDID)
@@ -254,6 +253,8 @@ class Bill():
         self.consumption = bill["Consumption"]
         self.readingRemark = bill["Reading_Remark"]
         self.amount = bill["Total_Demand"]
+        self.roundedAmount = round(self.amount%1,2)
+        self.intAmount = int(self.amount)
         print()
 
 
@@ -299,18 +300,31 @@ class Bill():
             FPPCA = []
             self.cursor.execute("SELECT * FROM bill_detail WHERE BD_ID = %s", (bid))
             records = self.cursor.fetchall()
+            ECSum = 0
+            FPPCASum = 0
             for record in records:
                 if record["Charge_Type"] == "Fixed":
                     details["Fixed"] = [record["Unit_Consumed"],round(record["Charges"],2),round(record["Individual_Amount"],2)]
                 elif record["Charge_Type"] == "Subsidy":
-                    details["Subsidy"] = [record["Unit_Consumed"],round(record["Charges"],2),round(record["Individual_Amount"],2)]
+                    details["Subsidy"] = [record["Unit_Consumed"],-round(record["Charges"],2),-round(record["Individual_Amount"],2)]
                 elif record["Charge_Type"] == "EC":
                     EC.append([record["Unit_Consumed"],round(record["Charges"],2),round(record["Individual_Amount"],2)])
+                    ECSum += round(record["Individual_Amount"],2)
                 elif record["Charge_Type"] == "FPPCA":
                     FPPCA.append([record["Unit_Consumed"],round(record["Charges"],2),round(record["Individual_Amount"],2)])
+                    FPPCASum += round(record["Individual_Amount"],2)
             details["EC"] = EC
             details["FPPCA"] =FPPCA
+            details["ECSum"] = ECSum
+            details["FPPCASum"] = FPPCASum
             return details
         except Exception as e:
             print(e)
             return False
+
+    def getAmountString(self):
+        tempAm = self.amount
+        count = 0
+        for digit in str(tempAm)[::-1]:
+            count+=1
+            pass
