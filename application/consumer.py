@@ -2,6 +2,7 @@
 from re import S
 import pymysql 
 from datetime import date
+from .user import User
 
 class Consumer():
     # Dictionary of Talukas and Districts in Goa
@@ -40,6 +41,10 @@ class Consumer():
         try:
             print("Executing Insert Query")
             self.cursor.execute("INSERT INTO consumer(Con_No,Con_First_Name,Con_Last_Name,Con_Address,Con_Taluka,Con_District,Con_Pin_Code,Con_Contact,Created,Updated,Con_Email) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.cno,self.fname,self.lname,self.address,self.taluka,self.district,self.pinCode,self.contact,today,today,self.email))
+            
+            # Create a user along with consumer
+            user = User(self.conn, cid)
+            user.insertUser()
             self.conn.commit()
             return True
         except Exception as e:
