@@ -12,7 +12,7 @@ import numpy as np
 # from .fileToDB import MeterReading
 class Bill():
 
-    def __init__(self,conn,meterNo,prevDate,prevReading,readDate,reading):
+    def __init__(self,conn,meterNo="",prevDate="",prevReading="",readDate="",reading=""):
 
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -240,17 +240,26 @@ class Bill():
     def getBill(self,bid):
         pass
     
-    """ i =0
-        c = self.consumption
-        prev = 0
-        while (c > 0):
-            c = c - (newSlabs[i] - prev)
-            prev = newSlabs[i]
-            i += 1
-        i -= 1
-        newSlabs[i] += c - newSlabs[i-1] if i > 0 else prev
-        i +=1
-        while(i<5):
-            newSlabs[i] = 0
-            i += 1
-        print(newSlabs) """
+    def getBillsByCNo(self,cNo):
+        try:
+            self.cursor.execute("SELECT * FROM bill_master WHERE Meter_No IN (SELECT Meter_No FROM connection WHERE Con_ID = %s) ORDER BY Current_Read_Date DESC",(cNo))
+            records = self.cursor.fetchall()
+            billNos = []
+            billDates = []
+            amounts = []
+            consumptions = []
+            connectionIds = []
+            prevDate = []
+            for record in records:
+                billNos.append(records["BD_ID"])
+                billDates.append(records["Current_Read_Date"])
+                amounts.append(records["Total_Demand"])
+                prevDate.append(records["Prev_Read_Date"])
+                consumptions.append(records["Consumption"])
+                self.cursor.execute("SELECT CO_ID from connection where Meter_No = %s",(record["Meter_No"]))
+                coId = self.cursor.fetchone()['CO_ID']
+                connectionIds.append(coId)
+        except Exception as e:
+            print(e)
+        
+        return billNos, billDates, amounts, consumptions, connectionIds, prevDate

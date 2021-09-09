@@ -255,9 +255,10 @@ def billTimeline():
 
 @app.route("/billsList")
 def billsList():
-    # cid = session["id"]
-    # conn = mysql.connect()
-    # bill = Bill(conn,request,cid)
+    cNo = session["id"]
+    conn = mysql.connect()
+    bill = Bill(conn)
+    bill.getBillsByCNo(cNo)
     # billNos = bill.getBillNos() #to be added; returns an array of bill numbers
     # billDates = bill.getBillDates() # should return an array of bill dates
     billNos=[1,2,3,4,5,6]
