@@ -19,6 +19,7 @@ class Connection:
             self.conNo = request.form['inputConNo']
             self.installationID = self.generateInstallID()
             self.installationDate = request.form['inputInstallationDate']
+            print(self.installationDate)
             self.connStatus = request.form['inputConnStatus']
             self.created = ""
             self.updated = ""
@@ -129,7 +130,7 @@ class Connection:
             self.conType = request.form['inputConnType']
             self.conNo = request.form['inputConNo']
             self.installationID = record['Installation_ID']
-            self.installationDate = record['Installation_Date']
+            self.installationDate = request.form['inputInstallationDate']
             self.connStatus = request.form['inputConnStatus']
             self.created = record['Created']
             

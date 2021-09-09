@@ -17,11 +17,18 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <style>
+      #container{
+              position: absolute;
+              width: calc(100vw - 80px);
+              right: 0;
+          }
+    </style>
     <title>ADMIN DASH</title>
   </head>
 
   <body>
-    <div class="container-fluid rounded">
+    <div class="container-fluid rounded" id="container">
       <section class="row justify-content-center">
         <section class="col-12 col-sm-11 col-md-11">
           <div
@@ -34,11 +41,11 @@
               </p>
               <div class="row m-0">
               <div class="col-4 mb-5 p-2" style="border: 2px solid">
-                <p class="font-monospace mb-0 col-12">Name : {{js.fname}} {{js.lname}}</p>
-                <p class="font-monospace mb-0 col-12">CA No. : {{js.cid}}</p>
+                <p class="font-monospace mb-0 col-12">Name : </p>
+                <p class="font-monospace mb-0 col-12">CA No. : </p>
                 <p class="font-monospace mb-0 col-12">Inst. No. :</p>
-                <p class="font-monospace mb-0 col-12">Address :{{js.address}}, {{js.taluka}}, {{js.district}}, Goa. {{js.pinCode}}</p>
-                <p class="font-monospace mb-0 col-12">Tel No. : {{js.contact}}</p>
+                <p class="font-monospace mb-0 col-12">Address : </p>
+                <p class="font-monospace mb-0 col-12">Tel No. : </p>
                 <p class="font-monospace mb-0 col-12">E-mail ID :</p>
               </div>
               <div
@@ -424,7 +431,7 @@
         </section>
       </section>
     </div>
-
+    {% include "navbar.html" %}
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
       integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"

@@ -263,8 +263,14 @@ def billsList():
     billNos=[1,2,3,4,5,6]
     length = len(billNos)
     billDates=['2021-09-07','2021-09-11','2021-09-10','2021-09-20','2021-09-30','2021-08-03']
-    BillPaymentStatus = [True,True,False,False,True]   #should be taken from the db too
-    return render_template("billslist.html",billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus)
+    BillPaymentStatus = [True,False,False,True,False]   #should be taken from the db too
+    meterNos=[1001,1002,1003,1004,1005,1006]
+    amountDues=[100,150,170,300,270,990]
+    unitsConsumed=[80,110,130,200,180,350]
+    connectionIDs=[1111,1112,1113,1114,1115,1117]
+    billingPeriods=[3,5,8,2,8,1]
+    
+    return render_template("billslist.html",billingPeriods=billingPeriods,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs)
 
 @app.route("/billDetail")
 def billDetail():
@@ -281,7 +287,7 @@ def billDetail():
     # data = 
     # # amount = pass
     js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
-    return render_template("billDetail.html" ,js=js) 
+    return render_template("billDetail.html" ) 
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
@@ -367,8 +373,8 @@ def adminConn():
                     print("in Update")
                     print("ConnectionID : ",connid)
 
-                    print(request.form['state'])
-                    if request.form['state'] == "1":
+                    print(request.form['stateC'])
+                    if request.form['stateC'] == "1":
                         try:
                             try:
                                 print("actually updating")
@@ -386,7 +392,7 @@ def adminConn():
                             conn.close()
                     else:
                         findConn = connection.getConnection(connid)
-                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":connection.conType, "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
+                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":str(connection.conType), "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
                         if not findConn:
                             msg = "Unable to find the connection"
                     
