@@ -10,23 +10,26 @@ class Consumer():
     districts = ["SOUTH GOA","NORTH GOA"]
 
 
-    def __init__(self,conn,request):
-        try:
-            self.fname = request.form['inputConFName']
-            self.lname = request.form['inputConLName']
-            self.address = request.form['inputConAddress']
-            print(request.form['inputConAddress'])
-            print(self.address)
-            self.taluka = request.form['inputConTaluka']
-            self.district = request.form['inputConDistrict']
-            self.pinCode = request.form['inputConPin']
-            self.contact = request.form['inputConContact']
-            self.email = request.form['inputConEmail']
-        except:
-            print("Unable to initialize consumer")
+    def __init__(self,conn,request=""):
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
-        self.cno = self.createConsumerNo()
+        try:
+            if request != "":
+                self.fname = request.form['inputConFName']
+                self.lname = request.form['inputConLName']
+                self.address = request.form['inputConAddress']
+                print(request.form['inputConAddress'])
+                print(self.address)
+                self.taluka = request.form['inputConTaluka']
+                self.district = request.form['inputConDistrict']
+                self.pinCode = request.form['inputConPin']
+                self.contact = request.form['inputConContact']
+                self.email = request.form['inputConEmail']
+                self.cno = self.createConsumerNo()
+        except:
+            print("Unable to initialize consumer")
+        
+        
 
             
     def insertConsumer(self):

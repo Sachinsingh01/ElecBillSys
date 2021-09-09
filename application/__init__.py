@@ -271,7 +271,7 @@ def billDetail():
     conn = mysql.connect()
     bill = Bill(conn)
     breakUP = bill.getBillBreakUp(bid)
-    consumer = Consumer(conn, request)
+    consumer = Consumer(conn)
     consumer.getConsumer(conNo)
     connection = Connection(conn,request)
     connection.getConnectionByMeterNo(bill.meterNo)
@@ -280,7 +280,8 @@ def billDetail():
     temp = cursor.fetchone()
     sancLoad = temp["San_Load"]
     conType = temp["Con_Type"]
-    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad,"breakUP" = breakUP}
+    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
+    print(js)
     return render_template("billDetail.html") 
 
 @app.route("/adminConn", methods=["POST", "GET"])
