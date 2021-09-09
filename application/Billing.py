@@ -242,10 +242,12 @@ class Bill():
     def getBill(self,bid):
         self.cursor.execute("SELECT * FROM bill_master WHERE BD_ID = %s",(bid))
         bill = self.cursor.fetchone()
+        self.bid = bid
         self.meterNo = bill["Meter_No"]
         self.prevDate = bill["Prev_Read_Date"]
         self.currDate = bill["Current_Read_Date"]
         self.billingPeriod = int((self.currDate - self.prevDate).days)
+        self.dueDate = self.generateDueDate()
         print(f"Billing Period = {self.billingPeriod}")
         self.currReading = bill["Curr_Reading"]
         self.prevReading = bill["Prev_Reading"]
