@@ -12,19 +12,21 @@ import numpy as np
 # from .fileToDB import MeterReading
 class Bill():
 
-    def __init__(self,conn,meterNo,prevDate,prevReading,readDate,reading):
+    def __init__(self,conn,meterNo="",prevDate="",prevReading="",readDate="",reading=""):
 
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
-        self.meterNo = meterNo
-        self.cursor.execute("SELECT Co_Type_ID from connection where Meter_No = %s",(self.meterNo))
-        self.connType = self.cursor.fetchone()['Co_Type_ID']
-        self.prevDate = self.getDate(prevDate)
-        self.currDate = self.getDate(readDate)
-        self.prevReading = prevReading
-        self.currReading = reading
-        self.dueDate = self.generateDueDate() #due date can be generated using todays date
-        print(f"prev: {self.prevDate}, curr:{self.currDate},due:{self.dueDate}")
+        if meterNo != "":
+            self.meterNo = meterNo
+            self.cursor.execute("SELECT Co_Type_ID from connection where Meter_No = %s",(self.meterNo))
+            self.connType = self.cursor.fetchone()['Co_Type_ID']
+            self.prevDate = self.getDate(prevDate)
+            self.currDate = self.getDate(readDate)
+            self.prevReading = prevReading
+            self.currReading = reading
+            self.dueDate = self.generateDueDate() #due date can be generated using todays date
+            self.billingPeriod = int((self.currDate - self.prevDate).days)
+            print(f"prev: {self.prevDate}, curr:{self.currDate},due:{self.dueDate}")
         # self.amount = self.getAmount()
 
     
@@ -236,18 +238,77 @@ class Bill():
         temp = date.split("/")
         dat = f"{temp[2]}-{temp[0]}-{temp[1]}"
         return datetime.strptime(dat,'%Y-%m-%d').date()
+
+    def getBill(self,bid):
+        self.cursor.execute("SELECT * FROM bill_master WHERE BD_ID = %s",(bid))
+        bill = self.cursor.fetchone()
+        self.meterNo = bill["Meter_No"]
+        self.prevDate = bill["Prev_Read_Date"]
+        self.currDate = bill["Current_Read_Date"]
+        self.billingPeriod = int((self.currDate - self.prevDate).days)
+        print(f"Billing Period = {self.billingPeriod}")
+        self.currReading = bill["Curr_Reading"]
+        self.prevReading = bill["Prev_Reading"]
+        self.consumption = bill["Consumption"]
+        self.readingRemark = bill["Reading_Remark"]
+        self.amount = bill["Total_Demand"]
+        print()
+
+
+    def getBillsByCNo(self,cNo):
+        print(f"cNo = {cNo}")
+        try:
+            self.cursor.execute("SELECT Con_ID from consumer WHERE Con_No = %s",(cNo))
+            cid = self.cursor.fetchone()["Con_ID"]
+            self.cursor.execute("SELECT * FROM bill_master WHERE Meter_No IN (SELECT Meter_No FROM connection WHERE Con_ID = %s) ORDER BY Current_Read_Date DESC",(cid))
+            records = self.cursor.fetchall()
+            print("Records")
+            print(records)
+            billNos = []
+            billDates = []
+            amounts = []
+            consumptions = []
+            connectionIds = []
+            prevDate = []
+            meterNos = []
+            for record in records:
+                billNos.append(record["BD_ID"])
+                billDates.append(record["Current_Read_Date"])
+                amounts.append(record["Total_Demand"])
+                prevDate.append(record["Prev_Read_Date"])
+                consumptions.append(record["Consumption"])
+                meterNos.append(record["Meter_No"])
+                self.cursor.execute("SELECT CO_ID from connection where Meter_No = %s",(record["Meter_No"]))
+                coId = self.cursor.fetchone()['CO_ID']
+                connectionIds.append(coId)
+            return billNos, billDates, meterNos, amounts, consumptions, connectionIds, prevDate
+
+        except Exception as e:
+            print(e)
+            return False
+        
+       
     
-    """ i =0
-        c = self.consumption
-        prev = 0
-        while (c > 0):
-            c = c - (newSlabs[i] - prev)
-            prev = newSlabs[i]
-            i += 1
-        i -= 1
-        newSlabs[i] += c - newSlabs[i-1] if i > 0 else prev
-        i +=1
-        while(i<5):
-            newSlabs[i] = 0
-            i += 1
-        print(newSlabs) """
+    def getBillBreakUp(self,bid):
+        self.getBill(bid)
+        try:
+            details = {}
+            EC = []
+            FPPCA = []
+            self.cursor.execute("SELECT * FROM bill_detail WHERE BD_ID = %s", (bid))
+            records = self.cursor.fetchall()
+            for record in records:
+                if record["Charge_Type"] == "Fixed":
+                    details["Fixed"] = [record["Unit_Consumed"],round(record["Charges"],2),round(record["Individual_Amount"],2)]
+                elif record["Charge_Type"] == "Subsidy":
+                    details["Subsidy"] = [record["Unit_Consumed"],round(record["Charges"],2),round(record["Individual_Amount"],2)]
+                elif record["Charge_Type"] == "EC":
+                    EC.append([record["Unit_Consumed"],round(record["Charges"],2),round(record["Individual_Amount"],2)])
+                elif record["Charge_Type"] == "FPPCA":
+                    FPPCA.append([record["Unit_Consumed"],round(record["Charges"],2),round(record["Individual_Amount"],2)])
+            details["EC"] = EC
+            details["FPPCA"] =FPPCA
+            return details
+        except Exception as e:
+            print(e)
+            return False

@@ -255,26 +255,34 @@ def billTimeline():
 
 @app.route("/billsList")
 def billsList():
-    # cid = session["id"]
-    # conn = mysql.connect()
-    # bill = Bill(conn,request,cid)
-    # billNos = bill.getBillNos() #to be added; returns an array of bill numbers
-    # billDates = bill.getBillDates() # should return an array of bill dates
-    billNos=[1,2,3,4,5,6]
+    cNo = session["id"]
+    conn = mysql.connect()
+    bill = Bill(conn)
+    billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = bill.getBillsByCNo(cNo)
     length = len(billNos)
-    billDates=['2021-09-07','2021-09-11','2021-09-10','2021-09-20','2021-09-30','2021-08-03']
-    BillPaymentStatus = [True,True,False,False,True]   #should be taken from the db too
-    return render_template("billslist.html",billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus)
+    BillPaymentStatus = [True,False,False,True,False]   #should be taken from the db too
+    return render_template("billslist.html",prevDates=prevDates,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs)
 
 @app.route("/billDetail")
 def billDetail():
-    # cid = session["id"]
-    # conn = mysql.connect()
-    # bill = Bill(conn, request,cid)
-    # print(bill.getAmount())
-    # amount = pass
-    # js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "meterId":consumer.meterId, "conType":consumer.conType, "contact":consumer.contact, "sanctionedLoad":consumer.sanctionedLoad}
-    return render_template("billDetail.html" ) 
+    bid = request.args['id']
+    print(f"BID : {bid}")
+    conNo = session["id"]
+    conn = mysql.connect()
+    bill = Bill(conn)
+    breakUP = bill.getBillBreakUp(bid)
+    consumer = Consumer(conn)
+    consumer.getConsumer(conNo)
+    connection = Connection(conn,request)
+    connection.getConnectionByMeterNo(bill.meterNo)
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT San_Load, Con_Type FROM connection_type WHERE Con_Type_ID = %s ",(connection.conType))
+    temp = cursor.fetchone()
+    sancLoad = temp["San_Load"]
+    conType = temp["Con_Type"]
+    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
+    print(js)
+    return render_template("billDetail.html") 
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
@@ -360,8 +368,8 @@ def adminConn():
                     print("in Update")
                     print("ConnectionID : ",connid)
 
-                    print(request.form['state'])
-                    if request.form['state'] == "1":
+                    print(request.form['stateC'])
+                    if request.form['stateC'] == "1":
                         try:
                             try:
                                 print("actually updating")
@@ -379,7 +387,7 @@ def adminConn():
                             conn.close()
                     else:
                         findConn = connection.getConnection(connid)
-                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":connection.conType, "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
+                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":str(connection.conType), "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
                         if not findConn:
                             msg = "Unable to find the connection"
                     
