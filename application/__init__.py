@@ -66,16 +66,18 @@ def login():
         role = request.form['inputCredentials']
         print(role)
         
-        cursor.execute('SELECT * FROM user WHERE id = %s', (username))
+        cursor.execute('SELECT * FROM login_info WHERE user_name = %s', (username))
         account = cursor.fetchone()
         pwd = account['password']
+        uType = account['user_type']
         print(f"Account {account}")
         print(pwd)
+        print(uType == role)
         print(check_password_hash(pwd,password))
         
-        if account and check_password_hash(pwd,password):
+        if account and check_password_hash(pwd,password) and uType == role :
             session['loggedin'] = True
-            session['id'] = account['id']
+            session['id'] = account['user_name']
             session['role'] = role
             print(role)
             if role == "1":
