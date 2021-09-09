@@ -42,14 +42,16 @@
             <div id="app-name">Electricity Billing System</div>
           </div>
           <div class="col-6 my-3" id="search-bar">
-            <form class="d-flex" id="search-form">
+            <div class="d-flex" id="search-form">
               <input class="me-1" type="search" placeholder="Search Consumer..." id="search">
-              <button class="btn btn-outline-none" type="submit" id="search-btn"><i class="bi bi-search" id="search-icon"></i></button>
-            </form>
+              <button class="btn btn-outline-none" type="button" id="search-btn"><i class="bi bi-search" id="search-icon"></i></button>
+            </div>
           </div>          
           <div class="col-1 my-3 align-center" id="logout">    
             <div class="d-flex" id="logout-btn-case">
-              <button class="btn btn-outline-none p-2" type="submit" id="logout-btn"><i class="bi bi-box-arrow-left mx-1" id="log-icon"></i></button>
+              <button class="btn btn-outline-none p-2" type="button" id="logout-btn"><i class="bi bi-box-arrow-left mx-1" id="log-icon"></i></button>
+              <a class="d-none" href="{{url_for('logout')}}" id="logout-link"></a>
+              <a class="d-none" id="search-link"></a>
             </div>
           </div>
         </div>
@@ -65,5 +67,23 @@
       integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
       crossorigin="anonymous"
     ></script>
+    <script>
+      document.getElementById('logout-btn').addEventListener("click", e => {
+        document.getElementById('logout-link').click()
+      })
+
+      document.getElementById('search').addEventListener(onkeyup, e=>{
+        if(e.keyCode===13){
+          document.getElementById('search-btn').click()
+        }
+      })
+      document.getElementById('search-btn').addEventListener("click", e => {
+        let searchKey = document.getElementById('search').value
+        //check if search key is correct
+        let link = document.getElementById('search-link')
+        link.href = "/dashboard?id=" + searchKey
+        link.click()
+      })
+    </script>
   </body>
 </html>

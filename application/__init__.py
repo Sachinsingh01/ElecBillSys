@@ -267,6 +267,7 @@ def billTimeline():
 @app.route("/billsList")
 def billsList():
     cNo = session["id"]
+    print(f"CNO = {cNo}")
     conn = mysql.connect()
     bill = Bill(conn)
     billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = bill.getBillsByCNo(cNo)
@@ -291,9 +292,9 @@ def billDetail():
     temp = cursor.fetchone()
     sancLoad = temp["San_Load"]
     conType = temp["Con_Type"]
-    js = {"fname":consumer.fname, "lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
+    js = {"fname":consumer.fname, "instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
     print(js)
-    return render_template("billDetail.html") 
+    return render_template("billDetail.html", js=js, connection = connection, consumer=consumer, bill = bill) 
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():

@@ -43,48 +43,45 @@
               </p>
               <div class="row m-0">
               <div class="col-4 mb-5 p-2" style="border: 2px solid">
-                <p class="font-monospace mb-0 col-12">Name : </p>
-                <p class="font-monospace mb-0 col-12">CA No. : </p>
-                <p class="font-monospace mb-0 col-12">Inst. No. :</p>
-                <p class="font-monospace mb-0 col-12">Address : </p>
-                <p class="font-monospace mb-0 col-12">Tel No. : </p>
-                <p class="font-monospace mb-0 col-12">E-mail ID :</p>
+                <p class="font-monospace mb-0 col-12">Name : {{js.fname}} {{js.lname}}</p>
+                <p class="font-monospace mb-0 col-12">CA No. : {{js.cid}}</p>
+                <p class="font-monospace mb-0 col-12">Inst. No. : {{js.instNo}}</p>
+                <p class="font-monospace mb-0 col-12">Address : {{js.address}}, {{js.taluka}}, {{js.district}}, Goa. {{js.pinCode}}</p>
+                <p class="font-monospace mb-0 col-12">Tel No. : {{js.contact}}</p>
+                <p class="font-monospace mb-0 col-12">E-mail ID : {{js.email}}</p>
               </div>
               <div
                 class="col-4 mb-5 p-2"
                 style="border: 2px solid; border-left: none"
               >
-                <p class="font-monospace mb-0 col-12">Energisation Date :</p>
-                <p class="font-monospace mb-0 col-12">MRU No. :</p>
-                <p class="font-monospace mb-0 col-12">Meter Status :</p>
-                <p class="font-monospace mb-0 col-12">Connection Status :</p>
-                <p class="font-monospace mb-0 col-12">Tariff Category :</p>
-                <p class="font-monospace mb-0 col-12">Feeder No. :</p>
-                <p class="font-monospace mb-0 col-12">DTC Pole No. :</p>
-                <p class="font-monospace mb-0 col-12">Voltage Level(KV) :</p>
-                <p class="font-monospace mb-0 col-12">Sanc. Load :</p>
-                <p class="font-monospace mb-0 col-12">Legacy No. :</p>
+                <p class="font-monospace mb-0 col-12">Energisation Date : {{js.instDt}}</p>
+                <p class="font-monospace mb-0 col-12">Meter Status : E - OK</p>
+                <p class="font-monospace mb-0 col-12">Connection Status : {{connection.connStatus}}</p>
+                <p class="font-monospace mb-0 col-12">Tariff Category : {{js.conType}}</p>
+                <p class="font-monospace mb-0 col-12">Feeder No. : FDR_BONBAG</p>
+                <p class="font-monospace mb-0 col-12">DTC Pole No. : 1DDTTT_8768685</p>
+                <p class="font-monospace mb-0 col-12">Voltage Level(KV) : 0.40</p>
+                <p class="font-monospace mb-0 col-12">Sanc. Load : {{js.sanctionedLoad}}</p>
               </div>
               <div
                 class="col-4 mb-5 p-2"
                 style="border: 2px solid; border-left: none"
               >
-                <p class="font-monospace mb-0 col-12">Line Min Charges :</p>
-                <p class="font-monospace mb-0 col-12">Walking Sequence :</p>
+                <p class="font-monospace mb-0 col-12">Line Min Charges : </p>
                 <p class="font-monospace mb-0 col-12">
-                  Security Deposit(SD) - CD/BG :
+                  Security Deposit(SD) - CD/BG : Rs 1500/-
                 </p>
-                <p class="font-monospace mb-0 col-12">Bill Date :</p>
-                <p class="font-monospace mb-0 col-12">Due Date :</p>
-                <p class="font-monospace mb-0 col-12">Bill Basis :</p>
-                <p class="font-monospace mb-0 col-12">Bill Number :</p>
+                <p class="font-monospace mb-0 col-12">Bill Date : {{bill.currDate}}</p>
+                <p class="font-monospace mb-0 col-12">Due Date :{{bill.dueDate}}</p>
+                <p class="font-monospace mb-0 col-12">Bill Basis : Actual</p>
+                <p class="font-monospace mb-0 col-12">Bill Number : {{bill.bid}}</p>
                 <p class="font-monospace mb-0 col-12">
-                  Last Bill Reading Date :
+                  Last Bill Reading Date : {{bill.prevDate}}
                 </p>
                 <p class="font-monospace mb-0 col-12">
-                  Billing Period in Days :
+                  Billing Period in Days : {{bill.billingPeriod}}
                 </p>
-                <p class="font-monospace mb-0 col-12">Read Period in Days :</p>
+                <p class="font-monospace mb-0 col-12">Read Period in Days : {{bill.billingPeriod}}</p>
               </div>
             </div>
               <div class="row m-0" style="font-size: 12.5px ;">
@@ -152,61 +149,61 @@
                 class="font-monospace mb-5 text-center col-1"
                 style="border: 2px solid; border-top: none"
               >
-                Meter Number
+                {{connection.meterNo}}
               </p>
               <p
                 class="font-monospace mb-5 text-center col-1"
                 style="border: 2px solid; border-left: none; border-top: none"
               >
-                Unit
+                KWH
               </p>
               <p
                 class="font-monospace mb-5 text-center col-2"
                 style="border: 2px solid; border-left: none; border-top: none"
               >
-                Current Reading Date
+                {{bill.currDate}}
               </p>
               <p
                 class="font-monospace mb-5 text-center col-1"
                 style="border: 2px solid; border-left: none; border-top: none"
               >
-                Current Reading
+                {{bill.currReading}}
               </p>
               <p
                 class="font-monospace mb-5 text-center col-2"
                 style="border: 2px solid; border-left: none; border-top: none"
               >
-                Previous Reading Date
+                {{bill.prevDate}}
               </p>
               <p
                 class="font-monospace mb-5 text-center col-1"
                 style="border: 2px solid; border-left: none; border-top: none"
               >
-                Previous Reading
+                {{bill.prevReading}}
               </p>
               <p
                 class="font-monospace mb-5 text-center col-1"
                 style="border: 2px solid; border-left: none; border-top: none"
               >
-                Reading Difference
+                {{bill.consumption}}
               </p>
               <p
                 class="font-monospace mb-5 text-center col-1"
                 style="border: 2px solid; border-left: none; border-top: none"
               >
-                MF
+                1.00
               </p>
               <p
                 class="font-monospace mb-5 text-center col-1"
                 style="border: 2px solid; border-left: none; border-top: none;"
               >
-                337
+              {{bill.consumption}}
               </p>
               <p
                 class="font-monospace mb-5 text-center col-1"
                 style="border: 2px solid; border-left: none; border-top: none"
               >
-                Reading Remark
+                {{bill.readingRemark}}
               </p>
             </div>
               <p class="font-monospace col-12">Bill Summary :</p>
@@ -226,22 +223,22 @@
                 Ammpount Payable on or before due date 20-jul-2021 (A + B + C +
                 D + E)
               </p>
-              <p class="font-monospace mb-5 text-center col-2" style="border: 2px solid;border-top: none;">Meter Number</p>
-              <p class="font-monospace mb-5 text-center col-2" style="border: 2px solid; border-left: none;border-top: none;">Unit</p>
+              <p class="font-monospace mb-5 text-center col-2" style="border: 2px solid;border-top: none;"></p>
+              <p class="font-monospace mb-5 text-center col-2" style="border: 2px solid; border-left: none;border-top: none;">0.00</p>
               <p class="font-monospace mb-5 text-center col-1" style="border: 2px solid; border-left: none;border-top: none;">
-                Current Reading Date
+                
               </p>
               <p class="font-monospace mb-5 text-center col-1" style="border: 2px solid; border-left: none;border-top: none;">
-                Current Reading
+                {{bill.amount}}
               </p>
               <p class="font-monospace mb-5 text-center col-1" style="border: 2px solid; border-left: none;border-top: none;">
-                Previous Reading Date
+                {{ round((bill.amount % 1), 2) }}
               </p>
               <p class="font-monospace mb-5 text-center col-5" style="border: 2px solid; border-left: none;border-top: none;">
-                Previous Reading
+                {{int(bill.amount)}}
               </p>
             </div>
-              <p class="font-monospace mb-0 col-12">Amount Payable</p>
+              <p class="font-monospace mb-0 col-12">Amount Payable </p>
               <p class="font-monospace mb-0 col-12">
                 Last Payment of 1169.00 Recieved on 08-jul-2021
               </p>
@@ -272,9 +269,9 @@
                   <div class="font-monospace col-2">Fixed Charges</div>
                   <div class="col-5">
                     <div class="row">
-                      <div class="font-monospace text-center col-5">1</div>
-                      <div class="font-monospace text-center col-2">60.00</div>
-                      <div class="font-monospace text-center col-5">88.00</div>
+                      <div class="font-monospace text-center col-5">{{js.breakUP.Fixed[0]}}</div>
+                      <div class="font-monospace text-center col-2">{{js.breakUP.Fixed[1]}}</div>
+                      <div class="font-monospace text-center col-5">{{js.breakUP.Fixed[2]}}</div>
                     </div>
                   </div>
                   <div class="col-5">
