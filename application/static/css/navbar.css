@@ -3,13 +3,13 @@
     padding: 0;
     margin: 0;
     width: 80px;
-    height: 100vh;
+    height: calc(100vh);
     background-color: #0d6efd;
     transition: 0.2s ease-in-out;
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 700;
 }
 
 .ctn-body{
@@ -20,7 +20,7 @@
 .nav-list{
     list-style: none;
     padding: 0 0rem 1rem 0rem;
-    margin: 0;    
+    margin: 4rem 0 0 0;    
 }
 
 .nav-link{
@@ -122,7 +122,7 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-    width: calc(100vw - 90px);
+    width: 100vw;
     height: 70px;
     background-color: #0d6efd;
     transition: 0.2s ease-in-out;
@@ -154,12 +154,12 @@
 }
 
 #search-btn:hover,
-#logout-btn:hover{
+#accountUser:hover{
     background-color: rgb(2,86,212);
 }
 
 #search-btn,
-#logout-btn{
+#accountUser{
     color: #fff;
     font-size: 1.3rem;
 }
@@ -182,3 +182,55 @@
     color:#948f8f;
 }
 
+#userDropdown{
+    margin: 0 auto;
+}
+#accountUser{
+    padding: 1rem;
+    border-radius: 0.2rem;
+}
+
+.dropdownMenu{
+    display: none;
+    list-style: none;
+    position: absolute;
+    top: 10;
+}
+
+.dropdownMenu.down{
+    display: block;
+    position: absolute;
+    top: 73px;
+    right: 10px;
+    background-color: #0d6efd;
+    padding: 1rem;
+    border-radius: 0.2rem;
+}
+
+#dropdown-item{
+    font-size: 1.1rem;
+    color: #fff;
+    text-align: center;
+}
+
+#dropdown-link{
+    text-decoration: none;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 0.2rem;
+}
+
+#dropdown-link:hover{
+    background-color: rgb(2,86,212);
+}
+
+#dropdown-divider{
+    color: #fff;
+    border: 3px solid;
+    border-top: none;
+    margin: 0.5rem 0;
+}
+
+.dropdownMenu.down li{
+    padding: 0.5rem 0;
+}
