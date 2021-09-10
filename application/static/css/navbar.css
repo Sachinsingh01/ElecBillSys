@@ -218,6 +218,7 @@
     color: #fff;
     padding: 1rem;
     border-radius: 0.2rem;
+    margin: auto;
 }
 
 #dropdown-link:hover{
@@ -233,4 +234,11 @@
 
 .dropdownMenu.down li{
     padding: 0.5rem 0;
+}
+
+.dropdownMenu.down li:last-child{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
 }
