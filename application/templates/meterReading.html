@@ -18,17 +18,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../static/css/dash.css">
     <style>
-      .droppable {
-        background: #e5e5e5;
-        color: #fff;
-        padding: 1rem 0;
-        text-align: center;
-        justify-content: center;
-      }
-      .droppable.dragover {
-        opacity: 20%;
-        color: #000;
-      }
       #device-progress-bar {
         animation: progress-mtr 5s ease-in-out 0s;
         width: 100%;
@@ -208,7 +197,7 @@
               </form>
 
               <div class="table-ctn" style="font-size: 12px;">
-                <table>
+                <table id="table-config" class="d-none">
                     <thead>
                         <tr>
                             <th style="font-size: 10px;">Meter No</th>
@@ -234,6 +223,7 @@
                 type="button"
                 id="processSampleCsv"
                 class="btn btn-primary"
+                disabled
               >
                 <i class="bi bi-upload me-2"></i>Process
               </button>
@@ -310,6 +300,8 @@
     }
     document.getElementById("downloadSampleCsv").addEventListener("click", e=>{
       UploadCSV()
+      document.getElementById("processSampleCsv").disabled=false
+      document.getElementById("table-config").className = "visible"
     })
     // $.ajax({
     // type: "GET",
