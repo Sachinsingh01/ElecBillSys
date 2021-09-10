@@ -9,9 +9,34 @@
 <body>
     <div class="container-fluid rounded">
         <section class="row justify-content-center">
-            {% for i in range (0, 5) %}
-            {% include "includes/consumerInputs/complainBrief.html" %}
-            {% endfor %}
+            <div class="col-12 col-sm-11 col-md-11">
+                <div class="shadow p-5 m-3 bg-body rounded">
+                    <h2 class="text-start mb-3">Your Bills</h2>
+                    <div id="bills-list" class="list-group">
+                        {% for i in range(length) %}
+                            {% if complainCategory[i] == 1 %}
+                            <div>
+                                <div>
+                                    <small>Complain ID : {{complainIDs[i]}}</small>
+                                    <small>connection ID : {{connectionIDs[i]}}</small>
+                                </div>
+                                <div>
+                                    <input type="checkbox">
+                                </div>
+                            </div>                        
+                             
+                            <!-- <li><a href="/billDetail?id={{billNos[i]}}" class="list-group-item list-group-item-success">Bill from {{billDates[i]}} &emsp; &emsp; &emsp;&emsp;&emsp; <i>click the link to get a detailed view</i>&emsp; &emsp; &emsp;&emsp;&emsp;<emp style="color: rgb(10, 124, 15);">Status:Paid</emp></a></li> -->
+                            {% else %}
+                        
+                            <!-- <li><a href="/billDetail?id={{billNos[i]}}" class="list-group-item list-group-item-danger">Bill from {{billDates[i]}} &emsp; &emsp; &emsp;&emsp;&emsp; <i>click the link to get a detailed view</i>&emsp; &emsp; &emsp;&emsp;&emsp;<emp style="color: rgb(158, 4, 4);">Status:Unpaid</emp></a></li> -->
+                            {% endif %}
+                        
+                        {% endfor %}
+                    </div>
+                    {% include "consumerNavbar.html" %}
+                </div>
+            
+            </div>
         </section>
     </div>
     
