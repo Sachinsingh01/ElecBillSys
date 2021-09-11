@@ -9,7 +9,6 @@
     <style>
        div#bills-list {
         list-style-type: none;
-        padding-left: 100px;
         }   
         h2#head1 {
             align-self: center;
@@ -23,56 +22,69 @@
         a {
             font-family:sans-serif;
         }
+        #container{
+                position: absolute;
+                width: calc(100vw - 80px);
+                height: calc(100vh - 70px);
+                right: 0;
+                bottom: 0;
+            }
     </style>
 
 </head>
 <body>
-    <div class="container-fluid rounded">
+    <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
-            <div id="top-bar">
-                <h2 id="head1">Your Bills</h2>
+            <div class="col-12 col-sm-11 col-md-11">
+                <div class="shadow p-5 m-3 bg-body rounded">
+                    <h2 class="text-start mb-3">Your Bills</h2>
+                    <div id="bills-list" class="list-group">
+                        {% for i in range(length) %}
+                            {% if BillPaymentStatus[i] == True %}
+                            <br>
+                            <div class="list-group-item list-group-item flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                  <p><strong>Bill No: {{billNos[i]}}</strong></p>
+                                  <a href="/billDetail?id={{billNos[i]}}"><button type="button" class="btn btn-primary" id="billDetails" name="billDetails">Details</button></a>
+                                  <small style="color: rgb(10, 124, 15);">&nbsp;&nbsp;&nbsp;&nbsp;<i>Paid</i></small>
+                                </div>
+                                <div>
+                                    <small><i>Due Date : {{billDates[i]}}</i></small>&emsp;
+                                    <small>Amount : Rs. {{amountDues[i]}} /-</small> <br>
+                                    <small>Connection ID : {{connectionIDs[i]}}</small>&emsp;
+                                    <small>Meter No : {{meterNos[i]}}</small>&emsp;
+                                    <small>Prev Date : {{prevDates[i]}}</small>&emsp;
+                                    <small>Consumption : {{unitsConsumed[i]}} Units</small>                            
+                                </div>
+                            </div>
+                             
+                            <!-- <li><a href="/billDetail?id={{billNos[i]}}" class="list-group-item list-group-item-success">Bill from {{billDates[i]}} &emsp; &emsp; &emsp;&emsp;&emsp; <i>click the link to get a detailed view</i>&emsp; &emsp; &emsp;&emsp;&emsp;<emp style="color: rgb(10, 124, 15);">Status:Paid</emp></a></li> -->
+                            {% else %}
+                            <br>
+                            <div class="list-group-item list-group-item flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                  <p><strong>Bill No: {{billNos[i]}}</strong></p>
+                                  <a href="/billDetail?id={{billNos[i]}}"><button type="button" class="btn btn-primary" id="billDetails" name="billDetails">Details</button></a>
+                                  <small style="color: rgb(151, 25, 25);"><i>Unpaid</i></small>
+                                </div>
+                                <div>
+                                    <small><i>Due Date : {{billDates[i]}}</i></small>&emsp;
+                                    <small>Amount : Rs. {{amountDues[i]}} /-</small> <br>
+                                    <small>Connection ID : {{connectionIDs[i]}}</small>&emsp;
+                                    <small>Meter No : {{meterNos[i]}}</small>&emsp;
+                                    <small>prevDates : {{prevDates[i]}}</small>&emsp;
+                                    <small>Consumption : {{unitsConsumed[i]}} Units</small>                            
+                                </div>
+                            </div>
+                            {% endif %}
+                        
+                        {% endfor %}
+                    </div>
+                    {% include "consumerNavbar.html" %}
             </div>
             
-            <div id="bills-list" class="list-group">
-                {% for i in range(length) %}
-                    {% if BillPaymentStatus[i] == True %}
-                    <a href="/billDetail?id={{billNos[i]}}" class="list-group-item-success list-group-item flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                          <h5 class="mb-1"><strong>Bill No: {{billNos[i]}}</strong></h5>
-                          <small style="color: rgb(10, 124, 15);">Paid</small>
-                        </div>
-                        <div>
-                            <p style="color: rgb(250, 106, 106);"><i>Due Date : {{billDates[i]}}</i></p>
-                            <p style="color: crimson;">Amount : {{amountDues[i]}}</p>
-                            <small>Connection ID : {{connectionIDs[i]}}</small>&emsp;
-                            <small>Meter No : {{meterNos[i]}}</small>&emsp;
-                            <small>Prev Date : {{prevDates[i]}}</small>&emsp;
-                            <small>Consumption : {{unitsConsumed[i]}}</small>                            
-                        </div>
-                      </a>
-                    
-                    <!-- <li><a href="/billDetail?id={{billNos[i]}}" class="list-group-item list-group-item-success">Bill from {{billDates[i]}} &emsp; &emsp; &emsp;&emsp;&emsp; <i>click the link to get a detailed view</i>&emsp; &emsp; &emsp;&emsp;&emsp;<emp style="color: rgb(10, 124, 15);">Status:Paid</emp></a></li> -->
-                    {% else %}
-                    <a href="/billDetail?id={{billNos[i]}}" class="list-group-item-danger list-group-item flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                          <h5 class="mb-1"><strong>Bill No: {{billNos[i]}}</strong></h5>
-                          <small style="color: rgb(151, 25, 25);">Unpaid</small>
-                        </div>
-                        <div>
-                            <p style="color: rgb(250, 106, 106);"><i>Due Date : {{billDates[i]}}</i></p>
-                            <p style="color: crimson;">Amount : {{amountDues[i]}}</p>
-                            <small>Connection ID : {{connectionIDs[i]}}</small>&emsp;
-                            <small>Meter No : {{meterNos[i]}}</small>&emsp;
-                            <small>prevDates : {{prevDates[i]}}</small>&emsp;
-                            <small>Consumption : {{unitsConsumed[i]}}</small>                            
-                        </div>
-                      </a>
-                    <!-- <li><a href="/billDetail?id={{billNos[i]}}" class="list-group-item list-group-item-danger">Bill from {{billDates[i]}} &emsp; &emsp; &emsp;&emsp;&emsp; <i>click the link to get a detailed view</i>&emsp; &emsp; &emsp;&emsp;&emsp;<emp style="color: rgb(158, 4, 4);">Status:Unpaid</emp></a></li> -->
-                    {% endif %}
-                
-                {% endfor %}
             </div>
-            {% include "consumerNavbar.html" %}
+            
         </section>
     </div>
     

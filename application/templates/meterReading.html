@@ -14,27 +14,37 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
     />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../static/css/dash.css">
     <style>
-      .droppable {
-        background: #e5e5e5;
-        color: #fff;
-        padding: 1rem 0;
-        text-align: center;
-        justify-content: center;
+      #device-progress-bar {
+        animation: progress-mtr 5s ease-in-out 0s;
+        width: 100%;
       }
-      .droppable.dragover {
-        opacity: 20%;
-        color: #000;
+      @keyframes progress-mtr {
+        from {
+          width: 0%;
+        }
+        to {
+          width: 100%;
+        }
+      }
+      #container {
+        position: absolute;
+        width: calc(100vw - 80px);
+        height: calc(100vh - 70px);
+        right: 0;
+        bottom: 0;
       }
     </style>
     <title>Document</title>
   </head>
   <body>
-    <div class="container-fluid rounded">
+    <div class="container-fluid rounded" id="container">
       <div class="row">
         <div class="col shadow p-5 bg-body rounded m-5">
-          <form action="/meterReading" method="POST" name="getCsv" id="getCsv">
+          <!-- <form action="/meterReading" method="POST" name="getCsv" id="getCsv">
             <div class="row">
               <div class="col-4"></div>
               <input
@@ -46,14 +56,14 @@
               />
               <div class="d-grid col-4 gap-2 d-block text-center">
                 <label for="downloadSampleCsv" class="form-label"
-                  >Download Customer List</label
+                  >Get Meter Readings</label
                 >
                 <button
                   type="submit"
                   id="downloadSampleCsv"
                   class="btn btn-primary"
                 >
-                  <i class="bi bi-download me-2"></i>Download
+                  <i class="bi bi-upload me-2"></i>Read Meter
                 </button>
               </div>
               <div class="col-4"></div>
@@ -106,10 +116,125 @@
               </div>
               <div class="col-4"></div>
             </div>
-          </form>
+          </form> -->
+          <div class="col-12" id="meter-status">
+            <div class="row">
+              <div class="col-2"></div>
+              <div class="col-2 d-flex justify-content-center">
+                <img
+                  src="../static/icons/desktop-computer.png"
+                  alt="pc"
+                  style="width: fit-content; height: 7rem"
+                />
+              </div>
+              <div class="col-4 my-auto" id="device-progress">
+                <div class="progress">
+                  <div
+                    class="
+                      progress-bar progress-bar-striped progress-bar-animated
+                      bg-danger
+                    "
+                    id="device-progress-bar"
+                    role="progressbar"
+                    aria-valuenow="100"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+              <script type="text/javascript">
+                function progressBarChange() {
+                  setTimeout(() => {
+                    document.getElementById("device-progress-bar").className =
+                      "progress-bar progress-bar-striped progress-bar-animated bg-success";
+                  }, 5000);
+                }
+                progressBarChange();
+
+                
+              </script>
+              <div class="col-2 d-flex justify-content-center">
+                <img
+                  src="../static/icons/color-meter.png"
+                  alt="meter"
+                  style="width: fit-content; height: 7rem"
+                />
+              </div>
+              <div class="col-2"></div>
+              <div class="col-12 d-flex justify-content-center"><!-- Remove this input -->
+                <input class="" type="file" name="fl" id="fl"></div>
+              <form action="/meterReading" method="POST" name="getCsv" id="getCsv">
+                <div class="row mt-5 mb-5">
+                  <div class="col-4"></div>
+                  <input
+                    type="text"
+                    class="d-none"
+                    name="formStateGet"
+                    id="formStateGet"
+                    value="0"
+                  />
+                  
+                  <div class="d-grid col-4 gap-2 d-block text-center">
+                    <label for="downloadSampleCsv" class="form-label"
+                      >Device Connected Get Meter Readings</label
+                    >
+                    <button
+                      type="button"
+                      id="downloadSampleCsv"
+                      class="btn btn-primary"
+                      disabled
+                    >
+                      <i class="bi bi-upload me-2"></i>Read Meter
+                    </button>
+                  </div>
+                  <script>
+                    setTimeout(()=>{
+                      document.getElementById("downloadSampleCsv").disabled = false
+                    }, 5000)
+                  </script>
+                  <div class="col-4"></div>
+                </div>
+              </form>
+
+              <div class="table-ctn" style="font-size: 12px;">
+                <table id="table-config" class="d-none">
+                    <thead>
+                        <tr>
+                            <th style="font-size: 10px;">Meter No</th>
+                            <th style="font-size: 10px;">Name</th>
+                            <th style="font-size: 10px;">Address</th>
+                            <th style="font-size: 10px;">Contact</th>
+                            <th style="font-size: 10px;">Previous Date</th>
+                            <th style="font-size: 10px;">Previous Reading</th>
+                            <th style="font-size: 10px;">Current Date</th>
+                            <th style="font-size: 10px;">Current Reading</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBodyCSV">
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-4"></div>
+            <div class="d-grid mt-5 mb-3 col-4 gap-2 d-block text-center">
+              <label for="processSampleCsv" class="form-label"
+                >Send Data for Processing</label
+              >
+              <button
+                type="button"
+                id="processSampleCsv"
+                class="btn btn-primary"
+                disabled
+              >
+                <i class="bi bi-upload me-2"></i>Process
+              </button>
+            </div>
+            <div class="col-4"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    {%include "navbar.html"%}
 
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
@@ -121,63 +246,75 @@
       integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
       crossorigin="anonymous"
     ></script>
-    <script type="text/javascript">
-      function makeDroppable(element, callback) {
-        var input = document.createElement("input");
-        input.setAttribute("type", "file");
-        input.id = "postCsv";
-        input.name = "postCsv";
-        input.style.display = "none";
-
-        input.addEventListener("change", triggerCallback);
-        element.appendChild(input);
-
-        element.addEventListener("dragover", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          element.classList.add("dragover");
-        });
-
-        element.addEventListener("dragleave", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          element.classList.remove("dragover");
-        });
-
-        element.addEventListener("drop", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          element.classList.remove("dragover");
-          triggerCallback(e);
-        });
-
-        element.addEventListener("click", function () {
-          input.value = null;
-          input.click();
-        });
-
-        function triggerCallback(e) {
-          var files;
-          if (e.dataTransfer) {
-            files = e.dataTransfer.files;
-          } else if (e.target) {
-            files = e.target.files;
-          }
-          callback.call(null, files);
-        }
-      }
-      function callback(files) {
-        document.getElementById("uploadCsv").files = files;
-      }
-      var element = document.getElementById("dropzoneCsv");
-      makeDroppable(element, callback);
-      document
-        .getElementById("submitSampleCsv")
-        .addEventListener("click", () => {
-          let val = document.getElementById("uploadCsv").value;
-          console.log(val);
-        });
-        
+    <script>
+      function UploadCSV() {
+        var fileUpload = document.getElementById("fl");
+        // var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+        // if (regex.test(fileUpload.value.toLowerCase())) {
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var tableBodyCSV = document.getElementById("tableBodyCSV");
+                    tableBodyCSV.innerHTML = "";
+                    var rows = e.target.result.split("\n");
+                    for (var i = 1; i < rows.length; i++) {
+                        var cells = rows[i].split(",");
+                        if (cells.length > 1) {
+                            let name = 2;
+                            let address = 4;
+                            var tr = document.createElement("tr")
+                            for (var j = 0; j < cells.length; j++) {
+                                var td = document.createElement("td")
+                                td.style.fontSize = "10px"
+                                td.style.fontWeight = "bold"
+                                if(j==1){
+                                  while(name!=0){
+                                    td.innerHTML = td.innerHTML + cells[j] + " ";    
+                                    name = name - 1    
+                                    j = j+1                            
+                                  }
+                                  j = j-1
+                                }else if(j==3){
+                                  while(address!=0){
+                                    td.innerHTML = td.innerHTML + cells[j] + " ";    
+                                    address = address - 1   
+                                    j = j + 1                             
+                                  }
+                                  j=j-1
+                                }else{
+                                  td.innerHTML = cells[j];
+                                }
+                                tr.appendChild(td)
+                            }
+                            tableBodyCSV.appendChild(tr);
+                        }
+                    }
+                }
+                reader.readAsText(fileUpload.files[0]);
+            } else {
+                alert("This browser does not support HTML5.");
+            }
+        // } else {
+        //     alert("Please upload a valid CSV file.");
+        // }
+    }
+    document.getElementById("downloadSampleCsv").addEventListener("click", e=>{
+      UploadCSV()
+      document.getElementById("processSampleCsv").disabled=false
+      document.getElementById("table-config").className = "visible"
+    })
+    // $.ajax({
+    // type: "GET",
+    // url: "file:///C:\Users\sdharwadkar\electricityBillingSystem\application\static\file\abc.txt",
+    // dataType: "text",
+    // success: function(data) {
+    //     alert("worked");
+    //     console.log(data)
+    // },
+    // error: function (request, status, error) {
+    //     alert(request.responseText);
+    // }
+    // })
     </script>
   </body>
 </html>

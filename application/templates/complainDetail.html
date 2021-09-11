@@ -8,7 +8,9 @@
         #container{
                 position: absolute;
                 width: calc(100vw - 80px);
+                height: calc(100vh - 70px);
                 right: 0;
+                bottom: 0;
             }
     </style>
     <title>ADMIN DASH</title>
@@ -17,30 +19,396 @@
     <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
             <section class="col-12 col-sm-11 col-md-11">
-                <div class="shadow p-5 m-3 bg-body rounded mt-5">
-                    <div class="row">
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Consumer ID : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Consumer Name : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Consumer Type : </p>
-                        <p class="font-monospace p-2 col-lg-12 col-md-12 col-sm-12">Consumer Address : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Meter ID : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Consumer Type : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Sanctioned Load : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Bill ID : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Bill Amount : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Metered Units : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Complain ID : </p>
-                        <p class="font-monospace p-2 col-lg-4 col-md-6 col-sm-12">Complain Field : </p>                        
-                        <p class="font-monospace p-2 col-lg-12 col-md-12 col-sm-12">Complain Description : </p>
-                        <div class="col"></div>
-                        <div class="d-grid gap-2 col-lg-3 col-md-4 col-sm-4 d-block">
-                            <button class="btn btn-primary">Discard</button>
-                        </div> 
-                        <div class="d-grid gap-2 col-lg-3 col-md-4 col-sm-4 d-block">
-                            <button class="btn btn-primary">Resolve</button>
-                        </div> 
-                        <div class="col"></div>
-                    </div>
+                <div class="shadow p-2 mb-5 mt-5 bg-body rounded" style="font-size: 14px">
+                    <div class="row p-2">
+                        <p class="font-monospace col-12 uppercase fs-3 text-center">
+                          Electricity Department - Government of Goa
+                        </p>
+                        <div class="row m-0">
+                          <div class="col-4 mb-5 p-2" style="border: 2px solid">
+                            <div class="row">
+                              <p class="font-monospace mb-0 col-4">Name :</p>
+                              <p class="font-monospace mb-0 col-8">
+                                {{js.fname}} {{js.lname}}
+                              </p>
+                              <p class="font-monospace mb-0 col-4">CA No. :</p>
+                              <p class="font-monospace mb-0 col-8">{{js.cid}}</p>
+                              <p class="font-monospace mb-0 col-4">Inst. No. :</p>
+                              <p class="font-monospace mb-0 col-8">{{js.instNo}}</p>
+                              <p class="font-monospace mb-0 col-4">Address :</p>
+                              <p class="font-monospace mb-0 col-8">
+                                {{js.address}}, {{js.taluka}}, {{js.district}}, Goa.
+                                {{js.pinCode}}
+                              </p>
+                              <p class="font-monospace mb-0 col-4">Tel No. :</p>
+                              <p class="font-monospace mb-0 col-8">{{js.contact}}</p>
+                              <p class="font-monospace mb-0 col-4">E-mail ID :</p>
+                              <p class="font-monospace mb-0 col-8">{{js.email}}</p>
+                            </div>
+                          </div>
+                          <div
+                            class="col-4 mb-5 p-2"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            <div class="row">
+                              <p class="font-monospace mb-0 col-6">Energisation Date :</p>
+                              <p class="font-monospace mb-0 col-6">{{js.instDt}}</p>
+                              <p class="font-monospace mb-0 col-6">Meter Status :</p>
+                              <p class="font-monospace mb-0 col-6">E - OK</p>
+                              <p class="font-monospace mb-0 col-6">Connection Status :</p>
+                              <p class="font-monospace mb-0 col-6">
+                                {{connection.connStatus}}
+                              </p>
+                              <p class="font-monospace mb-0 col-6">Tariff Category :</p>
+                              <p class="font-monospace mb-0 col-6">{{js.conType}}</p>
+                              <p class="font-monospace mb-0 col-6">Feeder No. :</p>
+                              <p class="font-monospace mb-0 col-6">FDR_BONBAG</p>
+                              <p class="font-monospace mb-0 col-6">DTC Pole No. :</p>
+                              <p class="font-monospace mb-0 col-6">1DDTTT_24352BT</p>
+                              <p class="font-monospace mb-0 col-6">Voltage Level(KV) :</p>
+                              <p class="font-monospace mb-0 col-6">0.40</p>
+                              <p class="font-monospace mb-0 col-6">Sanc. Load :</p>
+                              <p class="font-monospace mb-0 col-6">
+                                {{js.sanctionedLoad}}
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="col-4 mb-5 p-2"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            <div class="row">
+                              <p class="font-monospace mb-0 col-7">Line Min Charges :</p>
+                              <p class="font-monospace mb-0 col-5"></p>
+                              <p class="font-monospace mb-0 col-7">
+                                Security Deposit(SD)-CD/BG:
+                              </p>
+                              <p class="font-monospace mb-0 col-5">Rs 1500/-</p>
+                              <p class="font-monospace mb-0 col-7">Bill Date :</p>
+                              <p class="font-monospace mb-0 col-5">{{bill.currDate}}</p>
+                              <p class="font-monospace mb-0 col-7">Due Date :</p>
+                              <p class="font-monospace mb-0 col-5">{{bill.dueDate}}</p>
+                              <p class="font-monospace mb-0 col-7">Bill Basis :</p>
+                              <p class="font-monospace mb-0 col-5">Actual</p>
+                              <p class="font-monospace mb-0 col-7">Bill Number :</p>
+                              <p class="font-monospace mb-0 col-5">{{bill.bid}}</p>
+                              <p class="font-monospace mb-0 col-7">
+                                Last Bill Reading Date:
+                              </p>
+                              <p class="font-monospace mb-0 col-5">{{bill.prevDate}}</p>
+                              <p class="font-monospace mb-0 col-7">
+                                Billing Period in Days:
+                              </p>
+                              <p class="font-monospace mb-0 col-5">
+                                {{bill.billingPeriod}}
+                              </p>
+                              <p class="font-monospace mb-0 col-7">
+                                Read Period in Days:
+                              </p>
+                              <p class="font-monospace mb-0 col-5">
+                                {{bill.billingPeriod}}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row m-0" style="font-size: 12.5px">
+                          <p
+                            class="font-monospace mb-0 text-center col-1"
+                            style="border: 2px solid"
+                          >
+                            Meter Number
+                          </p>
+                          <p
+                            class="font-monospace mb-0 text-center col-1"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            Unit
+                          </p>
+                          <p
+                            class="font-monospace mb-0 text-center col-2"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            Current Reading Date
+                          </p>
+                          <p
+                            class="font-monospace mb-0 text-center col-1"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            Current Reading
+                          </p>
+                          <p
+                            class="font-monospace mb-0 text-center col-2"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            Previous Reading Date
+                          </p>
+                          <p
+                            class="font-monospace mb-0 text-center col-1"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            Previous Reading
+                          </p>
+                          <p
+                            class="font-monospace mb-0 text-center col-1"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            Reading Difference
+                          </p>
+                          <p
+                            class="font-monospace mb-0 text-center col-1"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            MF
+                          </p>
+                          <p
+                            class="font-monospace mb-0 text-center col-1"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            Consumption
+                          </p>
+                          <p
+                            class="font-monospace mb-0 text-center col-1"
+                            style="border: 2px solid; border-left: none"
+                          >
+                            Reading Remark
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-1"
+                            style="border: 2px solid; border-top: none"
+                          >
+                            {{connection.meterNo}}
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-1"
+                            style="border: 2px solid; border-left: none; border-top: none"
+                          >
+                            KWH
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-2"
+                            style="border: 2px solid; border-left: none; border-top: none"
+                          >
+                            {{bill.currDate}}
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-1"
+                            style="border: 2px solid; border-left: none; border-top: none"
+                          >
+                            {{bill.currReading}}
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-2"
+                            style="border: 2px solid; border-left: none; border-top: none"
+                          >
+                            {{bill.prevDate}}
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-1"
+                            style="border: 2px solid; border-left: none; border-top: none"
+                          >
+                            {{bill.prevReading}}
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-1"
+                            style="border: 2px solid; border-left: none; border-top: none"
+                          >
+                            {{bill.consumption}}
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-1"
+                            style="border: 2px solid; border-left: none; border-top: none"
+                          >
+                            1.00
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-1"
+                            style="border: 2px solid; border-left: none; border-top: none"
+                          >
+                            {{bill.consumption}}
+                          </p>
+                          <p
+                            class="font-monospace mb-5 text-center col-1"
+                            style="border: 2px solid; border-left: none; border-top: none"
+                          >
+                            {{bill.readingRemark}}
+                          </p>
+                        </div>
+                        <div class="row m-0">
+                           
+                            
+                        </div>
+            
+                          <p class="font-monospace col-7">
+                            Current Demand Calculation Details
+                          </p>
+                          <p class="font-monospace col-5">Present Bill Charges</p>
+                          <div class="row m-0">
+                            <div class="col-7 mb-2" style="border: 2px solid">
+                              <div class="row">
+                                <div class="font-monospace text-center col-2">
+                                  Particulars
+                                </div>
+                                <div class="font-monospace text-center col-2">Quantity</div>
+                                <div class="font-monospace text-center col-1">Rate</div>
+                                <div class="font-monospace text-center col-2">Amount</div>
+                                <div class="font-monospace text-center col-2">Quantity</div>
+                                <div class="font-monospace text-center col-1">Rate</div>
+                                <div class="font-monospace text-center col-2">Amount</div>
+            
+                                <div class="font-monospace col-2">Fixed</div>
+                                <div class="col-5">
+                                  <div class="row">
+                                    <div class="font-monospace text-center col-5">
+                                      {{js.breakUP.Fixed[0]}}
+                                    </div>
+                                    <div class="font-monospace text-center col-2">
+                                      {{js.breakUP.Fixed[1]}}
+                                    </div>
+                                    <div class="font-monospace text-center col-5">
+                                      {{js.breakUP.Fixed[2]}}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-5">
+                                  <div class="row"></div>
+                                </div>
+                                <div class="col-12"></div>
+                                <div class="font-monospace col-2">EC</div>
+                                <div class="col-5">
+                                  <div class="row">
+                                    {% for element in js.breakUP.EC %}
+                                    <div class="font-monospace text-center col-5">
+                                      {{element[0]}}
+                                    </div>
+                                    <div class="font-monospace text-center col-2">
+                                      {{element[1]}}
+                                    </div>
+                                    <div class="font-monospace text-center col-5">
+                                      {{element[2]}}
+                                    </div>
+                                    {% endfor %}
+                                  </div>
+                                </div>
+                                <div class="col-5">
+                                  <div class="row"></div>
+                                </div>
+                                <div class="col-12"></div>
+                                <div class="font-monospace col-2">FPPCA</div>
+                                <div class="col-5">
+                                  <div class="row">
+                                    {% for element in js.breakUP.FPPCA %}
+                                    <div class="font-monospace text-center col-5">
+                                      {{element[0]}}
+                                    </div>
+                                    <div class="font-monospace text-center col-2">
+                                      {{element[1]}}
+                                    </div>
+                                    <div class="font-monospace text-center col-5">
+                                      {{element[2]}}
+                                    </div>
+                                    {% endfor %}
+                                  </div>
+                                </div>
+                                <div class="col-5">
+                                  <div class="row"></div>
+                                </div>
+                                <div class="col-12"></div>
+                                <div class="font-monospace col-2">Subsidy</div>
+                                <div class="col-5">
+                                  <div class="row">
+                                    <div class="font-monospace text-center col-5">
+                                      {{js.breakUP.Subsidy[0]}}
+                                    </div>
+                                    <div class="font-monospace text-center col-2">
+                                      {{js.breakUP.Subsidy[1]}}
+                                    </div>
+                                    <div class="font-monospace text-center col-5">
+                                      {{js.breakUP.Subsidy[2]}}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-5"></div>
+                              </div>
+                            </div>
+                            <div
+                              class="col-5 mb-2"
+                              style="border: 2px solid; border-left: none"
+                            >
+                              <div class="row">
+                                <div class="font-monospace text-start col-9">
+                                  Particulars
+                                </div>
+                                <div class="font-monospace text-end col-3">Amount</div>
+                                <div class="font-monospace text-start col-9">
+                                  Fixed Charges
+                                </div>
+                                <div class="font-monospace text-end col-3">
+                                  {{js.breakUP.Fixed[2]}}
+                                </div>
+                                <div class="font-monospace text-start col-9">
+                                  Energy Charges
+                                </div>
+                                <div class="font-monospace text-end col-3">
+                                  {{js.breakUP.ECSum}}
+                                </div>
+                                <div class="font-monospace text-start col-9">FPPCA</div>
+                                <div class="font-monospace text-end col-3">
+                                  {{js.breakUP.FPPCASum}}
+                                </div>
+                                <div class="font-monospace text-start col-9">
+                                  Sundry Charges
+                                </div>
+                                <div class="font-monospace text-end col-3"></div>
+                                <div class="font-monospace text-start col-9">
+                                  Adv/PP Rebate
+                                </div>
+                                <div class="font-monospace text-end col-3"></div>
+                                <div class="font-monospace text-start col-9">
+                                  Meter Rent
+                                </div>
+                                <div class="font-monospace text-end col-3">36.67</div>
+                                <div class="font-monospace text-start col-9">
+                                  Electricity Duty @ Rs. 0.20/KWh
+                                </div>
+                                <div class="font-monospace text-end col-3">75.40</div>
+                                <div class="font-monospace text-start col-9">
+                                  Monthly Minimum Charges
+                                </div>
+                                <div class="font-monospace text-end col-3">0.00</div>
+                                <div class="font-monospace text-start col-9">Subsidy</div>
+                                <div class="font-monospace text-end col-3">
+                                  -{{js.breakUP.Subsidy[2]}}
+                                </div>
+                                <div class="font-monospace text-start mt-3 col-9">
+                                  Total Current Demand
+                                </div>
+                                <div class="font-monospace text-end mt-3 col-3">
+                                  {{js.amount}}
+                                </div>
+                                <div class="font-monospace text-start mt-3 col-9"></div>
+                                <div class="font-monospace text-end mt-3 col-3">0.00</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row m-0">
+                          <div class="col-12 text-uppercase mt-3 fs-4">Complain Details</div>
+                          <div class="col-12 mt-2 p-2" style="border: 2px solid"><p class="font-monospace m-0">Complain ID : </p></div>
+                          <div class="col-12 p-2" style="border: 2px solid;border-top:none">
+                            <div class="row">
+                              <p class="font-monospace m-0 col-3">Complain Description : </p>
+                              <p class="font-monospace m-0 col-9">Complain Description : </p>
+                            </div>
+                          </div>
+                          <div class="row m-3">
+                              <div class="col-2"></div>
+                            <div class="d-grid gap-2 mt-2 col-4 d-block">
+                                <button type="button" class="btn btn-primary">Discard</button>
+                            </div>  
+                            <div class="d-grid gap-2 mt-2 col-4 d-block">
+                                <button type="button" class="btn btn-primary">Resolve</button>
+                            </div>  
+                            <div class="col-2"></div>
+                          </div>
                 </div>
             </section>
         </section>

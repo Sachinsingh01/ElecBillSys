@@ -26,33 +26,42 @@
         <div class="ctn-body">
             <ul class="nav-list">
                 <li class="nav-elements"><i id="hamburger" class="bi bi-list"></i><div class="nav-app-name"></div></li>
+                <li class="nav-elements"><a href="/dashboard" class="nav-link"><i class="bi bi-house-fill"></i><div class="nav-txt">Dashboard</div></a></li>
                 <li class="nav-elements"><a href="/adminCust" class="nav-link"><i class="bi bi-people-fill"></i><div class="nav-txt">Consumer</div></a></li>
                 <li class="nav-elements"><a href="/adminConn" class="nav-link"><i class="bi bi-hdd-network-fill"></i><div class="nav-txt">Connection</div></a></li>
                 <li class="nav-elements"><a href="/adminDist" class="nav-link"><i class="bi bi-lightning-charge-fill"></i><div class="nav-txt">Distributor</div></a></li>
-                <li class="nav-elements"><a href="/billDetail" class="nav-link"><i class="bi bi-card-list"></i><div class="nav-txt">Bills</div></a></li>
+                <li class="nav-elements"><a href="/billsList" class="nav-link"><i class="bi bi-card-list"></i><div class="nav-txt">Bills</div></a></li>
                 <li class="nav-elements"><a href="/complainDetail" class="nav-link"><i class="bi bi-person-x-fill"></i><div class="nav-txt">Complains</div></a></li>
+                <!-- <li class="nav-elements"><a href="/complainList" class="nav-link"><i class="bi bi-person-x-fill"></i><div class="nav-txt">ComplainList</div></a></li> -->
             </ul>
         </div>
     </div>
     <div  id="ctn-appbar">
       <div id="ctn-body-appbar">
         <div class="row" id="app-list">
-          <div class="col-5 d-flex my-3" id="app-elements">
-            <div class="ms-3" id="app-logo"><i class="bi bi-lightbulb-fill"></i></div>
+          <div class="col-1 d-flex my-3 justify-content-end" id="app-elements">
+            <div class="me-2" id="app-logo"><i class="bi bi-lightbulb-fill"></i></div>
+          </div>
+          <div class="col-4 my-3" id="app-elements">            
             <div id="app-name">Electricity Billing System</div>
           </div>
           <div class="col-6 my-3" id="search-bar">
             <div class="d-flex" id="search-form">
+              <a class="d-none" id="search-link"></a>
               <input class="me-1" type="search" placeholder="Search Consumer..." id="search">
               <button class="btn btn-outline-none" type="button" id="search-btn"><i class="bi bi-search" id="search-icon"></i></button>
             </div>
-          </div>          
-          <div class="col-1 my-3 align-center" id="logout">    
-            <div class="d-flex" id="logout-btn-case">
-              <button class="btn btn-outline-none p-2" type="button" id="logout-btn"><i class="bi bi-box-arrow-left mx-1" id="log-icon"></i></button>
-              <a class="d-none" href="{{url_for('logout')}}" id="logout-link"></a>
-              <a class="d-none" id="search-link"></a>
+          </div>   
+          <div class="col-1 my-3 d-flex justify-content-center" id="userDropdown">
+            <div class="py-2 px-3" href="#" id="accountUser" role="button">
+              <i class="bi bi-person-circle"></i>
             </div>
+            <ul class="dropdownMenu" id="dropParent">
+              <li><div id="dropdown-item">Virat Kohli</div></li>
+              <li><div id="dropdown-item">1pon12314123451234</div></li>
+              <li><div id="dropdown-divider"></div></li>
+              <li><a id="dropdown-link" href="{{url_for('logout')}}"><i class="bi bi-box-arrow-left me-2" id="log-icon"></i>Logout</a></li>
+            </ul>
           </div>
         </div>
       </div>
@@ -68,6 +77,14 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      document.getElementById('accountUser').addEventListener("click", e=>{
+        var classN = document.getElementById("dropParent").className
+        if(classN == "dropdownMenu down"){
+          document.getElementById("dropParent").className = "dropdownMenu"
+        }else{
+          document.getElementById("dropParent").className = "dropdownMenu down"
+        }
+      })
       document.getElementById('logout-btn').addEventListener("click", e => {
         document.getElementById('logout-link').click()
       })
