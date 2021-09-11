@@ -40,6 +40,7 @@
                     {% include "navbar.html" %}
                 </form>
             </section>
+            <button type="reset" class="btn btn-secondary" style="width: 10rem;">Cancel</button>
         </section>
     </div>
 
@@ -79,6 +80,9 @@
             document.getElementById("filterElD").style.display = "flex"
             document.getElementById("task").value = "del"
         })
+        function resetVals(){
+            document.getElementById('inputDistFilID').value = '';
+        }
     </script>
 </body>
 

@@ -253,6 +253,7 @@ def uploadFile():
 
 @app.route("/fileComplaint", methods=["GET", "POST"])
 def fileComplaint():
+    
     return render_template("fileComplaint.html")
 
 @app.route("/complainList", methods=["GET", "POST"])
