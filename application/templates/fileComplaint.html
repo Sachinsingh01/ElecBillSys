@@ -1,0 +1,70 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <style>
+        #container{
+                position: absolute;
+                width: calc(100vw - 80px);
+                height: calc(100vh - 70px);
+                right: 0;
+                bottom: 0;
+            }
+    </style>
+    <title>Consumer Dash</title>
+</head>
+
+<body>
+
+    <div class="container-fluid rounded" id="container">
+        <section class="row justify-content-center">
+            <section class="col-12 col-sm-11 col-md-11" id="loaderfn">
+                <form href="/fileComplaint" method="POST" class="shadow p-5 m-3 bg-body rounded" id="takeComplaint">
+                    <h2 class="text-start mb-3">Complaint Details</h2>
+                      
+                    <label for="complaintType">Choose a Complaint Type:</label>
+
+                    <select name="complaintType" id="complaintType">
+                    <option value="Technical">Technical</option>
+                    <option value="BillRel">Bill Related</option>
+                    </select>
+                    <br><br>
+                    <div id="idType">
+                        <label for='technicalType'>Enter Connection ID</label> <input type='text' id='technicalType'/>
+                    </div><br>
+                    <label for="comment">Enter the complain description</label><br>
+                    <textarea name="description" id="comment" cols="30" rows="10"></textarea><br><br>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    {% include "consumerNavbar.html" %}
+                    
+                </form>
+            </section>
+        </section>
+    </div>
+
+
+<script>
+    document.getElementById('complaintType').addEventListener('change', function changeType(e){
+	type = e.target.value;
+	if(type === 'Technical'){
+        document.getElementById('idType').innerHTML = "<label for='technicalType'>Enter Connection ID</label> <input type='text' id='technicalType'/> ";
+    }
+    else if(type === 'BillRel'){
+        document.getElementById('idType').innerHTML = "<label for='billType'>Enter Bill ID</label> <input type='text' id='billType'/> ";
+
+    }
+			
+	
+});
+</script>
+</body>
+
+</html>

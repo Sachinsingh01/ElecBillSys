@@ -251,6 +251,10 @@ def uploadFile():
                 return redirect(request.url)
     return render_template("meterReading.html")
 
+@app.route("/fileComplaint", methods=["GET", "POST"])
+def fileComplaint():
+    return render_template("fileComplaint.html")
+
 @app.route("/complainList", methods=["GET", "POST"])
 def complainList():
     complainCategory = [1,2,2,1]
