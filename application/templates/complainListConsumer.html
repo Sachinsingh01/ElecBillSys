@@ -12,11 +12,8 @@
         right: 0;
         bottom: 0;
       }
-      button {
-          width: 5rem;
-      }
     </style>
-    <title>ADMIN DASH</title>
+    <title>CONSUMER DASH</title>
     
 </head>
 <body>
@@ -31,7 +28,7 @@
                             <br>
                             <div style="display: flex;" class="list-group-item align-items-start">
                                 <div>
-                                    <small>Complain ID : {{complainIDs[i]}}</small> &nbsp;
+                                    <small>Complain ID : {{complainIDs[i]}}</small> &emsp;
                                     <small>Connection ID : {{connectionIDs[i]}}</small> <br><br>
                                     <small><i>Category : Technical</i></small>
                                     
@@ -63,11 +60,11 @@
                                 </div>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;
                                 {% if complainStatus[i]==1%}
                                 <div>
-                                    <small><em style="color: rgb(182, 23, 23); padding-left: 9rem;">&nbsp;&nbsp;Unresolved</em></small>
+                                    <small><em style="color: rgb(182, 23, 23); padding-left: 10rem;">Unresolved</em></small>
                                 </div>
                                 {% else %}
                                 <div>
-                                    <small><em style="color: rgb(34, 121, 41); padding-left: 9rem;">&nbsp;Resolved</em></small>
+                                    <small><em style="color: rgb(34, 121, 41); padding-left: 10rem;">&nbsp;&nbsp;&nbsp;Resolved</em></small>
                                 </div>
                                 {% endif %}
                             </div>                        
@@ -76,7 +73,7 @@
                                 <br>
                                 <div style="display: flex;" class="list-group-item align-items-start">
                                     <div>
-                                        <small>Complain ID : {{complainIDs[i]}}</small> &nbsp;
+                                        <small>Complain ID : {{complainIDs[i]}}</small> &emsp;
                                         <small>Connection ID : {{connectionIDs[i]}}</small> <br><br>
                                         <small><i>Category : Bill Related</i></small>
                                         
@@ -99,11 +96,11 @@
                                     </div> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                                     {% if complainStatus[i]==1%}
                                     <div>
-                                        <small><em style="color: rgb(182, 23, 23); padding-left: 9rem;">Unresolved</em></small>
+                                        <small><em style="color: rgb(182, 23, 23); padding-left: 10rem;">Unresolved</em></small>
                                     </div>
                                     {% else %}
                                     <div>
-                                        <small><em style="color: rgb(34, 121, 41); padding-left: 9rem;">&nbsp;Resolved</em></small>
+                                        <small><em style="color: rgb(34, 121, 41); padding-left: 10rem;">&nbsp;&nbsp;&nbsp;Resolved</em></small>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -117,7 +114,7 @@
             </div>
         </section>
     </div>
-    {% include "Navbar.html" %}
+    {% include "consumerNavbar.html" %}
     
 
 
