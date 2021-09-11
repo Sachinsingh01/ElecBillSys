@@ -1,3 +1,4 @@
+from application.ditributor import Distributor
 from flask import Flask, request, session, redirect, url_for, render_template, Response
 from flask.helpers import flash
 from flaskext.mysql import MySQL
@@ -84,6 +85,7 @@ def login():
             if role == "1":
                 session["task"] = "add"
                 session["taskC"] = "add"
+                session["taskD"] = "add"
                 return redirect(url_for('adminCust'))
             elif account and role == "2":
                 return redirect(url_for('billsList'))
@@ -455,3 +457,114 @@ def nav():
     return render_template(".html")
 
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
+
+
+@app.route("/adminDistributor", methods=["POST", "GET"])
+def adminDistributor():
+    if 'loggedin' in session and session['role'] == "1":
+        taskD = session["taskD"]
+        
+        js = {"disId":"","disCompName":"", "disAddress":"", "disDistrict":"", "disPincode":"", "suppplyMonth":"", "disContact":"", "supplyRate":"","created":"", "updated":""}
+
+        if request.method == "POST" and 'taskD' in request.form:
+            session["taskD"] = request.form['taskD']
+            taskD = session["taskD"]
+            print(session["taskD"])
+            # Begin Add
+            if taskD == "add":
+                conn = mysql.connect()
+                distributor = Distributor(conn, request)
+                msg = None
+                try:
+                    val = distributor.insertDistributor()
+                    if val:
+                        conn.commit()
+                        msg = "Distributor Succefully Added"
+                    else:
+                        msg = "Unable to Add Distributor"
+                finally:
+                    conn.close()
+                print(msg)
+                return render_template("distributorDataInput.html", msg = msg, val = taskD, js = js)
+            # End Add
+
+            # Begin Update
+            elif taskD == "upd":
+                disId = request.form['inputDistFilID']
+                conn = mysql.connect()
+                distributor = Distributor(conn, request)
+                msg = None
+                # Messages for testing
+                print("in Update")
+                print(disId)
+                print(request.form['stateD'])
+                if request.form['stateD'] == "1":
+                    try:
+                        try:
+                            print("actually updating")
+                            disId = request.form['inputDistID']
+                            print("Printing dis ID", disId)
+                            updateDis = distributor.updateDistributor(request, disId)
+                            if updateDis:
+                                msg = "Distributor updated Sucessfully"
+                            else:
+                                msg = "Unable to update distributor 1"
+                        except:
+                            msg = "Unable to update ditributor"
+                    finally:
+                        conn.close()
+                else:
+                    findDis = distributor.getDistributor(disId)
+                    if not findDis:
+                        msg = "Unable to find the Distributor"
+
+                js = {"disId": disId ,"disCompName": distributor.disCompName, "disAddress": distributor.disAddress, "disDistrict": distributor.disDistrict, "disPincode": distributor.disPincode, "suppplyMonth": distributor.supplyPMonth, "disContact":distributor.disContact, "supplyRate": distributor.supplyRate,"created":distributor.created, "updated":distributor.updated}
+                print(js)
+                print(msg)
+                return render_template("distributorDataInput.html", val = taskD, js = js)
+            # End Update
+
+            # Begin Delete
+            elif taskD == "del":
+                js = {"disId":"","disCompName":"", "disAddress":"", "disDistrict":"", "disPincode":"", "suppplyMonth":"", "disContact":"", "supplyRate":"","created":"", "updated":""}
+                disId = request.form['inputDistFilID']
+                print(disId)
+                conn = mysql.connect()
+                distributor = Distributor(conn, request)
+                distributor.getDistributor(disId)
+                
+                msg = None
+                print("in Delete")
+                print(request.form['stateD'])
+                if request.form['stateD'] == "1":
+                    try:
+                        try:
+                            print("actually deleting")
+                            print(request.form['inputDistFilID'])
+                            disId = request.form['inputDistFilID']
+                            
+                            val = distributor.deleteDistributor(disId)
+                            
+                            if val:
+                                msg = "Distributor deleted Sucessfully"
+                            else:
+                                msg = "Unable to delete Distributor"
+                        except:
+                            msg = "Unable to delete Distributor 1"
+                    finally:
+                        conn.close()
+                else:
+                    val2 = distributor.getDistributor(disId)
+                    js = {"disId": disId ,"disCompName": distributor.disCompName, "disAddress": distributor.disAddress, "disDistrict": distributor.disDistrict, "disPincode": distributor.disPincode, "suppplyMonth": distributor.supplyPMonth, "disContact":distributor.disContact, "supplyRate": distributor.supplyRate,"created":distributor.created, "updated":distributor.updated}
+                    if not val2:
+                        msg = "Unable to find the Distributor"
+                
+                print(js)
+                print(msg)
+                return render_template("distributorDataInput.html", val = taskD, js = js) 
+            #Delete end
+        # User is loggedin show them the home page
+        return render_template("distributorDataInput.html", val = taskD, js = js)
+    # User is not loggedin redirect to login page
+
+    return redirect(url_for('login'))

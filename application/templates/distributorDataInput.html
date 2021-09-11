@@ -28,13 +28,16 @@
                             {% if val == "add"%} checked {%endif%}>
                         <label class="btn btn-outline-primary" for="distAdd">Add Distributor</label>
 
-                        <input type="radio" class="btn-check" name="distFuncType" id="distDel" autocomplete="off" {% if val == "del"%} checked {%endif%}>
+                        <input type="radio" class="btn-check" name="distFuncType" id="distDel" autocomplete="off" 
+                            {% if val == "del"%} checked {%endif%}>
                         <label class="btn btn-outline-primary" for="distDel">Delete Distributor</label>
 
-                        <input type="radio" class="btn-check" name="distFuncType" id="distUpd" autocomplete="off" {% if val == "upd"%} checked {%endif%}>
+                        <input type="radio" class="btn-check" name="distFuncType" id="distUpd" autocomplete="off" 
+                            {% if val == "upd"%} checked {%endif%}>
                         <label class="btn btn-outline-primary" for="distUpd">Update Distributor</label>
                     </div>                 
-                    <input type="text" class="d-none" id="task" name="task" value= {{val}}>
+                    <input type="text" class="d-none" id="taskD" name="taskD" value= {{val}}>
+                    <input type="text" class="d-none" id="stateD" name="stateD" value= "0">
                     {% include "includes/distributorInputs/distributorAdd.html" %}
                     {% include "includes/distributorInputs/distributorFilter.html" %}
                     {% include "navbar.html" %}
@@ -55,29 +58,28 @@
         document.getElementById("distAdd").addEventListener("click", (e)=>{            
             document.getElementById("addElD").style.display = "flex"
             document.getElementById("filterElD").style.display = "none"
-            if(document.getElementById("task").value != "add"){
+            if(document.getElementById("taskD").value != "add"){
                 document.getElementById("inputDistID").value = ""
                 document.getElementById("inputDistCompName").value = ""
                 document.getElementById("inputDistAddress").value = ""
-                document.getElementById("inputDistTaluka").value = ""
                 document.getElementById("inputDistDistrict").value = ""
                 document.getElementById("inputDistPin").value = ""
                 document.getElementById("inputSupplyPMonth").value = ""
                 document.getElementById("inputSupplyRate").value = ""
                 document.getElementById("inputDistContact").value = ""
             }           
-            document.getElementById("task").value = "add"
+            document.getElementById("taskD").value = "add"
             document.getElementById("fieldSetD").disabled = false
         })
         document.getElementById("distUpd").addEventListener("click", (e)=>{
             document.getElementById("addElD").style.display = "none"            
             document.getElementById("filterElD").style.display = "flex"
-            document.getElementById("task").value = "upd"
+            document.getElementById("taskD").value = "upd"
         })
         document.getElementById("distDel").addEventListener("click", (e)=>{
             document.getElementById("addElD").style.display = "none"         
             document.getElementById("filterElD").style.display = "flex"
-            document.getElementById("task").value = "del"
+            document.getElementById("taskD").value = "del"
         })
     </script>
 </body>
