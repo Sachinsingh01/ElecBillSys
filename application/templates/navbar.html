@@ -29,7 +29,7 @@
                 <li class="nav-elements"><a href="/dashboard" class="nav-link"><i class="bi bi-house-fill"></i><div class="nav-txt">Dashboard</div></a></li>
                 <li class="nav-elements"><a href="/adminCust" class="nav-link"><i class="bi bi-people-fill"></i><div class="nav-txt">Consumer</div></a></li>
                 <li class="nav-elements"><a href="/adminConn" class="nav-link"><i class="bi bi-hdd-network-fill"></i><div class="nav-txt">Connection</div></a></li>
-                <li class="nav-elements"><a href="/adminDist" class="nav-link"><i class="bi bi-lightning-charge-fill"></i><div class="nav-txt">Distributor</div></a></li>
+                <li class="nav-elements"><a href="/adminDistributor" class="nav-link"><i class="bi bi-lightning-charge-fill"></i><div class="nav-txt">Distributor</div></a></li>
                 <li class="nav-elements"><a href="/billsList" class="nav-link"><i class="bi bi-card-list"></i><div class="nav-txt">Bills</div></a></li>
                 <li class="nav-elements"><a href="/complainDetail" class="nav-link"><i class="bi bi-person-x-fill"></i><div class="nav-txt">Complains</div></a></li>
                 <!-- <li class="nav-elements"><a href="/complainList" class="nav-link"><i class="bi bi-person-x-fill"></i><div class="nav-txt">ComplainList</div></a></li> -->
@@ -84,9 +84,6 @@
         }else{
           document.getElementById("dropParent").className = "dropdownMenu down"
         }
-      })
-      document.getElementById('logout-btn').addEventListener("click", e => {
-        document.getElementById('logout-link').click()
       })
 
       document.getElementById('search').addEventListener(onkeyup, e=>{

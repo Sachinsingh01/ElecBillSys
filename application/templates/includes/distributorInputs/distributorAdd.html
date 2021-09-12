@@ -1,48 +1,79 @@
 <div class="row" id="addElD">
     {% if val == "del" %} <fieldset class="row" id="fieldSetD" disabled> {% endif %}
-<div class="mb-3 col-4">
-    <label for="inputDistID" class="form-label">Distributor ID</label>
-    <input type="text" class="form-control" id="inputDistID" name="inputDistID" {% if val != "add" %} value = {{js.did}} {% endif %}>
+
+<div class="mb-4 col-6">
+    <div class="formControl" id="formControl">
+    <label for="inputDistCompName" class="form-label">Company Name</label>
+    <input type="text" class="form-control" id="inputDistCompName" name="inputDistCompName" {% if val != "add" %} value = {{js.disCompName}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>
-<div class="mb-3 col-4">
-    <label for="inputDistCompName" class="form-label">Distributor Company Name</label>
-    <input type="text" class="form-control" id="inputDistCompName" name="inputDistCompName" {% if val != "add" %} value = {{js.compName}} {% endif %}>
+<div class="mb-4 col-2">
+    <!-- <label for="inputDistID" class="form-label">Distributor ID</label>
+    <input type="text" class="form-control" id="inputDistID" name="inputDistID" {% if val != "add" %} value = {{js.disId}} {% endif %}> -->
 </div>
-<div class="mb-3 col-4"></div>
-<div class="mb-3 col-12">
-    <label for="inputDistAddress" class="form-label">Distributor Address</label>
-    <input type="text" class="form-control" id="inputDistAddress" name="inputDistAddress" {% if val != "add" %} value = {{js.dAddress}} {% endif %}>
+<div class="mb-4 col-4"></div>
+<div class="mb-4 col-12">
+    <div class="formControl" id="formControl">
+    <label for="inputDistAddress" class="form-label">Address</label>
+    <input type="text" class="form-control" id="inputDistAddress" name="inputDistAddress" {% if val != "add" %} value = {{js.disAddress}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>
-<div class="mb-3 col-4">
-    <!-- <label for="inputDistTaluka" class="form-label">Distributor Taluka</label>
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
+    <label for="inputDistDistrict" class="form-label">District</label>
+    <input type="text" class="form-control" id="inputDistDistrict" name="inputDistDistrict" {% if val != "add" %} value = {{js.disDistrict}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
+</div>        
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
+    <label for="inputDistPin" class="form-label">Pin Code</label>
+    <input type="text" class="form-control" id="inputDistPin" name="inputDistPin" {% if val != "add" %} value = {{js.disPincode}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
+</div>     
+<div class="mb-4 col-4">
+    <!-- <label for="inputDistTaluka" class="form-label">Taluka</label>
     <input type="text" class="form-control" id="inputDistTaluka" name="inputDistTaluka" {% if val != "add" %} value = {{js.dTaluka}} {% endif %}> -->
 </div>  
-<div class="mb-3 col-4">
-    <label for="inputDistDistrict" class="form-label">Distributor District</label>
-    <input type="text" class="form-control" id="inputDistDistrict" name="inputDistDistrict" {% if val != "add" %} value = {{js.dDistrict}} {% endif %}>
-</div>        
-<div class="mb-3 col-4">
-    <label for="inputDistPin" class="form-label">Distributor Pin Code</label>
-    <input type="text" class="form-control" id="inputDistPin" name="inputDistPin" {% if val != "add" %} value = {{js.dPinCode}} {% endif %}>
-</div>     
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputSupplyPMonth" class="form-label">Supply (per Month)</label>
-    <input type="text" class="form-control" id="inputSupplyPMonth" name="inputSupplyPMonth" {% if val != "add" %} value = {{js.supplyMonth}} {% endif %}>
+    <input type="text" class="form-control" id="inputSupplyPMonth" name="inputSupplyPMonth" {% if val != "add" %} value = {{js.suppplyMonth}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>                       
-<div class="mb-3 col-4">
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
     <label for="inputSupplyRate" class="form-label">Supply Rate</label>
     <input type="text" class="form-control" id="inputSupplyRate" name="inputSupplyRate" {% if val != "add" %} value = {{js.supplyRate}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>  
-<div class="mb-3 col-4">
-    <label for="inputDistContact" class="form-label">Distributor Contact</label>
-    <input type="text" class="form-control" id="inputDistContact" name="inputDistContact" {% if val != "add" %} value = {{js.dContact}} {% endif %}>
+<div class="mb-4 col-4">
+    <div class="formControl" id="formControl">
+    <label for="inputDistContact" class="form-label">Contact</label>
+    <input type="text" class="form-control" id="inputDistContact" name="inputDistContact" {% if val != "add" %} value = {{js.disContact}} {% endif %}>
+    <i class="bi bi-check-circle"></i>
+    <i class="bi bi-exclamation-circle"></i>
+    <p class="mb-0" id="errMsg">Error Message</p></div>
 </div>  
 
 {% if val == "del" %} </fieldset> {% endif %}
-<div class="mb-3 col-4"></div>
-<div class="d-grid gap-2 col-4 d-block">
-    <button type="submit" class="btn btn-primary">Submit</button><br>
-    <button type="reset" class="btn btn-secondary" style="width: 10rem; margin: auto;">Cancel</button>
+<div class="mb-3 col-2"></div>
+<div class="d-grid gap-2 mt-3 col-4 d-block">
+    <button type="submit" class="btn btn-primary">Submit</button>
 </div> 
-<div class="mb-3 col-4"></div>
+<div class="d-grid gap-2 mt-3 col-4 d-block">
+    <button type="reset" class="btn btn-secondary" onclick="resetVals()">Cancel</button>
+</div> 
+<div class="mb-3 col-2"></div>
 </div>

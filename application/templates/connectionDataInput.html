@@ -119,7 +119,8 @@
             console.log(alertMsg)
             alert(alertMsg)
         })
-        document.getElementById("connAdd").addEventListener("click", (e)=>{            
+        document.getElementById("connAdd").addEventListener("click", (e)=>{    
+            resetVals()          
             document.getElementById("addElC").style.display = "flex"
             document.getElementById("filterElC").style.display = "none"
             if(document.getElementById("taskC").value != "add"){
@@ -137,11 +138,13 @@
             document.getElementById("fieldSetC").disabled = false
         })
         document.getElementById("connUpd").addEventListener("click", (e)=>{
+            resetVals()  
             document.getElementById("addElC").style.display = "none"            
             document.getElementById("filterElC").style.display = "flex"
             document.getElementById("taskC").value = "upd"
         })
         document.getElementById("connDel").addEventListener("click", (e)=>{
+            resetVals()  
             document.getElementById("addElC").style.display = "none"         
             document.getElementById("filterElC").style.display = "flex"
             document.getElementById("taskC").value = "del"
@@ -170,6 +173,11 @@
         function setSuccess(elt){
             const fc = elt.parentElement
             fc.className = "formControl success"
+        }
+
+        function resetCls(elt){
+            const fc = elt.parentElement
+            fc.className = "formControl"
         }
 
         document.getElementById("connFormInp").addEventListener("submit", (e)=>{
@@ -244,6 +252,18 @@
             if(cPinVal===""){
                 setError(cPin, "Connection pin can't be blank")
                 cPinErr=true
+            }else if(isNaN(cPinVal)){
+                setError(cPin, "Pin is Numeric field")
+                cPinErr=true
+            }else if(isNaN(parseFloat(cPinVal))){
+                setError(cPin, "Please Remove any blank spaces")
+                cPinErr=true
+            }else if(cPinVal.includes(".")){
+                setError(cPin, "Pin can't have period")
+                cPinErr=true
+            }else if(cPinVal.length !== 6){
+                setError(cPin, "Pin should have 6 digits")
+                cPinErr=true
             }
             else{
                 setSuccess(cPin)
@@ -295,8 +315,19 @@
             }
                 
         })
+
         function resetVals(){
-            document.getElementById('inputConnFilID').value = '';
+            connId.value=""
+            resetCls(connNo)
+            resetCls(connType)
+            resetCls(cAddress)
+            resetCls(meterNo)
+            resetCls(cDistrict)
+            resetCls(cTaluka)
+            resetCls(cPin)
+            resetCls(cInstDt)
+            resetCls(cStatus)
+            resetCls(connId)
         }
     </script>
 </body>
