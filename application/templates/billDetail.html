@@ -51,7 +51,7 @@
             class="shadow p-2 mb-5 bg-body rounded mt-3"
             style="font-size: 14px"
           >
-            <div class="row p-0 mt-5 mx-auto" id="elctricityBill" style="width: 210mm;height: 300mm;font-size: 10px;font-weight: bold;">
+            <div class="row p-0 mt-5 mb-0 mx-auto" id="elctricityBill" style="width: 210mm;height: 300mm;font-size: 10px;font-weight: bold;">
               <p class="font-monospace col-12 uppercase fs-5 text-center">
                 Electricity Department - Government of Goa
               </p>
@@ -655,10 +655,51 @@
               </div>
             </div>
           </div>
+          {% if roleId=="2" %}
+          <a class="d-none" id="gotoLink"></a>
+          <div class="row mt-0 p-0">
+            <div class="col-3"></div>
+              <div class="d-grid col-3 mb-5 mt-0 gap-2 d-block text-center">
+                <button
+                  type="button"
+                  id="fileComplaintBtn"
+                  class="btn btn-primary"
+                >
+                  <i class="bi bi-patch-exclamation-fill me-2"></i>File Complaint
+                </button>
+              </div>
+              <div class="d-grid col-3 mb-5 gap-2 mt-0 d-block text-center">
+                <button
+                  type="button"
+                  id="payBtn"
+                  class="btn btn-primary"
+                >
+                <i class="bi bi-credit-card-fill me-2"></i>Proceed to pay
+                </button>
+              </div>            
+              <div class="col-3"></div>
+          </div>
+          {% endif %}
         </section>
       </section>
     </div>
+    {% if roleId=="1" %}
     {% include "navbar.html" %}
+    {% elif roleId=="2" %}
+    {% include "consumerNavbar.html" %}
+    {% endif %}
+    <script>
+      document.getElementById("fileComplaintBtn").addEventListener("click", e=>{
+        var link = document.getElementById("gotoLink")
+        link.href="/fileComplaint"
+        link.click()
+      })
+      document.getElementById("payBtn").addEventListener("click", e=>{
+        var link = document.getElementById("gotoLink")
+        link.href="/payBill"
+        link.click()
+      })
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
       integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"

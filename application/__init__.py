@@ -691,3 +691,7 @@ def adminDistributor():
     # User is not loggedin redirect to login page
 
     return redirect(url_for('login'))
+
+@app.route("/paymentHistory")
+def paymentHistory():
+    return render_template("paymentHistory.html")

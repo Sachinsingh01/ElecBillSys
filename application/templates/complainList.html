@@ -62,6 +62,7 @@
                                 </div>
                                 <p class="font-monospace col-4">Category : {% if complainCategory[i] == 1 %}Technical{% else %}Bill Related{% endif %}</p>  
                                 <div class="col-4"></div> 
+                                {% if roleId == "1" %}
                                 <div class="d-grid gap-2 mx-auto col-2 d-block">
                                     <form action="/complainList" method="POST">
                                         <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="discard" name="{{complainIDs[i]}}" {% if complainStatus[i]!=1 %}disabled{% endif %}>Discard</button>
@@ -76,7 +77,15 @@
                                 {% else %}
                                 <div class="d-grid gap-2 mx-auto col-2 d-block">
                                     <a href="/complainDetail?id={{complainIDs[i]}}">
-                                    <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="resolve" name="{{complainIDs[i]}}" {% if complainStatus[i]!=1 %}disabled{% endif %}>Details</button>
+                                    <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="resolve" name="{{complainIDs[i]}}" >Details</button>
+                                    </a>
+                                </div> 
+                                {% endif %}
+                                {% elif roleId == "2" and complainCategory[i] != 1 %}
+                                <div class="col-2"></div>
+                                <div class="d-grid gap-2 mx-auto col-2 d-block">
+                                    <a href="/complainDetail?id={{complainIDs[i]}}">
+                                    <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="resolve" name="{{complainIDs[i]}}" >Details</button>
                                     </a>
                                 </div> 
                                 {% endif %}                                                                                         
