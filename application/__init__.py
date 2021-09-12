@@ -12,10 +12,7 @@ import re
 from .connection import Connection
 import hashlib
 import os
-<<<<<<< HEAD
-=======
 # import bcrypt
->>>>>>> 98d8bdcdb2dbc8e8f206d1a54677adf5739e4a40
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
