@@ -15,6 +15,7 @@ import re
 from .connection import Connection
 import hashlib
 import os
+from datetime import date
 # import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -267,7 +268,25 @@ def uploadFile():
 
 #Functionality has to be added
 @app.route("/fileComplaint", methods=["GET", "POST"])
-def fileComplaint():  
+def fileComplaint(): 
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    if request.method=="POST":
+        # billId = request.form['']
+        billId = 'udgsudgsudg'
+        connectionId = request.form['inputConnID']
+        complaintCategory = request.form['inputCompType']
+        comment = request.form['inputCompDesc']
+        created = str(date.today())
+        updated = str(date.today())
+        status = 'unresolved'
+        try:
+            cursor.execute("INSERT INTO bill_complain(`bill_id`,`co_id`,`category`,`status`,`comment`,`created`,`updated`) VALUES(%s,%s,%s,%s,%s,%s,%s)",(billId,connectionId,complaintCategory,status,comment,created,updated))
+            print("Success!")
+            conn.commit()
+        except Exception as e:
+            print(e)
+
     return render_template("fileComplaint.html")
 
 @app.route("/complainList", methods=["GET", "POST"])
