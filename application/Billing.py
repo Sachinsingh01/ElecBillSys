@@ -243,6 +243,10 @@ class Bill():
         bill = self.cursor.fetchone()
         self.bid = bid
         self.meterNo = bill["Meter_No"]
+        self.cursor.execute("SELECT Con_ID FROM connection WHERE Meter_No =  %s",(self.meterNo))
+        conId = self.cursor.fetchone()["Con_ID"]
+        self.cursor.execute("SELECT Con_No FROM consumer WHERE Con_ID =  %s",(conId))
+        self.conNo = self.cursor.fetchone()["Con_No"]
         self.prevDate = bill["Prev_Read_Date"]
         self.currDate = bill["Current_Read_Date"]
         self.billingPeriod = int((self.currDate - self.prevDate).days)
@@ -277,7 +281,7 @@ class Bill():
             for record in records:
                 billNos.append(record["BD_ID"])
                 billDates.append(record["Current_Read_Date"])
-                amounts.append(record["Total_Demand"])
+                amounts.append(round(record["Total_Demand"],2))
                 prevDate.append(record["Prev_Read_Date"])
                 consumptions.append(record["Consumption"])
                 meterNos.append(record["Meter_No"])

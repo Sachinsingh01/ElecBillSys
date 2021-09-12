@@ -9,8 +9,6 @@ class Consumer():
     talukas = ["PONDA", "TISWADI", "BARDEZ", "BICHOLIM", "CANACONA", "SATTARI", "MORMUGAO", "PERNEM", "QUEPEM", "SALCETTE", "SANGUEM", "DHARBANDORA"]
     cidTalukas = ["PON", "TIS", "BAR", "BIC", "CAN", "SAT", "MOR", "PER", "QUE", "SAL", "SAN", "DHA"]
     districts = ["SOUTH GOA","NORTH GOA"]
-
-
     def __init__(self,conn,request=""):
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -72,10 +70,10 @@ class Consumer():
             self.cursor.execute('SELECT * FROM consumer WHERE Con_No = %s', (cid))
             acc = self.cursor.fetchone()
             self.cid = cid
+            self.conID  = acc["Con_ID"]
             self.fname = acc['Con_First_Name']
             self.lname = acc['Con_Last_Name']
             self.address = acc['Con_Address']
-            print(acc['Con_Address'])
             self.taluka = acc['Con_Taluka']
             self.district = acc['Con_District']
             self.pinCode = acc['Con_Pin_Code']
@@ -124,6 +122,13 @@ class Consumer():
         except:
             print("unable to create cno")
             return 0
+    def getMeterNos(self):
+        self.cursor.execute("SELECT Meter_No From connections WHERE Con_ID = %s",(self.conID))
+        records = self.cursor.fetchall()
+        meterNos = []
+        for record in records:
+            meterNos.append(record["Meter_No"])
+        return meterNos
     #create a password using provided calculations
     def createDefaultPassword(self):
         pass

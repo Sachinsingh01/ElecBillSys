@@ -1,3 +1,5 @@
+from numpy import number
+from application.user import User
 from application.ditributor import Distributor
 from flask import Flask, request, session, redirect, url_for, render_template, Response
 from flask.helpers import flash
@@ -48,7 +50,13 @@ def allowed_file(filename):
 def home():
     if 'loggedin' in session:
         # User is loggedin show them the home page
-        return render_template('home.html', username=session['id'])
+        roleId = session['role']
+        if roleId == "1":
+            return render_template("dash.html", roleId = roleId)
+        elif roleId == "2":
+            return render_template("consumerDash.html", roleId = roleId)
+        elif roleId == "3":
+            return redirect(url_for('meterReading'))
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
@@ -86,15 +94,15 @@ def login():
                 session["task"] = "add"
                 session["taskC"] = "add"
                 session["taskD"] = "add"
-                return redirect(url_for('adminCust'))
+                return redirect(url_for('dashboard'))
             elif account and role == "2":
-                return redirect(url_for('billsList'))
+                return redirect(url_for('dashboardCon'))
                 # return redirect(url_for('billDetail'))
             elif role == "3":
                 return redirect(url_for('meterReading'))
         else:
             msg = 'Incorrect Username or Password!'  
-    return render_template('login.html', msg=msg, roleId = role)
+    return render_template('login.html', msg=msg)
 
 @app.route("/logout")
 def logout():
@@ -308,16 +316,43 @@ def billTimeline():
 def billsList():
     cNo = session["id"]
     roleId = session['role']
-    print(f"CNO = {cNo}")
-    conn = mysql.connect()
-    bill = Bill(conn)
-    billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = bill.getBillsByCNo(cNo)
-    length = len(billNos)
-    BillPaymentStatus = [True,False,False,True,False]   #should be taken from the db too
-    cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
-    record = cursor.fetchone()
-    consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
+    if roleId == "1":
+        conn = mysql.connect()
+        bill = Bill(conn)
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = [],[],[],[],[],[],[]
+        cursor.execute("SELECT Con_No FROM consumer")
+        cNos = cursor.fetchall()
+        for cNo in cNos:
+            billNo,billDate, meterNo, amountDue, unitsConsume, connectionID, prevDate = bill.getBillsByCNo(cNo["Con_No"])
+            billNos.append(billNo)
+            billDates.append(billDate)
+            meterNos.append(meterNo)
+            amountDues.append(amountDue)
+            unitsConsumed.append(unitsConsume)
+            connectionIDs.append(connectionID)
+            prevDates.append(prevDate)
+        billNos = [j for sub in billNos for j in sub]
+        billDates = [j for sub in billDates for j in sub]
+        meterNos = [j for sub in meterNos for j in sub]
+        amountDues = [j for sub in amountDues for j in sub]
+        unitsConsumed = [j for sub in unitsConsumed for j in sub]
+        connectionIDs = [j for sub in connectionIDs for j in sub]
+        prevDates = [j for sub in prevDates for j in sub]
+        length = len(billNos)
+        BillPaymentStatus = [True,False,False,True,False]
+        consumerName = ""
+    elif roleId == "2":
+        print(f"CNO = {cNo}")
+        conn = mysql.connect()
+        bill = Bill(conn)
+        billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = bill.getBillsByCNo(cNo)
+        length = len(billNos)
+        BillPaymentStatus = [True,False,False,True,False]   #should be taken from the db too
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
+        record = cursor.fetchone()
+        consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
     return render_template("billslist.html",prevDates=prevDates,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs, roleId = roleId, consumerNo = cNo, consumerName = consumerName)
 
 
@@ -331,7 +366,7 @@ def billDetail():
     bill = Bill(conn)
     breakUP = bill.getBillBreakUp(bid)
     consumer = Consumer(conn)
-    consumer.getConsumer(conNo)
+    consumer.getConsumer(bill.conNo)
     connection = Connection(conn,request)
     connection.getConnectionByMeterNo(bill.meterNo)
     cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -341,7 +376,10 @@ def billDetail():
     conType = temp["Con_Type"]
     js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
     print(js)
-    consumerName = consumer.fname + " " + consumer.lname
+    if roleId == "2":
+        consumerName = consumer.fname + " " + consumer.lname
+    else:
+        consumerName = ""
     return render_template("billDetail.html", js=js, connection = connection, consumer=consumer, bill = bill, consumerName = consumerName, consumerNumber = conNo, roleId = roleId) 
 
 @app.route("/adminConn", methods=["POST", "GET"])
@@ -503,12 +541,43 @@ def test():
 
 @app.route("/dashboard")
 def dashboard():
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT Con_No FROM consumer")
+    conNumbers = cursor.fetchall()
+    consumers = []
+    numberOfConnections = []
+    for conNumber in conNumbers:
+        consumer = Consumer(conn)
+        consumer.getConsumer(conNumber["Con_No"])
+        consumers.append(consumer)
+        cursor.execute("SELECT count(*) as c FROM connection WHERE Con_ID = %s",(consumer.conID))
+        n = cursor.fetchone()["c"]
+        numberOfConnections.append(n)
+    print(consumers)
+    print(numberOfConnections)
     roleId = session['role']
-    return render_template("dash.html", roleId = roleId)
+    return render_template("dash.html", roleId = roleId, consumers = consumers)
 
 @app.route("/dashboardCon")
 def dashboardCon():
-    return render_template("consumerDash.html")
+    cNo = session["id"]
+    roleId = session['role']
+    if roleId == "2":
+        conn = mysql.connect()
+        bill = Bill(conn)
+        billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = bill.getBillsByCNo(cNo)
+        length = len(billNos)
+        BillPaymentStatus = [True,False,False,True,False] 
+          #should be taken from the db too
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
+        record = cursor.fetchone()
+        consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
+        print("Consumer Name")
+        print(consumerName)
+        return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName)
+    return render_template("consumerDash.html",roleId=roleId,consumerName="")
 
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
 
