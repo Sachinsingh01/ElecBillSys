@@ -110,7 +110,7 @@
                     <div class="mb-4 col-10">
                         <div class="formControl" id="formControl">
                         <label for="inputCompDesc" class="form-label">Describe your complaint briefly</label>
-                        <textarea class="form-control" id="inputCompDesc" rows="3" value=""></textarea>
+                        <textarea class="form-control" id="inputCompDesc" name="inputCompDesc" rows="3" value=""></textarea>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p></div>
@@ -156,7 +156,7 @@
         }
 
         document.getElementById("takeComplaint").addEventListener("submit", (e)=>{
-            e.preventDefault()
+            // e.preventDefault()
             console.log("hi")
             let connIdErr = true
             let compDescErr = true
