@@ -180,6 +180,16 @@
             fc.className = "formControl"
         }
 
+        function isConNo(strVal){
+            if((strVal.substring(0,3).toLowerCase().match(/^(pon|tis|bar|bic|can|san|sal|sat|mor|per|que|dha)$/))&&(!isNaN(strVal.substring(3,)))){
+                console.log("its true")
+                return true
+            }
+            console.log("its false")
+
+            return false
+        }
+
         document.getElementById("connFormInp").addEventListener("submit", (e)=>{
             let connNoErr = true
             let connTypeErr = true
@@ -205,8 +215,14 @@
             const connIdVal = connId.value.trim()
 
             if(connNoVal===""){
-                setError(connNo, "Connection Number can't be blank")
+                setError(connNo, "Consumer Number can't be blank")
                 connNoErr = true
+            }else if(connNoVal.length != 12){
+                setError(connNo, "Consumer Number should have 12 characters")
+                connNoErr=true
+            }else if(!isConNo(connNoVal)){
+                setError(connNo, "Enter valid Consumer Number")
+                connNoErr=true
             }
             else{
                 setSuccess(connNo)
@@ -225,6 +241,18 @@
             if(meterNoVal===""){
                 setError(meterNo, "Meter Number can't be blank")
                 meterNoErr = true
+            }else if(isNaN(meterNoVal)){
+                setError(meterNo, "Meter Number is Numeric field")
+                meterNoErr=true
+            }else if(isNaN(parseFloat(meterNoVal))){
+                setError(meterNo, "Please Remove any blank spaces")
+                meterNoErr=true
+            }else if(meterNoVal.includes(".")){
+                setError(meterNo, "Meter Number can't have period")
+                meterNoErr=true
+            }else if(meterNoVal.length !== 10){
+                setError(meterNo, "Meter Number should have 10 digits")
+                meterNoErr=true
             }    
             else{
                 setSuccess(meterNo)
@@ -300,7 +328,19 @@
             if(connIdVal===""){
                 setError(connId, "Connection Number can't be blank")
                 connIdErr = true
-            }
+            }else if(isNaN(connIdVal)){
+                setError(connId, "Connection ID is Numeric field")
+                connIdErr=true
+            }else if(isNaN(parseFloat(connIdVal))){
+                setError(connId, "Please Remove any blank spaces")
+                connIdErr=true
+            }else if(connIdVal.includes(".")){
+                setError(connId, "Connection ID can't have period")
+                connIdErr=true
+            }else if(connIdVal.length !== 12){
+                setError(connId, "Connection ID should have 12 digits")
+                connIdErr=true
+            } 
             else{
                 setSuccess(connId)                
                 connIdErr=false
