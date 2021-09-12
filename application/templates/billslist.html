@@ -37,7 +37,12 @@
         <section class="row justify-content-center">
             <div class="col-12 col-sm-11 col-md-11">
                 <div class="shadow p-5 m-3 bg-body rounded">
-                    <h2 class="text-start mb-3">Your Bills</h2>
+                    {% if roleId == "1" %}
+                        <h2 class="text-start mb-3">All Bills</h2>
+                    {% else %}
+                        <h2 class="text-start mb-3">Your Bills</h2>
+                    {% endif %}
+                    
                     <div id="bills-list" class="list-group">
                         {% for i in range(length) %}
                             {% if BillPaymentStatus[i] == True %}
@@ -80,7 +85,11 @@
                         
                         {% endfor %}
                     </div>
-                    {% include "consumerNavbar.html" %}
+                    {% if roleId == "1" %}
+                        {% include "navbar.html" %}
+                    {% else %}
+                        {% include "consumerNavbar.html" %}
+                    {% endif %}
             </div>
             
             </div>
