@@ -1,3 +1,4 @@
+from application.ditributor import Distributor
 from flask import Flask, request, session, redirect, url_for, render_template, Response
 from flask.helpers import flash
 from flaskext.mysql import MySQL
@@ -71,10 +72,10 @@ def login():
         account = cursor.fetchone()
         pwd = account['password']
         uType = account['user_type']
-        print(f"Account {account}")
-        print(pwd)
-        print(uType == role)
-        print(check_password_hash(pwd,password))
+        # print(f"Account {account}")
+        # print(pwd)
+        # print(uType == role)
+        # print(check_password_hash(pwd,password))
         
         if account and check_password_hash(pwd,password) and uType == role :
             session['loggedin'] = True
@@ -84,6 +85,7 @@ def login():
             if role == "1":
                 session["task"] = "add"
                 session["taskC"] = "add"
+                session["taskD"] = "add"
                 return redirect(url_for('adminCust'))
             elif account and role == "2":
                 return redirect(url_for('billsList'))
@@ -92,7 +94,7 @@ def login():
                 return redirect(url_for('meterReading'))
         else:
             msg = 'Incorrect Username or Password!'  
-    return render_template('login.html', msg=msg)
+    return render_template('login.html', msg=msg, roleId = role)
 
 @app.route("/logout")
 def logout():
@@ -105,6 +107,7 @@ def logout():
 @app.route("/adminCust", methods=["POST", "GET"])
 def adminCust():
     if 'loggedin' in session and session['role'] == "1":
+        roleId = session['role']
         task = session["task"]
         cid = ""
         fname = ""
@@ -140,7 +143,8 @@ def adminCust():
                 finally:
                     conn.close()
                 print(msg)
-                return render_template("customerDataInput.html", msg = msg, val = task, js = js)
+                # Only sending Role because user is Admin and username is Administrator
+                return render_template("customerDataInput.html", msg = msg, val = task, js = js, roleId = roleId)
             # End Add
 
             # Begin Update
@@ -177,7 +181,7 @@ def adminCust():
                 js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                 print(js)
                 print(msg)
-                return render_template("customerDataInput.html", val = task, js = js)
+                return render_template("customerDataInput.html", val = task, js = js, roleId = roleId)
             # End Update
 
             # Begin Delete
@@ -216,10 +220,10 @@ def adminCust():
                 
                 print(js)
                 print(msg)
-                return render_template("customerDataInput.html", val = task, js = js) 
+                return render_template("customerDataInput.html", val = task, js = js, roleId = roleId) 
             #Delete end
         # User is loggedin show them the home page
-        return render_template("customerDataInput.html", val = task, js = js)
+        return render_template("customerDataInput.html", val = task, js = js, roleId = roleId)
     # User is not loggedin redirect to login page
 
     return redirect(url_for('login'))
@@ -227,7 +231,7 @@ def adminCust():
 @app.route("/uploadFile", methods=["GET", "POST"])
 def uploadFile():
     if request.method == "POST":
-
+        roleId = session['role']
         if request.files:
             file = request.files["csvfile"]
 
@@ -249,26 +253,31 @@ def uploadFile():
             else:
                 print("That file extension is not allowed")
                 return redirect(request.url)
-    return render_template("meterReading.html")
 
+    # Only sending role because user is admin            
+    return render_template("meterReading.html", roleId = roleId)
+
+#Functionality has to be added
 @app.route("/fileComplaint", methods=["GET", "POST"])
-def fileComplaint():
+def fileComplaint():  
     return render_template("fileComplaint.html")
 
 @app.route("/complainList", methods=["GET", "POST"])
 def complainList():
+    roleId = session['role']
     complainCategory = [1,2,2,1]
     complainIDs = [1991,1992,1993,1994]
     connectionIDs = [3001,3002,3003,3004]
     length = 4
     complainStatus = [1,2,1,2]
-    return render_template("complainList.html",complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length)
+    return render_template("complainList.html",complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId)
 
 @app.route("/complainDetail")
 def complainDetail():
     bid = request.args['id']
     print(f"BID : {bid}")
     conNo = session["id"]
+    roleId = session['role']
     conn = mysql.connect()
     bill = Bill(conn)
     breakUP = bill.getBillBreakUp(bid)
@@ -277,13 +286,18 @@ def complainDetail():
     connection = Connection(conn,request)
     connection.getConnectionByMeterNo(bill.meterNo)
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute("SELECT San_Load, Con_Type FROM connection_type WHERE Con_Type_ID = %s ",(connection.conType))
-    temp = cursor.fetchone()
-    sancLoad = temp["San_Load"]
-    conType = temp["Con_Type"]
-    js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
-    print(js)
-    return render_template("complainDetail.html", js=js, consumer=consumer, connection=connection, bill=bill)
+    try:
+        cursor.execute("SELECT San_Load, Con_Type FROM connection_type WHERE Con_Type_ID = %s ",(connection.conType))
+        temp = cursor.fetchone()
+        sancLoad = temp["San_Load"]
+        conType = temp["Con_Type"]
+        js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
+        consumerName = consumer.fname + " " + consumer.lname
+        print(js)
+        return render_template("complainDetail.html", js=js, consumer=consumer, connection=connection, bill=bill, roleId = roleId, consumerNo = conNo, consumerName = consumerName)
+    except Exception as e:
+        print(e)
+        return redirect(url_for('complainList'))
 
 @app.route("/billTimeline")
 def billTimeline():
@@ -293,19 +307,26 @@ def billTimeline():
 @app.route("/billsList")
 def billsList():
     cNo = session["id"]
+    roleId = session['role']
     print(f"CNO = {cNo}")
     conn = mysql.connect()
     bill = Bill(conn)
     billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = bill.getBillsByCNo(cNo)
     length = len(billNos)
     BillPaymentStatus = [True,False,False,True,False]   #should be taken from the db too
-    return render_template("billslist.html",prevDates=prevDates,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs)
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
+    record = cursor.fetchone()
+    consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
+    return render_template("billslist.html",prevDates=prevDates,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs, roleId = roleId, consumerNo = cNo, consumerName = consumerName)
+
 
 @app.route("/billDetail")
 def billDetail():
     bid = request.args['id']
     print(f"BID : {bid}")
     conNo = session["id"]
+    roleId = session['role']
     conn = mysql.connect()
     bill = Bill(conn)
     breakUP = bill.getBillBreakUp(bid)
@@ -320,7 +341,8 @@ def billDetail():
     conType = temp["Con_Type"]
     js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
     print(js)
-    return render_template("billDetail.html", js=js, connection = connection, consumer=consumer, bill = bill) 
+    consumerName = consumer.fname + " " + consumer.lname
+    return render_template("billDetail.html", js=js, connection = connection, consumer=consumer, bill = bill, consumerName = consumerName, consumerNumber = conNo, roleId = roleId) 
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
@@ -329,7 +351,7 @@ def adminConn():
 
     if 'loggedin' in session and session['role'] == "1":
         taskC = session["taskC"]
-
+        roleId = session['role']
         js = {"cid": "", "cno":"", "connType":"", "meterNo":"","caddress":"", "cdistrict":"", "ctaluka":"", "connStatus":"", "cpinCode":"", "installationDate":""}
     
 
@@ -353,7 +375,9 @@ def adminConn():
                     finally:
                         conn.close()
                     print(msg)
-                    return render_template("connectionDataInput.html", msg = msg, val = taskC, js = js)
+
+                    # only roleId cuz user is admin
+                    return render_template("connectionDataInput.html", msg = msg, val = taskC, js = js, roleId = roleId)
                 # End Add
 
                 # Begin Delete
@@ -391,7 +415,7 @@ def adminConn():
                             msg = "Unable to find the connection" 
                     print(js)
                     print(msg)
-                    return render_template("connectionDataInput.html", val = taskC, js = js) 
+                    return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId) 
                 # End Delete
 
                 # Begin Update
@@ -431,15 +455,16 @@ def adminConn():
                     
                     print(js)
                     print(msg)
-                    return render_template("connectionDataInput.html", val = taskC, js = js)
+                    return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId)
                 # End Update
 
-    return render_template("connectionDataInput.html", js=js, val=taskC)
+    return render_template("connectionDataInput.html", js=js, val=taskC, roleId = roleId)
 
 @app.route("/meterReading", methods=["GET", "POST"])
 def meterReading():
     conn = mysql.connect()
     meterRead = MeterReading(conn,session['id'])
+    roleId = session['role']
     if request.method=="POST":
         if 'formStateGet' in request.form:
             csv,filename = meterRead.createMeterReadingFile()
@@ -465,7 +490,7 @@ def meterReading():
                 else:
                     print("That file extension is not allowed")
                     return redirect(request.url)
-    return render_template("meterReading.html")
+    return render_template("meterReading.html", roleId = roleId)
 
 @app.route("/test")
 def test():
@@ -478,10 +503,122 @@ def test():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dash.html")
+    roleId = session['role']
+    return render_template("dash.html", roleId = roleId)
 
 @app.route("/dashboardCon")
 def dashboardCon():
     return render_template("consumerDash.html")
 
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
+
+
+@app.route("/adminDistributor", methods=["POST", "GET"])
+def adminDistributor():
+    if 'loggedin' in session and session['role'] == "1":
+        taskD = session["taskD"]
+        roleId = session['role']
+        js = {"disId":"","disCompName":"", "disAddress":"", "disDistrict":"", "disPincode":"", "suppplyMonth":"", "disContact":"", "supplyRate":"","created":"", "updated":""}
+
+        if request.method == "POST" and 'taskD' in request.form:
+            session["taskD"] = request.form['taskD']
+            taskD = session["taskD"]
+            print(session["taskD"])
+            # Begin Add
+            if taskD == "add":
+                conn = mysql.connect()
+                distributor = Distributor(conn, request)
+                msg = None
+                try:
+                    val = distributor.insertDistributor()
+                    if val:
+                        conn.commit()
+                        msg = "Distributor Succefully Added"
+                    else:
+                        msg = "Unable to Add Distributor"
+                finally:
+                    conn.close()
+                print(msg)
+                return render_template("distributorDataInput.html", msg = msg, val = taskD, js = js, roleId = roleId)
+            # End Add
+
+            # Begin Update
+            elif taskD == "upd":
+                disId = request.form['inputDistFilID']
+                conn = mysql.connect()
+                distributor = Distributor(conn, request)
+                msg = None
+                # Messages for testing
+                print("in Update")
+                print(disId)
+                print(request.form['stateD'])
+                if request.form['stateD'] == "1":
+                    try:
+                        try:
+                            print("actually updating")
+                            disId = request.form['inputDistID']
+                            print("Printing dis ID", disId)
+                            updateDis = distributor.updateDistributor(request, disId)
+                            if updateDis:
+                                msg = "Distributor updated Sucessfully"
+                            else:
+                                msg = "Unable to update distributor 1"
+                        except:
+                            msg = "Unable to update ditributor"
+                    finally:
+                        conn.close()
+                else:
+                    findDis = distributor.getDistributor(disId)
+                    if not findDis:
+                        msg = "Unable to find the Distributor"
+
+                js = {"disId": disId ,"disCompName": distributor.disCompName, "disAddress": distributor.disAddress, "disDistrict": distributor.disDistrict, "disPincode": distributor.disPincode, "suppplyMonth": distributor.supplyPMonth, "disContact":distributor.disContact, "supplyRate": distributor.supplyRate,"created":distributor.created, "updated":distributor.updated}
+                print(js)
+                print(msg)
+                return render_template("distributorDataInput.html", val = taskD, js = js, roleId = roleId)
+            # End Update
+
+            # Begin Delete
+            elif taskD == "del":
+                js = {"disId":"","disCompName":"", "disAddress":"", "disDistrict":"", "disPincode":"", "suppplyMonth":"", "disContact":"", "supplyRate":"","created":"", "updated":""}
+                disId = request.form['inputDistFilID']
+                print(disId)
+                conn = mysql.connect()
+                distributor = Distributor(conn, request)
+                distributor.getDistributor(disId)
+                
+                msg = None
+                print("in Delete")
+                print(request.form['stateD'])
+                if request.form['stateD'] == "1":
+                    try:
+                        try:
+                            print("actually deleting")
+                            print(request.form['inputDistFilID'])
+                            disId = request.form['inputDistFilID']
+                            
+                            val = distributor.deleteDistributor(disId)
+                            
+                            if val:
+                                msg = "Distributor deleted Sucessfully"
+                            else:
+                                msg = "Unable to delete Distributor"
+                        except:
+                            msg = "Unable to delete Distributor 1"
+                    finally:
+                        conn.close()
+                else:
+                    val2 = distributor.getDistributor(disId)
+                    js = {"disId": disId ,"disCompName": distributor.disCompName, "disAddress": distributor.disAddress, "disDistrict": distributor.disDistrict, "disPincode": distributor.disPincode, "suppplyMonth": distributor.supplyPMonth, "disContact":distributor.disContact, "supplyRate": distributor.supplyRate,"created":distributor.created, "updated":distributor.updated}
+                    if not val2:
+                        msg = "Unable to find the Distributor"
+                
+                print(js)
+                print(msg)
+                return render_template("distributorDataInput.html", val = taskD, js = js, roleId = roleId) 
+            #Delete end
+        # User is loggedin show them the home page
+        return render_template("distributorDataInput.html", val = taskD, js = js, roleId = roleId)
+    # User is not loggedin redirect to login page
+
+    return redirect(url_for('login'))
