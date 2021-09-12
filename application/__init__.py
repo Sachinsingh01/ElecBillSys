@@ -541,8 +541,14 @@ def test():
 
 @app.route("/dashboard")
 def dashboard():
-    pageNo = int(request.args['pageNo'])- 1
-    cid = request.args['coNo']
+    if 'pageNo' in request.args:
+        pageNo = int(request.args['pageNo'])- 1
+    else:
+        pageNo = 0
+    if 'coNo' in request.args:
+        cid = request.args['coNo']  
+    else:
+        cid = ""
     roleId = session['role']
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -575,9 +581,14 @@ def dashboard():
 def dashboardCon():
     cNo = session["id"]
     roleId = session['role']
-    # connId = request.args['connId']
+    conn = mysql.connect()
     if roleId == "2":
-        conn = mysql.connect()
+        if 'bid' in request.args:
+            bid = request.args['bid']
+            bill = Bill(conn)
+            bill.getBill(bid)
+        else:
+            bill = ""
         connections = []
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
@@ -585,7 +596,7 @@ def dashboardCon():
         consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
         print("Consumer Name")
         print(consumerName)
-        return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections)
+        return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,bill=bill)
     return render_template("consumerDash.html",roleId=roleId,consumerName="")
 
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
