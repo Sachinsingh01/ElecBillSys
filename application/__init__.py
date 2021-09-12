@@ -560,42 +560,62 @@ def test():
 
 @app.route("/dashboard")
 def dashboard():
+    if 'pageNo' in request.args:
+        pageNo = int(request.args['pageNo'])- 1
+    else:
+        pageNo = 0
+    if 'coNo' in request.args:
+        cid = request.args['coNo']  
+    else:
+        cid = ""
+    roleId = session['role']
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute("SELECT Con_No FROM consumer")
-    conNumbers = cursor.fetchall()
-    consumers = []
-    numberOfConnections = []
-    for conNumber in conNumbers:
-        consumer = Consumer(conn)
-        consumer.getConsumer(conNumber["Con_No"])
-        consumers.append(consumer)
-        cursor.execute("SELECT count(*) as c FROM connection WHERE Con_ID = %s",(consumer.conID))
+    if cid == "":
+        cursor.execute("SELECT COUNT(*) as c FROM consumer")
         n = cursor.fetchone()["c"]
-        numberOfConnections.append(n)
-    print(consumers)
-    print(numberOfConnections)
-    roleId = session['role']
-    return render_template("dash.html", roleId = roleId, consumers = consumers)
-
+        import math
+        n = math.ceil(n/5)
+        cursor.execute("SELECT Con_No FROM consumer ORDER BY Con_No LIMIT %s, %s",(pageNo*5,5))
+        conNumbers = cursor.fetchall()
+        consumers = []
+        numberOfConnections = []
+        for conNumber in conNumbers:
+            consumer = Consumer(conn)
+            consumer.getConsumer(conNumber["Con_No"])
+            consumers.append(consumer)
+            cursor.execute("SELECT count(*) as c FROM connection WHERE Con_ID = %s",(consumer.conID))
+            n = cursor.fetchone()["c"]
+            numberOfConnections.append(n)
+        print(consumers)
+        print(numberOfConnections)
+        return render_template("dash.html", roleId = roleId, consumers = consumers,num = numberOfConnections,n=n/5)
+    else:
+        consumers = []
+        consumer = Consumer(conn)
+        consumer.getConsumer(cid)
+        consumers.append(consumer)
+        return render_template("dash.html", roleId = roleId, consumers = consumers)
 @app.route("/dashboardCon")
 def dashboardCon():
     cNo = session["id"]
     roleId = session['role']
+    conn = mysql.connect()
     if roleId == "2":
-        conn = mysql.connect()
-        bill = Bill(conn)
-        billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = bill.getBillsByCNo(cNo)
-        length = len(billNos)
-        BillPaymentStatus = [True,False,False,True,False] 
-          #should be taken from the db too
+        if 'bid' in request.args:
+            bid = request.args['bid']
+            bill = Bill(conn)
+            bill.getBill(bid)
+        else:
+            bill = ""
+        connections = []
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
         record = cursor.fetchone()
         consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
         print("Consumer Name")
         print(consumerName)
-        return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName)
+        return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,bill=bill)
     return render_template("consumerDash.html",roleId=roleId,consumerName="")
 
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
@@ -710,3 +730,7 @@ def adminDistributor():
     # User is not loggedin redirect to login page
 
     return redirect(url_for('login'))
+
+@app.route("/paymentHistory")
+def paymentHistory():
+    return render_template("paymentHistory.html")
