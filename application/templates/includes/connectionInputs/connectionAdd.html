@@ -32,7 +32,7 @@
 </div>
 <div class="mb-4 col-12">
     <div class="formControl" id="formControl">
-    <label for="inputConnAddress" class="form-label">Connection Address</label>
+    <label for="inputConnAddress" class="form-label">Address</label>
     <input type="text" class="form-control" id="inputConnAddress" name="inputConnAddress" {% if val != "add" %} value = {{js.caddress}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
@@ -40,7 +40,7 @@
 </div>
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConnDistrict" class="form-label">Connection District</label>
+    <label for="inputConnDistrict" class="form-label">District</label>
     <select id="inputConnDistrict" class="form-select" name="inputConnDistrict">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
         <option {% if val != "add" and js.cdistrict == "North Goa" %} selected {% endif %} value="North Goa">North Goa</option>
@@ -52,7 +52,7 @@
 </div>   
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConnTaluka" class="form-label">Connection Taluka</label>
+    <label for="inputConnTaluka" class="form-label">Taluka</label>
     <select id="inputConnTaluka" class="form-select" name="inputConnTaluka">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
         <option {% if val != "add" and js.ctaluka == "Bardez" %} selected {% endif %} value="Bardez">Bardez</option>
@@ -74,7 +74,7 @@
 </div>       
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConnPin" class="form-label">Connection Pin Code</label>
+    <label for="inputConnPin" class="form-label">Pin Code</label>
     <input type="text" class="form-control" id="inputConnPin" name="inputConnPin" {% if val != "add" %} value = {{js.cpinCode}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
@@ -101,10 +101,12 @@
 </div>   
 <div class="mb-4 col-4"></div>
 {% if val == "del" %} </fieldset> {% endif %}
-<div class="mt-3 col-4"></div>
+<div class="mt-3 col-2"></div>
 <div class="d-grid mt-3 gap-2 col-4 d-block">
-    <button type="submit" class="btn btn-primary" id="addBtnC">Submit</button><br>
-    <button type="reset" class="btn btn-secondary" style="width: 10rem; margin: auto;">Cancel</button>
+    <button type="submit" class="btn btn-primary" id="addBtnC">Submit</button>
 </div> 
-<div class="mt-3 col-4"></div>
+<div class="d-grid gap-2 mt-3 col-4 d-block">
+    <button type="reset" class="btn btn-secondary" onclick="resetVals()">Cancel</button>
+</div> 
+<div class="mt-3 col-2"></div>
 </div>

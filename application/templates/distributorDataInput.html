@@ -7,10 +7,54 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
+        .formControl{
+            position: relative;
+        }
+        .formControl i{
+            position: absolute;
+            bottom: 0.7rem;
+            right: 1rem;
+            visibility: hidden;
+        }
+        .formControl p{
+            position: absolute;
+            bottom: -1.3rem;
+            left: 0.5rem;
+            visibility: hidden;
+            font-size: 0.8rem;
+        }
+        .formControl.success input{
+            border-color: #2ecc71;
+        }
+        .formControl.error input{
+            border-color: #e74c3c;
+        }
+        .formControl.success select{
+            border-color: #2ecc71;
+            background: none;
+        }
+        .formControl.error select{
+            border-color: #e74c3c;
+            background: none;
+        }
+        .formControl.success i.bi.bi-check-circle{
+            color: #2ecc71;
+            visibility: visible;
+        }
+        .formControl.error i.bi.bi-exclamation-circle{
+            color: #e74c3c;
+            visibility: visible;
+        }
+        .formControl.error p{
+            color: #e74c3c;
+            visibility: visible;
+        }
         #container{
             position: absolute;
-            width: calc(100vw - 80px);
-            right: 0;
+                width: calc(100vw - 80px);
+                height: calc(100vh - 70px);
+                right: 0;
+                bottom: 0;
         }
     </style>
     <title>Admin Dash</title>
@@ -21,7 +65,7 @@
     <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
             <section class="col-12 col-sm-11 col-md-11">
-                <form method="POST" class="shadow p-5 mb-5 bg-body rounded mt-5">
+                <form method="POST" class="shadow p-5 mb-5 bg-body rounded mt-5" id="inpDistForm">
                     <h2 class="text-start mb-3">Distributor Details</h2>
                     <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="distFuncType" id="distAdd" autocomplete="off"
@@ -40,14 +84,13 @@
                     <input type="text" class="d-none" id="stateD" name="stateD" value= "0">
                     {% include "includes/distributorInputs/distributorAdd.html" %}
                     {% include "includes/distributorInputs/distributorFilter.html" %}
-                    {% include "navbar.html" %}
+                    
                 </form>
             </section>
-            <button type="reset" class="btn btn-secondary" style="width: 10rem;">Cancel</button>
         </section>
     </div>
 
-
+    {% include "navbar.html" %}
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
@@ -82,8 +125,188 @@
             document.getElementById("filterElD").style.display = "flex"
             document.getElementById("taskD").value = "del"
         })
+        
+
+        //validation
+        var compname = document.getElementById("inputDistCompName")
+        var address = document.getElementById("inputDistAddress")
+        var district = document.getElementById("inputDistDistrict")
+        var pin = document.getElementById("inputDistPin")
+        var contact = document.getElementById("inputDistContact")
+        var supplyMon = document.getElementById("inputSupplyPMonth")
+        var supplyR = document.getElementById("inputSupplyRate")
+        var did = document.getElementById("inputDistFilID")
+
+        function setError(elt, msg){
+            const fc = elt.parentElement
+            const pTag = fc.querySelector('p')
+            if(pTag){
+                pTag.innerText = msg
+            }
+            fc.className = "formControl error"
+        }
+
+        function setSuccess(elt){
+            const fc = elt.parentElement
+            fc.className = "formControl success"
+        }
+
+        function resetCls(elt){
+            const fc = elt.parentElement
+            fc.className = "formControl"
+        }
+
+       
+
+        document.getElementById("inpDistForm").addEventListener("submit", (e)=>{
+            let compnameErr = true
+            let supplyMonErr = true
+            let contactErr = true
+            let addressErr = true
+            let supplyRErr = true
+
+            let pinErr = true
+            let districtErr = true
+            let didErr = true
+
+            const compnameVal = compname.value.trim()
+            const supplyMonVal = supplyMon.value.trim()
+            const addressVal = address.value.trim()
+            const districtVal = district.value.trim()
+            const supplyRVal = supplyR.value.trim()
+            const pinVal = pin.value.trim()
+            const contactVal = contact.value.trim()
+            const didVal = did.value.trim()
+
+            if(compnameVal===""){
+                setError(compname, "Company Name can't be blank")
+                compnameErr=true
+            }
+            else{
+                setSuccess(compname)           
+                compnameErr=false
+            }
+
+            if(supplyMonVal===""){
+                setError(supplyMon, "Supply per Month is Mandatory")
+                supplyMonErr=true
+            }else if(isNaN(supplyMonVal)){
+                setError(supplyMon, "Supply per Month is Numeric field")
+                supplyMonErr=true
+            }else if(isNaN(parseFloat(supplyMonVal))){
+                setError(supplyMon, "Please Remove any blank spaces")
+                supplyMonErr=true
+            }
+            else{
+                setSuccess(supplyMon)
+                supplyMonErr=false
+            }
+            
+            if(addressVal===""){
+                setError(address, "Distributor Address can't be blank")
+                addressErr=true
+            }
+            else{
+                setSuccess(address)
+                addressErr=false
+            }
+            
+            if(districtVal===""){
+                setError(district, "Distributor District can't be blank")
+                districtErr=true
+            }
+            else{
+                setSuccess(district)
+                districtErr=false
+            }
+            
+            if(supplyRVal===""){
+                setError(supplyR, "Supply Rate is Mandatory")
+                supplyRErr=true
+            }else if(isNaN(supplyRVal)){
+                setError(supplyR, "Supply Rate is Numeric field")
+                supplyRErr=true
+            }else if(isNaN(parseFloat(supplyRVal))){
+                setError(supplyR, "Please Remove any blank spaces")
+                supplyRErr=true
+            }
+            else{
+                setSuccess(supplyR)
+                supplyRErr=false
+            }
+            
+            if(contactVal===""){
+                setError(contact, "Distributor Contact can't be blank")
+                contactErr=true
+            }else if(isNaN(contactVal)){
+                setError(contact, "Contact is Numeric field")
+                contactErr=true
+            }else if(isNaN(parseFloat(contactVal))){
+                setError(contact, "Please Remove any blank spaces")
+                contactErr=true
+            }else if(contactVal.includes(".")){
+                setError(contact, "Contact can't have period")
+                contactErr=true
+            }else if(contactVal.length !== 10){
+                setError(contact, "Contact should have 10 digits")
+                contactErr=true
+            }else{
+                setSuccess(contact)
+                contactErr=false
+            }
+            
+           
+            
+            if(pinVal===""){
+                setError(pin, "Distributor Pin can't be blank")
+                pinErr=true
+            }else if(isNaN(pinVal)){
+                setError(pin, "Pin is Numeric field")
+                pinErr=true
+            }else if(isNaN(parseFloat(pinVal))){
+                setError(pin, "Please Remove any blank spaces")
+                pinErr=true
+            }else if(pinVal.includes(".")){
+                setError(pin, "Pin can't have period")
+                pinErr=true
+            }else if(pinVal.length !== 6){
+                setError(pin, "Pin should have 6 digits")
+                pinErr=true
+            }else{
+                setSuccess(pin)
+                pinErr=false
+            }
+
+            if(didVal===""){
+                setError(did, "Distributor Number can't be blank")
+                didErr=true
+            }
+            else{
+                setSuccess(did)
+                didErr=false
+            }
+
+            let allErr = compnameErr||supplyMonErr||contactErr||addressErr||supplyMonErr||pinErr||districtErr
+            if(!didErr){
+                alert("submitted")
+            }else if(!allErr){
+                alert("submitted")
+            }else{                
+                e.preventDefault()
+            }
+        })
+
+        //reset
         function resetVals(){
-            document.getElementById('inputDistFilID').value = '';
+            did.value = ""
+            resetCls(compname)
+            resetCls(address)   
+            resetCls(district)  
+            resetCls(pin)  
+            resetCls(supplyMon)  
+            resetCls(supplyR)  
+            resetCls(did)  
+            resetCls(contact)          
         }
     </script>
 </body>

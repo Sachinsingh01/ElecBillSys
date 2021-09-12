@@ -11,6 +11,48 @@
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
     />
     <style>
+        .formControl{
+                position: relative;
+            }
+            .formControl i{
+                position: absolute;
+                bottom: 0.7rem;
+                right: 1rem;
+                visibility: hidden;
+            }
+            .formControl p{
+                position: absolute;
+                bottom: -1.3rem;
+                left: 0.5rem;
+                visibility: hidden;
+                font-size: 0.8rem;
+            }
+            .formControl.success input{
+                border-color: #2ecc71;
+            }
+            .formControl.error input{
+                border-color: #e74c3c;
+            }
+            .formControl.success select{
+                border-color: #2ecc71;
+                background: none;
+            }
+            .formControl.error select{
+                border-color: #e74c3c;
+                background: none;
+            }
+            .formControl.success i.bi.bi-check-circle{
+                color: #2ecc71;
+                visibility: visible;
+            }
+            .formControl.error i.bi.bi-exclamation-circle{
+                color: #e74c3c;
+                visibility: visible;
+            }
+            .formControl.error p{
+                color: #e74c3c;
+                visibility: visible;
+            }
         #container{
                 position: absolute;
                 width: calc(100vw - 80px);
@@ -29,42 +71,258 @@
             <section class="col-12 col-sm-11 col-md-11" id="loaderfn">
                 <form href="/fileComplaint" method="POST" class="shadow p-5 m-3 bg-body rounded" id="takeComplaint">
                     <h2 class="text-start mb-3">Complaint Details</h2>
-                      
-                    <label for="complaintType">Choose a Complaint Type:</label>
+                    <div class="row">
+                    <div class="col-1"></div>
+                    <div class="mb-4 col-4">
+                        <div class="formControl" id="formControl">
+                        <label for="inputConnID" class="form-label">Connection ID</label>
+                        <input type="text" class="form-control" id="inputConnID" name="inputConnID">
+                        <i class="bi bi-check-circle"></i>
+                        <i class="bi bi-exclamation-circle"></i>
+                        <p class="mb-0" id="errMsg">Error Message</p>
+                    </div>
 
-                    <select name="complaintType" id="complaintType">
-                    <option value="Technical">Technical</option>
-                    <option value="BillRel">Bill Related</option>
-                    </select>
-                    <br><br>
-                    <div id="idType">
-                        <label for='technicalType'>Enter Connection ID</label> <input type='text' id='technicalType'/>
-                    </div><br>
-                    <label for="comment">Enter the complain description</label><br>
-                    <textarea name="description" id="comment" cols="30" rows="10"></textarea><br><br>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    {% include "consumerNavbar.html" %}
-                    
+                    </div>
+                    <div class="col-2"></div>
+                    <div class="mb-4 col-4">
+                        <div class="formControl" id="formControl">
+                        <label for="inputCompType" class="form-label">Complaint Type</label>
+                        <select id="inputCompType" class="form-select" name="inputCompType">
+                            <option selected value="none">Select One</option>
+                            <option value="Technical">Technical</option>
+                            <option value="Bill Complaint">Bill Complaint</option>
+                        </select>
+                        <i class="bi bi-check-circle"></i>
+                        <i class="bi bi-exclamation-circle"></i>
+                        <p class="mb-0" id="errMsg">Error Message</p></div>
+                    </div> 
+                    <div class="col-1"></div>
+
+                    <div class="col-1"></div>
+                    <div class="mb-4 col-10">
+                        <div class="formControl" id="formControl">
+                        <label id="inputCompDesc" for="inputCompDesc" class="form-label">Example textarea</label>
+                        <textarea class="form-control" id="inputCompDesc" rows="3"></textarea>
+                        <i class="bi bi-check-circle"></i>
+                        <i class="bi bi-exclamation-circle"></i>
+                        <p class="mb-0" id="errMsg">Error Message</p></div>
+                    </div> 
+                    <div class="col-1"></div>
+                    <div class="mt-3 col-2"></div>
+                    <div class="d-grid mt-3 gap-2 col-4 d-block">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div> 
+                    <div class="d-grid gap-2 mt-3 col-4 d-block">
+                        <button type="reset" class="btn btn-secondary" onclick="resetVals()">Cancel</button>
+                    </div> 
+                    <div class="mt-3 col-2"></div>
+                    </div>
                 </form>
             </section>
         </section>
     </div>
+    {% include "consumerNavbar.html" %}
 
+    <script>
+        var connId = document.getElementById("inputConnID")
+        var compDesc = document.getElementById("inputCompDesc")
+        var compType = document.getElementById("inputCompType")
 
-<script>
-    document.getElementById('complaintType').addEventListener('change', function changeType(e){
-	type = e.target.value;
-	if(type === 'Technical'){
-        document.getElementById('idType').innerHTML = "<label for='technicalType'>Enter Connection ID</label> <input type='text' id='technicalType'/> ";
-    }
-    else if(type === 'BillRel'){
-        document.getElementById('idType').innerHTML = "<label for='billType'>Enter Bill ID</label> <input type='text' id='billType'/> ";
+        function setError(elt, msg){
+            const fc = elt.parentElement
+            const pTag = fc.querySelector('p')
+            if(pTag){
+                pTag.innerText = msg
+            }
+            fc.className = "formControl error"
+        }
 
-    }
-			
-	
-});
-</script>
+        function setSuccess(elt){
+            const fc = elt.parentElement
+            fc.className = "formControl success"
+        }
+
+        function resetCls(elt){
+            const fc = elt.parentElement
+            fc.className = "formControl"
+        }
+
+        function validateEmail(email) {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function isConNo(strVal){
+            if((strVal.substring(0,3).toLowerCase().match(/^(pon|tis|bar|bic|can|san|sal|sat|mor|per|que|dha)$/))&&(!isNaN(strVal.substring(3,)))){
+                console.log("its true")
+                return true
+            }
+            console.log("its false")
+
+            return false
+        }
+
+        document.getElementById("conFormInp").addEventListener("submit", (e)=>{
+            let fnameErr = true
+            let lnameErr = true
+            let contactErr = true
+            let addressErr = true
+            let talukaErr = true
+
+            let pinErr = true
+            let emailErr = true
+            let districtErr = true
+            let cidErr = true
+
+            const fnameVal = fname.value.trim()
+            const lnameVal = lname.value.trim()
+            const addressVal = address.value.trim()
+            const districtVal = district.value.trim()
+            const talukaVal = taluka.value.trim()
+            const pinVal = pin.value.trim()
+            const contactVal = contact.value.trim()
+            const emailVal = email.value.trim()
+            const cidVal = cid.value.trim()
+
+            if(fnameVal===""){
+                setError(fname, "Consumer First Name can't be blank")
+                fnameErr=true
+            }
+            else{
+                setSuccess(fname)           
+                fnameErr=false
+            }
+
+            if(lnameVal===""){
+                setError(lname, "Consumer Last Name can't be blank")
+                lnameErr=true
+            }
+            else{
+                setSuccess(lname)
+                lnameErr=false
+            }
+            
+            if(addressVal===""){
+                setError(address, "Consumer Address can't be blank")
+                addressErr=true
+            }
+            else{
+                setSuccess(address)
+                addressErr=false
+            }
+            
+            if(districtVal==="none"){
+                setError(district, "Consumer District can't be blank")
+                districtErr=true
+            }
+            else{
+                setSuccess(district)
+                districtErr=false
+            }
+            
+            if(talukaVal==="none"){
+                setError(taluka, "Consumer Taluka can't be blank")
+                talukaErr=true
+            }
+            else{
+                setSuccess(taluka)
+                talukaErr=false
+            }
+            
+            if(contactVal===""){
+                setError(contact, "Consumer Contact can't be blank")
+                contactErr=true
+            }else if(isNaN(contactVal)){
+                setError(contact, "Contact is Numeric field")
+                contactErr=true
+            }else if(isNaN(parseFloat(contactVal))){
+                setError(contact, "Please Remove any blank spaces")
+                contactErr=true
+            }else if(contactVal.includes(".")){
+                setError(contact, "Contact can't have period")
+                contactErr=true
+            }else if(contactVal.length !== 10){
+                setError(contact, "Contact should have 10 digits")
+                contactErr=true
+            }
+            else{
+                setSuccess(contact)
+                contactErr=false
+            }
+            
+            if(emailVal===""){
+                setError(email, "Consumer Email can't be blank")
+                emailErr=true
+            }else if(!validateEmail(emailVal)){
+                setError(email, "Enter a valid email")
+                emailErr=true
+            }
+            else{
+                setSuccess(email)
+                emailErr=false
+            }
+            
+            if(pinVal===""){
+                setError(pin, "Consumer Pin can't be blank")
+                pinErr=true
+            }else if(isNaN(pinVal)){
+                setError(pin, "Pin is Numeric field")
+                pinErr=true
+            }else if(isNaN(parseFloat(pinVal))){
+                setError(pin, "Please Remove any blank spaces")
+                pinErr=true
+            }else if(pinVal.includes(".")){
+                setError(pin, "Pin can't have period")
+                pinErr=true
+            }else if(pinVal.length !== 6){
+                setError(pin, "Pin should have 6 digits")
+                pinErr=true
+            }
+            else{
+                setSuccess(pin)
+                pinErr=false
+            }
+
+            if(cidVal===""){
+                setError(cid, "Consumer Number can't be blank")
+                cidErr=true
+            }else if(cidVal.length != 12){
+                setError(cid, "Consumer Number should have 12 characters")
+                cidErr=true
+            }else if(!isConNo(cidVal)){
+                setError(cid, "Enter valid Consumer Number")
+                cidErr=true
+            }
+            else{
+                setSuccess(cid)
+                cidErr=false
+            }
+
+            let allErr = fnameErr||lnameErr||contactErr||addressErr||talukaErr||pinErr||emailErr||districtErr
+            if(!cidErr){
+                alert("submitted")
+            }else if(!allErr){
+                alert("submitted")
+            }else{                
+                e.preventDefault()
+            }
+        })
+
+        
+
+        function resetVals(){
+            cid.value=""
+            resetCls(fname)
+            resetCls(lname)
+            resetCls(address)
+            resetCls(contact)
+            resetCls(district)
+            resetCls(taluka)
+            resetCls(pin)
+            resetCls(email)
+            resetCls(cid)
+        }
+    </script>
 </body>
 
 </html>

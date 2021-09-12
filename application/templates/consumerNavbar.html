@@ -27,9 +27,9 @@
         <div class="ctn-body">
             <ul class="nav-list">
                 <li class="nav-elements"><i id="hamburger" class="bi bi-list"></i><div class="nav-app-name">EBS</div></li>
-                <li class="nav-elements"><a href="/billsList" class="nav-link"><i class="bi bi-receipt-cutoff"></i><div class="nav-txt">View Bills</div></a></li>
-                <li class="nav-elements"><a href="/fileComplaint" class="nav-link"><i class="bi bi-patch-exclamation-fill"></i><div class="nav-txt">File Complaint</div></a></li>
-                <li class="nav-elements"><a href="/complainListConsumer" class="nav-link"><i class="bi bi-patch-question-fill"></i><div class="nav-txt">Track Complaints</div></a></li>
+                <li class="nav-elements"><a href="/billsList" class="nav-link"><i class="bi bi-receipt-cutoff"></i><div class="nav-txt" >View Bills</div></a></li>
+                <li class="nav-elements"><a href="/fileComplaint" class="nav-link"><i class="bi bi-patch-exclamation-fill"></i><div class="nav-txt" >File Complaint</div></a></li>
+                <li class="nav-elements"><a href="/complainList" class="nav-link"><i class="bi bi-patch-question-fill"></i><div class="nav-txt" >Track Complaints</div></a></li>
             </ul>
         </div>
     </div>
@@ -45,7 +45,7 @@
           <div class="col-6 my-3" id="search-bar">
             <div class="d-flex" id="search-form">
               <a class="d-none" id="search-link"></a>
-              <input class="me-1" type="search" placeholder="Search ..." id="search">
+              <input class="me-1" type="search" placeholder="Search Connection..." id="search">
               <button class="btn btn-outline-none" type="button" id="search-btn"><i class="bi bi-search" id="search-icon"></i></button>
             </div>
           </div>   
@@ -82,9 +82,6 @@
           document.getElementById("dropParent").className = "dropdownMenu down"
         }
       })
-      document.getElementById('logout-btn').addEventListener("click", e => {
-        document.getElementById('logout-link').click()
-      })
 
       document.getElementById('search').addEventListener(onkeyup, e=>{
         if(e.keyCode===13){
@@ -94,9 +91,21 @@
       document.getElementById('search-btn').addEventListener("click", e => {
         let searchKey = document.getElementById('search').value
         //check if search key is correct
-        let link = document.getElementById('search-link')
-        link.href = "/dashboard?id=" + searchKey
-        link.click()
+        if(searchKey===""){
+                alert("Connection Number can't be blank")
+            }else if(isNaN(searchKey)){
+                alert("Connection ID is Numeric field")
+            }else if(isNaN(parseFloat(searchKey))){
+                alert("Please Remove any blank spaces")
+            }else if(searchKey.includes(".")){
+                alert("Connection ID can't have period")
+            }else if(searchKey.length !== 12){
+                alert("Connection ID should have 12 digits")
+            }else{
+              let link = document.getElementById('search-link')
+              link.href = "/dashboardCon?id=" + searchKey
+              link.click()
+            }
       })
     </script>
   </body>

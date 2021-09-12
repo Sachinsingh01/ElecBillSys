@@ -119,7 +119,8 @@
             console.log(alertMsg)
             alert(alertMsg)
         })
-        document.getElementById("connAdd").addEventListener("click", (e)=>{            
+        document.getElementById("connAdd").addEventListener("click", (e)=>{    
+            resetVals()          
             document.getElementById("addElC").style.display = "flex"
             document.getElementById("filterElC").style.display = "none"
             if(document.getElementById("taskC").value != "add"){
@@ -137,11 +138,13 @@
             document.getElementById("fieldSetC").disabled = false
         })
         document.getElementById("connUpd").addEventListener("click", (e)=>{
+            resetVals()  
             document.getElementById("addElC").style.display = "none"            
             document.getElementById("filterElC").style.display = "flex"
             document.getElementById("taskC").value = "upd"
         })
         document.getElementById("connDel").addEventListener("click", (e)=>{
+            resetVals()  
             document.getElementById("addElC").style.display = "none"         
             document.getElementById("filterElC").style.display = "flex"
             document.getElementById("taskC").value = "del"
@@ -172,6 +175,21 @@
             fc.className = "formControl success"
         }
 
+        function resetCls(elt){
+            const fc = elt.parentElement
+            fc.className = "formControl"
+        }
+
+        function isConNo(strVal){
+            if((strVal.substring(0,3).toLowerCase().match(/^(pon|tis|bar|bic|can|san|sal|sat|mor|per|que|dha)$/))&&(!isNaN(strVal.substring(3,)))){
+                console.log("its true")
+                return true
+            }
+            console.log("its false")
+
+            return false
+        }
+
         document.getElementById("connFormInp").addEventListener("submit", (e)=>{
             let connNoErr = true
             let connTypeErr = true
@@ -197,8 +215,14 @@
             const connIdVal = connId.value.trim()
 
             if(connNoVal===""){
-                setError(connNo, "Connection Number can't be blank")
+                setError(connNo, "Consumer Number can't be blank")
                 connNoErr = true
+            }else if(connNoVal.length != 12){
+                setError(connNo, "Consumer Number should have 12 characters")
+                connNoErr=true
+            }else if(!isConNo(connNoVal)){
+                setError(connNo, "Enter valid Consumer Number")
+                connNoErr=true
             }
             else{
                 setSuccess(connNo)
@@ -217,6 +241,18 @@
             if(meterNoVal===""){
                 setError(meterNo, "Meter Number can't be blank")
                 meterNoErr = true
+            }else if(isNaN(meterNoVal)){
+                setError(meterNo, "Meter Number is Numeric field")
+                meterNoErr=true
+            }else if(isNaN(parseFloat(meterNoVal))){
+                setError(meterNo, "Please Remove any blank spaces")
+                meterNoErr=true
+            }else if(meterNoVal.includes(".")){
+                setError(meterNo, "Meter Number can't have period")
+                meterNoErr=true
+            }else if(meterNoVal.length !== 10){
+                setError(meterNo, "Meter Number should have 10 digits")
+                meterNoErr=true
             }    
             else{
                 setSuccess(meterNo)
@@ -243,6 +279,18 @@
 
             if(cPinVal===""){
                 setError(cPin, "Connection pin can't be blank")
+                cPinErr=true
+            }else if(isNaN(cPinVal)){
+                setError(cPin, "Pin is Numeric field")
+                cPinErr=true
+            }else if(isNaN(parseFloat(cPinVal))){
+                setError(cPin, "Please Remove any blank spaces")
+                cPinErr=true
+            }else if(cPinVal.includes(".")){
+                setError(cPin, "Pin can't have period")
+                cPinErr=true
+            }else if(cPinVal.length !== 6){
+                setError(cPin, "Pin should have 6 digits")
                 cPinErr=true
             }
             else{
@@ -280,7 +328,19 @@
             if(connIdVal===""){
                 setError(connId, "Connection Number can't be blank")
                 connIdErr = true
-            }
+            }else if(isNaN(connIdVal)){
+                setError(connId, "Connection ID is Numeric field")
+                connIdErr=true
+            }else if(isNaN(parseFloat(connIdVal))){
+                setError(connId, "Please Remove any blank spaces")
+                connIdErr=true
+            }else if(connIdVal.includes(".")){
+                setError(connId, "Connection ID can't have period")
+                connIdErr=true
+            }else if(connIdVal.length !== 12){
+                setError(connId, "Connection ID should have 12 digits")
+                connIdErr=true
+            } 
             else{
                 setSuccess(connId)                
                 connIdErr=false
@@ -295,8 +355,19 @@
             }
                 
         })
+
         function resetVals(){
-            document.getElementById('inputConnFilID').value = '';
+            connId.value=""
+            resetCls(connNo)
+            resetCls(connType)
+            resetCls(cAddress)
+            resetCls(meterNo)
+            resetCls(cDistrict)
+            resetCls(cTaluka)
+            resetCls(cPin)
+            resetCls(cInstDt)
+            resetCls(cStatus)
+            resetCls(connId)
         }
     </script>
 </body>

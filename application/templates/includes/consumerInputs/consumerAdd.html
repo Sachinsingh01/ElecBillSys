@@ -3,7 +3,7 @@
     {% if val == "del" %} <fieldset class="row" id="fieldSet" disabled> {% endif %}
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConFName" class="form-label">Consumer First Name</label>
+    <label for="inputConFName" class="form-label">First Name</label>
     <input type="text" class="form-control" id="inputConFName" name="inputConFName" {% if val != "add" %} value = {{js.fname}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
@@ -12,7 +12,7 @@
 </div>
 <div class="mb-4 col-4" >
     <div class="formControl" id="formControl">
-    <label for="inputConLName" class="form-label">Consumer Last Name</label>
+    <label for="inputConLName" class="form-label">Last Name</label>
     <input type="text" class="form-control" id="inputConLName" name="inputConLName" {% if val != "add" %} value = {{js.lname}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
@@ -22,7 +22,7 @@
 <div class="mb-4 col-4"></div>
 <div class="mb-4 col-12">
     <div class="formControl" id="formControl">
-    <label for="inputConAddress" class="form-label">Consumer Address</label>
+    <label for="inputConAddress" class="form-label">Address</label>
     <input type="text" class="form-control" id="inputConAddress" name="inputConAddress" {% if val != "add" %} value = {{js.address}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
@@ -30,7 +30,7 @@
 </div>
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConDistrict" class="form-label">Consumer District</label>
+    <label for="inputConDistrict" class="form-label">District</label>
     <select id="inputConDistrict" class="form-select" name="inputConDistrict">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
         <option {% if val != "add" and js.district == "North Goa" %} selected {% endif %} value="North Goa">North Goa</option>
@@ -42,7 +42,7 @@
 </div>   
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConTaluka" class="form-label">Consumer Taluka</label>
+    <label for="inputConTaluka" class="form-label">Taluka</label>
     <select id="inputConTaluka" class="form-select" name="inputConTaluka">
         <option {% if val == "add" %} selected {% endif %} value="none">Select One</option>
         <option {% if val != "add" and js.taluka == "Bardez" %} selected {% endif %} value="Bardez">Bardez</option>
@@ -64,7 +64,7 @@
 </div>       
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConPin" class="form-label">Consumer Pin Code</label>
+    <label for="inputConPin" class="form-label">Pin Code</label>
     <input type="text" class="form-control" id="inputConPin" name="inputConPin" {% if val != "add" %} value = {{js.pinCode}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
@@ -81,7 +81,7 @@
 </div>   -->
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConContact" class="form-label">Consumer Contact</label>
+    <label for="inputConContact" class="form-label">Contact</label>
     <input type="text" class="form-control" id="inputConContact" name="inputConContact" {% if val != "add" %} value = {{js.contact}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
@@ -89,7 +89,7 @@
 </div>  
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
-    <label for="inputConEmail" class="form-label">Consumer Email</label>
+    <label for="inputConEmail" class="form-label">Email</label>
     <input type="text" class="form-control" id="inputConEmail" name="inputConEmail" {% if val != "add" %} value = {{js.email}} {% endif %}>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
@@ -97,10 +97,12 @@
 </div>  
 <div class="mb-4 col-4"></div>
 {% if val == "del" %} </fieldset> {% endif %}
-<div class="mt-3 col-4"></div>
+<div class="mt-3 col-2"></div>
 <div class="d-grid mt-3 gap-2 col-4 d-block">
-    <button type="submit" class="btn btn-primary" id="addBtn">Submit</button><br>
-    <button type="reset" class="btn btn-secondary" style="width: 10rem; margin: auto;">Cancel</button>
+    <button type="submit" class="btn btn-primary" id="addBtn">Submit</button>
 </div> 
-<div class="mt-3 col-4"></div>
+<div class="d-grid gap-2 mt-3 col-4 d-block">
+    <button type="reset" class="btn btn-secondary" onclick="resetVals()">Cancel</button>
+</div> 
+<div class="mt-3 col-2"></div>
 </div>

@@ -29,9 +29,9 @@
                 <li class="nav-elements"><a href="/dashboard" class="nav-link"><i class="bi bi-house-fill"></i><div class="nav-txt">Dashboard</div></a></li>
                 <li class="nav-elements"><a href="/adminCust" class="nav-link"><i class="bi bi-people-fill"></i><div class="nav-txt">Consumer</div></a></li>
                 <li class="nav-elements"><a href="/adminConn" class="nav-link"><i class="bi bi-hdd-network-fill"></i><div class="nav-txt">Connection</div></a></li>
-                <li class="nav-elements"><a href="/adminDist" class="nav-link"><i class="bi bi-lightning-charge-fill"></i><div class="nav-txt">Distributor</div></a></li>
+                <li class="nav-elements"><a href="/adminDistributor" class="nav-link"><i class="bi bi-lightning-charge-fill"></i><div class="nav-txt">Distributor</div></a></li>
                 <li class="nav-elements"><a href="/billsList" class="nav-link"><i class="bi bi-card-list"></i><div class="nav-txt">Bills</div></a></li>
-                <li class="nav-elements"><a href="/complainDetail" class="nav-link"><i class="bi bi-person-x-fill"></i><div class="nav-txt">Complains</div></a></li>
+                <li class="nav-elements"><a href="/complainList" class="nav-link"><i class="bi bi-person-x-fill"></i><div class="nav-txt">Complaints</div></a></li>
                 <!-- <li class="nav-elements"><a href="/complainList" class="nav-link"><i class="bi bi-person-x-fill"></i><div class="nav-txt">ComplainList</div></a></li> -->
             </ul>
         </div>
@@ -85,21 +85,35 @@
           document.getElementById("dropParent").className = "dropdownMenu down"
         }
       })
-      document.getElementById('logout-btn').addEventListener("click", e => {
-        document.getElementById('logout-link').click()
-      })
 
       document.getElementById('search').addEventListener(onkeyup, e=>{
         if(e.keyCode===13){
           document.getElementById('search-btn').click()
         }
       })
+      function isConNo(strVal){
+            if((strVal.substring(0,3).toLowerCase().match(/^(pon|tis|bar|bic|can|san|sal|sat|mor|per|que|dha)$/))&&(!isNaN(strVal.substring(3,)))){
+                console.log("its true")
+                return true
+            }
+            console.log("its false")
+
+            return false
+        }
       document.getElementById('search-btn').addEventListener("click", e => {
         let searchKey = document.getElementById('search').value
         //check if search key is correct
-        let link = document.getElementById('search-link')
-        link.href = "/dashboard?id=" + searchKey
-        link.click()
+        if(searchKey===""){
+            alert("Consumer Number can't be blank")
+        }else if(searchKey.length != 12){
+            alert("Consumer Number should have 12 characters")
+        }else if(!isConNo(searchKey)){
+            alert("Enter valid Consumer Number")
+        }else{
+          let link = document.getElementById('search-link')
+          link.href = "/dashboard?id=" + searchKey
+          link.click()
+        }        
       })
     </script>
   </body>
