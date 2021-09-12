@@ -278,8 +278,8 @@ def fileComplaint():
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     if request.method=="POST":
-        # billId = request.form['']
-        billId = 'udgsudgsudg'
+        #take values from the submitted form
+        billId = request.form['inputBillId']
         connectionId = request.form['inputConnID']
         complaintCategory = request.form['inputCompType']
         comment = request.form['inputCompDesc']
@@ -287,6 +287,7 @@ def fileComplaint():
         updated = str(date.today())
         status = 'unresolved'
         try:
+            #query to insert the new complaint into the bill_complain table
             cursor.execute("INSERT INTO bill_complain(`bill_id`,`co_id`,`category`,`status`,`comment`,`created`,`updated`) VALUES(%s,%s,%s,%s,%s,%s,%s)",(billId,connectionId,complaintCategory,status,comment,created,updated))
             print("Success!")
             conn.commit()
@@ -298,6 +299,7 @@ def fileComplaint():
 @app.route("/complainList", methods=["GET", "POST"])
 def complainList():
     roleId = session['role']
+    
     complainCategory = [1,2,2,1]
     complainIDs = [1991,1992,1993,1994]
     connectionIDs = [3001,3002,3003,3004]
