@@ -12,9 +12,23 @@
         right: 0;
         bottom: 0;
       }
-      button {
-          width: 5rem;
-      }
+      .status {
+            border-radius: 0.2rem;
+            background-color: red;
+            padding: 0.2rem 1rem;
+            text-align: center;
+            margin: auto 0;
+        }
+
+        .status.paid{
+            background-color: #c8e6c9;
+            color: #388e3c;
+        }
+
+        .status.unpaid{
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
     </style>
     <title>ADMIN DASH</title>
     
@@ -24,100 +38,60 @@
         <section class="row justify-content-center">
             <div class="col-12 col-sm-11 col-md-11">
                 <div class="shadow p-5 m-3 bg-body rounded">
-                    <h2 class="text-start mb-3">Complaints</h2>
+                    {% if roleId == "1" %}
+                    <h2 class="text-start mb-3">Complaints List</h2>
+                    {% elif roleId == "2" %}
+                    <h2 class="text-start mb-3">Your Complaints</h2>
+                    {% endif %}
                     <div id="bills-list" class="list-group">
                         {% for i in range(length) %}
-                            {% if complainCategory[i] == 1 %}
-                            <br>
-                            <div style="display: flex;" class="list-group-item align-items-start">
-                                <div>
-                                    <small>Complain ID : {{complainIDs[i]}}</small> &nbsp;
-                                    <small>Connection ID : {{connectionIDs[i]}}</small> <br><br>
-                                    <small><i>Category : Technical</i></small>
-                                    
-                                </div>
-                                &emsp;
-                                <div>
-                                    <div class="row m-3">
-                                            <div class="col-3"></div>
-                                          <div class="d-grid gap-2 mt-2 col-4 d-block">
-                                            <form action="/complainList" method="POST">
-                                                <button type="submit" class="btn btn-primary" id="discard" name="{{complainIDs[i]}}">Discard</button>
-                                              </form>
-                                          </div>  
-                                          {% if complainStatus[i]==1 %}
-                                            <div class="d-grid gap-2 mt-2 col-4 d-block" style="padding-left: 2rem;">
-                                                <form action="/complainList" method="POST">
-                                                <button type="submit" class="btn btn-primary" id="resolve" name="{{complainIDs[i]}}">Resolve</button>
-                                                </form>
-                                            </div>  &nbsp;
-                                          {% else %}
-                                            <div class="d-grid gap-2 mt-2 col-4 d-block" style="padding-left: 2rem;">
-                                                <form action="/complainList" method="POST">
-                                                <button type="submit" class="btn btn-primary" id="resolve" name="{{complainIDs[i]}}" disabled>Resolve</button>
-                                                </form>
-                                            </div>&nbsp;
-                                          {% endif %}
-                                          <div class="col-2"></div>
-                                        </div>
-                                </div>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;
+                            <div class="row my-2 mx-1 p-2" style="border: 1px solid #e5e5e5;font-size: 14px;">
+                                <p class="font-monospace col-3">Complain ID : {{complainIDs[i]}}</p>                                
+                                <p class="font-monospace col-3">Connection ID : {{connectionIDs[i]}}</p>                             
+                                <p class="font-monospace col-5"></p>
                                 {% if complainStatus[i]==1%}
-                                <div>
-                                    <small><em style="color: rgb(182, 23, 23); padding-left: 9rem;">&nbsp;&nbsp;Unresolved</em></small>
-                                </div>
+                                <p class="font-monospace col-1 d-flex justify-content-center status unpaid " style="font-size: 12px;font-weight:bold;">Unresolved</p>    
                                 {% else %}
-                                <div>
-                                    <small><em style="color: rgb(34, 121, 41); padding-left: 9rem;">&nbsp;Resolved</em></small>
+                                <p class="font-monospace col-1 d-flex justify-content-center status paid " style="font-size: 12px;font-weight:bold;">Resolved</p>    
+                                {% endif %}                                                        
+                                <div class="col-12">
+                                    <div class="row">
+                                        <p class="font-monospace col-3">Description : </p>
+                                        <p class="font-monospace col-9"> Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempore quo repudiandae cumque perspiciatis officia, at quasi consequuntur. Quasi alias fuga voluptas! Ut porro deserunt praesentium adipisci possimus hic, natus reiciendis.</p>
+                                    </div>
                                 </div>
-                                {% endif %}
-                            </div>                        
-                             
-                            {% else %}
-                                <br>
-                                <div style="display: flex;" class="list-group-item align-items-start">
-                                    <div>
-                                        <small>Complain ID : {{complainIDs[i]}}</small> &nbsp;
-                                        <small>Connection ID : {{connectionIDs[i]}}</small> <br><br>
-                                        <small><i>Category : Bill Related</i></small>
-                                        
-                                    </div>
-                                    &emsp;
-                                    <div>
-                                        <div class="row m-3">
-                                            <div class="col-3"></div>
-                                          <div class="d-grid gap-2 mt-2 col-4 d-block">
-                                              <form action="/complainList" method="POST">
-                                                <button type="submit" class="btn btn-primary" id="discard" name="{{complainIDs[i]}}">Discard</button>
-                                              </form>
-                                               
-                                          </div>  
-                                          <div class="d-grid gap-2 mt-2 col-4 d-block" style="padding-left: 2rem;">
-                                              <a href="/complainDetail?id={{complainIDs[i]}}"><button type="submit" class="btn btn-primary" id="details">Details</button></a>
-                                          </div>  &emsp;
-                                          <div class="col-2"></div>
-                                        </div>
-                                    </div> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                                    {% if complainStatus[i]==1%}
-                                    <div>
-                                        <small><em style="color: rgb(182, 23, 23); padding-left: 9rem;">Unresolved</em></small>
-                                    </div>
-                                    {% else %}
-                                    <div>
-                                        <small><em style="color: rgb(34, 121, 41); padding-left: 9rem;">&nbsp;Resolved</em></small>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            
-                            {% endif %}
-                        
+                                <p class="font-monospace col-4">Category : {% if complainCategory[i] == 1 %}Technical{% else %}Bill Related{% endif %}</p>  
+                                <div class="col-4"></div> 
+                                <div class="d-grid gap-2 mx-auto col-2 d-block">
+                                    <form action="/complainList" method="POST">
+                                        <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="discard" name="{{complainIDs[i]}}" {% if complainStatus[i]!=1 %}disabled{% endif %}>Discard</button>
+                                    </form>
+                                </div>  
+                                {% if complainCategory[i] == 1 %}
+                                <div class="d-grid gap-2 mx-auto col-2 d-block">
+                                    <form action="/complainList" method="POST">
+                                        <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="resolve" name="{{complainIDs[i]}}" {% if complainStatus[i]!=1 %}disabled{% endif %}>Resolve</button>
+                                    </form>
+                                </div> 
+                                {% else %}
+                                <div class="d-grid gap-2 mx-auto col-2 d-block">
+                                    <a href="/complainDetail?id={{complainIDs[i]}}">
+                                    <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="resolve" name="{{complainIDs[i]}}" {% if complainStatus[i]!=1 %}disabled{% endif %}>Details</button>
+                                    </a>
+                                </div> 
+                                {% endif %}                                                                                         
+                            </div>                             
                         {% endfor %}
                     </div>
-                </div>
-            
+                </div>            
             </div>
         </section>
     </div>
-    {% include "Navbar.html" %}
+    {% if roleId == "1" %}
+    {% include "navbar.html" %}
+    {% elif roleId == "2" %}
+    {% include "consumerNavbar.html" %}
+    {% endif %}
     
 
 
