@@ -272,6 +272,7 @@ def fileComplaint():
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     if request.method=="POST":
+        #i will need bill ID from the frontend
         # billId = request.form['']
         billId = 'udgsudgsudg'
         connectionId = request.form['inputConnID']
@@ -281,6 +282,7 @@ def fileComplaint():
         updated = str(date.today())
         status = 'unresolved'
         try:
+            #query to insert the new complaint into the bill_complain table
             cursor.execute("INSERT INTO bill_complain(`bill_id`,`co_id`,`category`,`status`,`comment`,`created`,`updated`) VALUES(%s,%s,%s,%s,%s,%s,%s)",(billId,connectionId,complaintCategory,status,comment,created,updated))
             print("Success!")
             conn.commit()
