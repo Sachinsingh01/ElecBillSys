@@ -181,7 +181,7 @@
         }
 
         function isConNo(strVal){
-            if((strVal.substring(0,3).toLowerCase().match(/^(pon|tis|bar|bic|can|san|sal|sat|mor|per|que|dha)$/))&&(!isNaN(strVal.substring(3,)))){
+            if((strVal.substring(0,2).toLowerCase().match(/^(po|ti|ba|bi|ca|sa|mo|pe|qu|dh)$/))&&(!isNaN(strVal.substring(2,)))){
                 console.log("its true")
                 return true
             }
