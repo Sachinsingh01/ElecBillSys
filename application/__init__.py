@@ -199,7 +199,10 @@ def adminCust():
                 print(cid)
                 conn = mysql.connect()
                 consumer = Consumer(conn, request)
-                consumer.getConsumer(cid)
+                try:
+                    consumer.getConsumer(cid)
+                except Exception as e:
+                    print(e)
                 msg = None
                 print("in Delete")
                 print(request.form['state'])
@@ -216,7 +219,8 @@ def adminCust():
                                 msg = "Customer deleted Sucessfully"
                             else:
                                 msg = "Unable to delete cutomer"
-                        except:
+                        except Exception as e:
+                            print(e)
                             msg = "Unable to delete consumer"
                     finally:
                         conn.close()
@@ -495,7 +499,6 @@ def adminConn():
                     print(msg)
                     return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId)
                 # End Update
-
     return render_template("connectionDataInput.html", js=js, val=taskC, roleId = roleId)
 
 @app.route("/meterReading", methods=["GET", "POST"])

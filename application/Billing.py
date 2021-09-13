@@ -239,8 +239,11 @@ class Bill():
         return datetime.strptime(dat,'%Y-%m-%d').date()
 
     def getBill(self,bid):
-        self.cursor.execute("SELECT * FROM bill_master WHERE BD_ID = %s",(bid))
-        bill = self.cursor.fetchone()
+        try:
+            self.cursor.execute("SELECT * FROM bill_master WHERE BD_ID = %s",(bid))
+            bill = self.cursor.fetchone()
+        except Exception as e:
+            print(e)
         self.bid = bid
         self.meterNo = bill["Meter_No"]
         self.cursor.execute("SELECT Con_ID FROM connection WHERE Meter_No =  %s",(self.meterNo))
