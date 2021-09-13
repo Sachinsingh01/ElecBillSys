@@ -49,7 +49,7 @@
                                 <p class="font-monospace col-3">Complain ID : {{complainIDs[i]}}</p>                                
                                 <p class="font-monospace col-3">Connection ID : {{connectionIDs[i]}}</p>                             
                                 <p class="font-monospace col-5"></p>
-                                {% if complainStatus[i]==1%}
+                                {% if complainStatus[i]=="1"%}
                                 <p class="font-monospace col-1 d-flex justify-content-center status unpaid " style="font-size: 12px;font-weight:bold;">Unresolved</p>    
                                 {% else %}
                                 <p class="font-monospace col-1 d-flex justify-content-center status paid " style="font-size: 12px;font-weight:bold;">Resolved</p>    
@@ -57,7 +57,7 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <p class="font-monospace col-3">Description : </p>
-                                        <p class="font-monospace col-9"> Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempore quo repudiandae cumque perspiciatis officia, at quasi consequuntur. Quasi alias fuga voluptas! Ut porro deserunt praesentium adipisci possimus hic, natus reiciendis.</p>
+                                        <p class="font-monospace col-9">{{comments[i]}}</p>
                                     </div>
                                 </div>
                                 <p class="font-monospace col-4">Category : {% if complainCategory[i] == 1 %}Technical{% else %}Bill Related{% endif %}</p>  
