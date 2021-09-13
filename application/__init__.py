@@ -1,3 +1,4 @@
+from application.transaction import Transaction
 from numpy import number
 from application.user import User
 from application.ditributor import Distributor
@@ -13,6 +14,8 @@ from .fileToDB import MeterReading
 from .Billing import Bill
 import re 
 from .connection import Connection
+from .transaction import Transaction
+
 import hashlib
 import os
 from datetime import date
@@ -206,7 +209,10 @@ def adminCust():
                 print(cid)
                 conn = mysql.connect()
                 consumer = Consumer(conn, request)
-                consumer.getConsumer(cid)
+                try:
+                    consumer.getConsumer(cid)
+                except Exception as e:
+                    print(e)
                 msg = None
                 print("in Delete")
                 print(request.form['state'])
@@ -223,7 +229,8 @@ def adminCust():
                                 msg = "Customer deleted Sucessfully"
                             else:
                                 msg = "Unable to delete cutomer"
-                        except:
+                        except Exception as e:
+                            print(e)
                             msg = "Unable to delete consumer"
                     finally:
                         conn.close()
@@ -522,8 +529,9 @@ def adminConn():
                     print(msg)
                     return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
                 # End Update
+    return render_template("connectionDataInput.html", js=js, val=taskC, roleId = roleId)
 
-    return render_template("connectionDataInput.html", js=js, val=taskC, roleId = roleId, uName=session["uName"], uId=session["id"])
+    #return render_template("connectionDataInput.html", js=js, val=taskC, roleId = roleId, uName=session["uName"], uId=session["id"])
 
 @app.route("/meterReading", methods=["GET", "POST"])
 def meterReading():
@@ -601,6 +609,7 @@ def dashboard():
         print(n)
         return render_template("dash.html", roleId = roleId, consumers = consumers, pageNo=pageNo+1, num = numberOfConnections,n=n, uName=session["uName"], uId=session["id"])
     else:
+        print()
         consumers = []
         numberOfConnections = []
         consumer = Consumer(conn)
@@ -610,6 +619,7 @@ def dashboard():
         num = cursor.fetchone()["c"]
         numberOfConnections.append(num)
         return render_template("dash.html", roleId = roleId, num=numberOfConnections, pageNo=0, n=0, consumers = consumers, uName=session["uName"], uId=session["id"])
+
 @app.route("/dashboardCon")
 def dashboardCon():
     cNo = session["id"]
@@ -624,8 +634,9 @@ def dashboardCon():
             bill = ""
         connections = []
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
-        record = cursor.fetchone()
+        cursor.execute("SELECT Con_ID FROM consumer WHERE Con_No = %s",(cNo))
+        conId = cursor.fetchone()["Con_ID"]
+        
         consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
         print("Consumer Name")
         print(consumerName)
@@ -747,4 +758,16 @@ def adminDistributor():
 
 @app.route("/paymentHistory")
 def paymentHistory():
-    return render_template("paymentHistory.html", uName=session["uName"], uId=session["id"])
+    cid = session["id"]
+    transactions = []
+    conn = mysql.connect()
+    consumer = Consumer(conn)
+    return render_template("paymentHistory.html", uName=session["uName"], uId=session["id"],)
+
+@app.route("/transaction")
+def transactionPage():
+    if request.method == 'POST'and 'bid' in request.form and 'meterNo' in request.form:
+        conn = mysql.connect()
+        transaction = Transaction(conn, request)
+        transaction.insertTransaction()
+        return render_template("paymentPage.html", uName=session["uName"], uId=session["id"],transaction = transaction)
