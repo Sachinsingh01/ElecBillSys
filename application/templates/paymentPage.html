@@ -10,6 +10,8 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
     />
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
     <style>
         .formControl{
                 position: relative;
@@ -95,9 +97,8 @@
                     <div class="col-1"></div>
 
                     <div class="col-1"></div>
-                    <p class="font-monospace fs-5 bold col-4" style="font-weight: bold;">Amount : Rs. {{bill.amount}}/-</p>
+                    <p class="font-monospace fs-5 bold col-4" style="font-weight: bold;" >Amount : Rs. {{bill.amount}}/-</p>
                     <div class="col-7"></div>
-
                     <div class="col-4"></div>
                     <div class="d-grid col-4 mb-3 mt-3 gap-2 d-block text-center">
                         <button
@@ -111,8 +112,34 @@
                     </div>
                     <div class="col-4"></div>
                     {% if stateT == 1 %}
-                    <div class="col-4"></div>
+                    <div class="col-4"></div>                        
+                    <small id="alertAmt" class="d-none">{{bill.amount}}</small>
+                    <small id="alertCat" class="d-none">{{transaction.status}}</small>
                     <!--loaderFn-->
+                    <div class="col-4 mt-3 d-flex justify-content-center">
+                        <img
+                          src="../static/icons/remove.png"
+                          alt="meter"
+                          style="width: fit-content; height: 7rem"
+                          id="paymentSuccess"
+                        />                        
+                    </div>
+                    <script type="text/javascript">
+                        function progressBarChange() {
+                            var amt = document.getElementById("alertAmt").innerText
+                            var alertCat = document.getElementById("alertCat").innerText
+                          setTimeout(() => {
+                              if(alertCat=="Paid"){
+                                Swal.fire('Success!!!', `Payment of Rs. ${amt}/- was Successful`, 'success')
+                              }else{
+                                Swal.fire('Unsuccessful!!!', `Payment of Rs. ${amt}/- was Not Successful`, 'error')                                  
+                              }
+                            document.getElementById("paymentSuccess").src = "../static/icons/check.png"
+                          }, 2500);
+                        }
+                        progressBarChange();                       
+                    </script>
+
                     <div class="col-4"></div>
                     {% endif %}
                     

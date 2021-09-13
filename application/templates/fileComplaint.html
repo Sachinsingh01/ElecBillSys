@@ -72,7 +72,7 @@
     <title>Consumer Dash</title>
 </head>
 
-<body>
+<body onload="billCompLoad()">
 
     <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
@@ -340,6 +340,10 @@
         })
 
         compType.addEventListener("change", e=>{
+            billCompLoad()
+        })
+
+        function billCompLoad(){
             if(compType.value==="Bill Complaint"){
                 document.getElementById("disp1").style.display = "block"
                 document.getElementById("disp2").style.display = "block"
@@ -353,7 +357,7 @@
                 document.getElementById("disp4").style.display = "none" 
                 document.getElementById("adjustor").style.display = "block" 
             }
-        })
+        }
 
         function resetVals(){
             resetCls(connId)

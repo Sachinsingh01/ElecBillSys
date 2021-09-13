@@ -140,7 +140,7 @@ class Consumer():
             return 0
             
     def getMeterNos(self):
-        self.cursor.execute("SELECT Meter_No From connections WHERE Con_ID = %s",(self.conID))
+        self.cursor.execute("SELECT Meter_No From connection WHERE Con_ID = %s",(self.cidpk))
         records = self.cursor.fetchall()
         meterNos = []
         for record in records:

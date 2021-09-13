@@ -17,6 +17,8 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../static/css/dash.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
     <style>
       #device-progress-bar {
         animation: progress-mtr 5s ease-in-out 0s;
@@ -32,7 +34,6 @@
       }
       #container {
         position: absolute;
-        width: calc(100vw - 80px);
         height: calc(100vh - 70px);
         right: 0;
         bottom: 0;
@@ -162,7 +163,23 @@
               </div>
               <div class="col-2"></div>
               <div class="col-12 d-flex justify-content-center"><!-- Remove this input -->
-                <input class="" type="file" name="fl" id="fl"></div>
+                <input class="d-none" type="file" name="fl" id="fl">
+                <div class="col-4"></div>
+                <div class="d-grid col-4 gap-2 d-block text-center">
+                  <label for="selectCsvBtn" class="form-label"
+                    >Select a File</label
+                  >
+                  <button
+                    type="button"
+                    id="selectCsvBtn"
+                    class="btn btn-primary"
+                    disabled
+                  >
+                  Choose File
+                  </button>
+                </div>
+                <div class="col-4"></div>
+              </div>
               <form action="/meterReading" method="POST" name="getCsv" id="getCsv">
                 <div class="row mt-5 mb-5">
                   <div class="col-4"></div>
@@ -188,8 +205,10 @@
                     </button>
                   </div>
                   <script>
-                    setTimeout(()=>{
+                    setTimeout(()=>{   
+                      Swal.fire('Information', "Select your Meter Reading file and Read It", 'info')                   
                       document.getElementById("downloadSampleCsv").disabled = false
+                      document.getElementById("selectCsvBtn").disabled = false
                     }, 5000)
                   </script>
                   <div class="col-4"></div>
@@ -234,7 +253,7 @@
         </div>
       </div>
     </div>
-    {%include "navbar.html"%}
+    {%include "navbarMeterG.html"%}
 
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
@@ -247,6 +266,9 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      document.getElementById("selectCsvBtn").addEventListener("click",e=>{
+        document.getElementById("fl").click()
+      })
       function UploadCSV() {
         var fileUpload = document.getElementById("fl");
         // var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
@@ -298,10 +320,14 @@
         //     alert("Please upload a valid CSV file.");
         // }
     }
-    document.getElementById("tabBody").addEventListener("load", e=>{
+    document.getElementById("downloadSampleCsv").addEventListener("click", e=>{
       UploadCSV()
       document.getElementById("processSampleCsv").disabled=false
       document.getElementById("table-config").className = "visible"
+      Swal.fire('Information', "Check your Entries and click Process for FINAL SUBMISSION", 'info')
+    })
+    document.getElementById("processSampleCsv").addEventListener("click", e=>{
+      Swal.fire('Successfully Sent', "Your Data has been successfully sent to the system for Bill Generation", 'success')
     })
     // $.ajax({
     // type: "GET",
@@ -318,3 +344,4 @@
     </script>
   </body>
 </html>
+

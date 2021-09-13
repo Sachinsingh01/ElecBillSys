@@ -147,6 +147,7 @@ def adminCust():
         print("hi")
         js = {"fname":fname, "lname":lname, "cid":cid, "address":address, "taluka":taluka, "district":district, "pinCode":pinCode, "meterId":meterId, "conType":conType, "contact":contact, "sanctionedLoad":sanctionedLoad}
         print("i am here")
+        msgCat = 1
 
         if request.method == "POST" and 'task' in request.form:
             session["task"] = request.form['task']
@@ -161,15 +162,17 @@ def adminCust():
                     msg, val = consumer.insertConsumer()
                     if val:
                         conn.commit()
+                        msgCat=1
                         msg = f"Consumer Succefully Added. Consumer Number for generated Consumer is {consumer.cno}"
                 except Exception as e:
                     print(f"outside${e}")
                     msg = e
+                    msgCat=0
                 finally:
                     conn.close()
                 print(msg)
                 # Only sending Role because user is Admin and username is Administrator
-                return render_template("customerDataInput.html", msg = msg, val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
+                return render_template("customerDataInput.html",msgCat=msgCat, msg = msg, val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
             # End Add
 
             # Begin Update
@@ -191,10 +194,13 @@ def adminCust():
                         updateCon = consumer.updateConsumer(cid, request)
                         if updateCon:
                             msg = "Customer updated Sucessfully"
+                            msgCat=1
                         else:
                             msg = "Unable to update consumer"
+                            msgCat=0
                     except:
                         msg = "Unable to update consumer"
+                        msgCat=0
                     finally:
                         conn.close()
                 else:
@@ -202,13 +208,17 @@ def adminCust():
                         msg, findCon = consumer.getConsumer(cid)
                         if not findCon:
                             msg = "Unable to find the consumer"
+                            msgCat=0
+                        else:
+                            msgCat=1
                     except Exception as e:
                         msg=e
+                        msgCat=0
 
                 js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                 print(js)
                 print(msg)
-                return render_template("customerDataInput.html", msg=msg, val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
+                return render_template("customerDataInput.html", msgCat=msgCat, msg=msg, val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
             # End Update
 
             # Begin Delete
@@ -236,11 +246,14 @@ def adminCust():
                             
                             if val:
                                 msg = "Customer deleted Sucessfully"
+                                msgCat=1
                             else:
                                 msg = "Unable to delete cutomer"
+                                msgCat=0
                         except Exception as e:
                             print(e)
                             msg = "Unable to delete consumer"
+                            msgCat=0
                     finally:
                         conn.close()
                 else:
@@ -248,10 +261,13 @@ def adminCust():
                     js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                     if not val2:
                         msg = "Unable to find the consumer"
+                        msgCat=0
+                    else:
+                        msgCat=1
                 
                 print(js)
                 print(msg)
-                return render_template("customerDataInput.html",msg=msg, val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
+                return render_template("customerDataInput.html",msgCat=msgCat, msg=msg, val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
             #Delete end
         # User is loggedin show them the home page
         return render_template("customerDataInput.html", val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
@@ -411,7 +427,7 @@ def complainDetail():
         temp = cursor.fetchone()
         sancLoad = temp["San_Load"]
         conType = temp["Con_Type"]
-        js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
+        js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cno, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
         consumerName = consumer.fname + " " + consumer.lname
         print(js)
         return render_template("complainDetail.html", js=js, consumer=consumer, connection=connection, bill=bill, roleId = roleId, consumerNo = conNo, consumerName = consumerName)
@@ -487,7 +503,7 @@ def billDetail():
     temp = cursor.fetchone()
     sancLoad = temp["San_Load"]
     conType = temp["Con_Type"]
-    js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cid, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
+    js = {"fname":consumer.fname, "amount":round(bill.amount,2),"instDt":connection.installationDate,"email":consumer.email, "instNo":connection.installationID,"lname":consumer.lname, "cid":consumer.cno, "address":connection.connAddress, "taluka":connection.connTaluka, "district":connection.connDistrict, "pinCode":connection.connPin, "meterId":connection.meterNo, "conType":conType, "contact":consumer.contact, "sanctionedLoad":sancLoad, "breakUP":breakUP}
     print(js)
     if roleId == "2":
         consumerName = consumer.fname + " " + consumer.lname
@@ -504,7 +520,7 @@ def adminConn():
         taskC = session["taskC"]
         roleId = session['role']
         js = {"cid": "", "cno":"", "connType":"", "meterNo":"","caddress":"", "cdistrict":"", "ctaluka":"", "connStatus":"", "cpinCode":"", "installationDate":""}
-    
+        msgCat=1
 
         if request.method == "POST" and 'taskC' in request.form:
                 session["taskC"] = request.form['taskC']
@@ -517,18 +533,23 @@ def adminConn():
                     connection = Connection(conn, request)
                     msg = None
                     try:
-                        val = connection.insertConnection()
+                        msg, val = connection.insertConnection()
                         if val:
                             conn.commit()
-                            msg = "Connection Succefully Added"
+                            msg = f"Connection Succefully Added. Connection ID for the Connection generated is {connection.connID}"
+                            msgCat=1
                         else:
                             msg = "Unable to Add Connection"
+                            msgCat=0
+                    except:
+                        msg = "Unable to Add Connection"
+                        msgCat=0
                     finally:
                         conn.close()
                     print(msg)
 
                     # only roleId cuz user is admin
-                    return render_template("connectionDataInput.html", msg = msg, val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
+                    return render_template("connectionDataInput.html",msgCat=msgCat, msg = msg, val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
                 # End Add
 
                 # Begin Delete
@@ -549,24 +570,30 @@ def adminConn():
                                 print(request.form['realID'])
                                 conid = request.form['realID']
                                 
-                                val = connection.deleteConnection(conid)
+                                msg, val = connection.deleteConnection(conid)
                                 
                                 if val:
                                     msg = "connection deleted Sucessfully"
+                                    msgCat=1
                                 else:
-                                    msg = "Unable to delete connection 1"
+                                    msg = "Unable to delete connection"
+                                    msgCat=0
                             except:
-                                msg = "Unable to delete connection 2"
+                                msg = "Unable to delete connection"
+                                msgCat=0
                         finally:
                             conn.close()
                     else:
-                        val2 = connection.getConnection(conid)
+                        msg, val2 = connection.getConnection(conid)
                         js = {"cid": connection.connID, "cno":connection.conNo, "connType":connection.conType, "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
                         if not val2:
                             msg = "Unable to find the connection" 
+                            msgCat=0
+                        else:
+                            msgCat=1
                     print(js)
                     print(msg)
-                    return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
+                    return render_template("connectionDataInput.html",msgCat=msgCat,msg=msg, val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
                 # End Delete
 
                 # Begin Update
@@ -589,24 +616,31 @@ def adminConn():
                                 connid = request.form['realID']
                                 print("ConnectionID : ",connid)
 
-                                updateConn = connection.updateConnection(connid, request)
+                                msg, updateConn = connection.updateConnection(connid, request)
                                 if updateConn:
                                     msg = "Connection updated Sucessfully"
+                                    msgCat=1
                                 else:
-                                    msg = "Unable to update connection 1"
+                                    msg = "Unable to update connection"
+                                    msgCat=0
                             except:
-                                msg = "Unable to update connection 2"
+                                msg = "Unable to update connection"
+                                msgCat=0
                         finally:
                             conn.close()
                     else:
-                        findConn = connection.getConnection(connid)
+                        msg, findConn = connection.getConnection(connid)
                         js = {"cid": connection.connID, "cno":connection.conNo, "connType":str(connection.conType), "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
+                        
                         if not findConn:
                             msg = "Unable to find the connection"
+                            msgCat=0
+                        else:
+                            msgCat=1
                     
                     print(js)
                     print(msg)
-                    return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
+                    return render_template("connectionDataInput.html",msg=msg, msgCat=msgCat, val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
                 # End Update
     return render_template("connectionDataInput.html", js=js, val=taskC, roleId = roleId)
 
@@ -681,7 +715,7 @@ def dashboard():
             consumer = Consumer(conn)
             consumer.getConsumer(conNumber["Con_No"])
             consumers.append(consumer)
-            cursor.execute("SELECT count(*) as c FROM connection WHERE Con_ID = %s",(consumer.conID))
+            cursor.execute("SELECT count(*) as c FROM connection WHERE Con_ID = %s",(consumer.cidpk))
             num = cursor.fetchone()["c"]
             numberOfConnections.append(num)
         print(consumers)
@@ -695,7 +729,7 @@ def dashboard():
         consumer = Consumer(conn)
         consumer.getConsumer(cid)
         consumers.append(consumer)
-        cursor.execute("SELECT count(*) as c FROM connection WHERE Con_ID = %s",(consumer.conID))
+        cursor.execute("SELECT count(*) as c FROM connection WHERE Con_ID = %s",(consumer.cidpk))
         num = cursor.fetchone()["c"]
         numberOfConnections.append(num)
         return render_template("dash.html", roleId = roleId, num=numberOfConnections, pageNo=0, n=0, consumers = consumers, uName=session["uName"], uId=session["id"])

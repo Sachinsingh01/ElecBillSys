@@ -49,9 +49,9 @@
                       You can add, update or remove a customer from here.
                     </p>
                     <p class="card-text mt-3">
-                      <small class="text-muted"
+                      <!-- <small class="text-muted"
                         >Total customers registerd :
-                      </small>
+                      </small> -->
                     </p>
                   </div>
                 </div>
@@ -78,9 +78,9 @@
                       You can add, update or remove a connection from here.
                     </p>
                     <p class="card-text mt-3">
-                      <small class="text-muted"
+                      <!-- <small class="text-muted"
                         >Total connections registerd :
-                      </small>
+                      </small> -->
                     </p>
                   </div>
                 </div>
@@ -102,7 +102,7 @@
                       View and Generate bills for all existing connection.
                     </p>
                     <p class="card-text mt-3">
-                      <small class="text-muted">Total pending bills : </small>
+                      <!-- <small class="text-muted">Total pending bills : </small> -->
                     </p>
                   </div>
                 </div>
@@ -125,9 +125,9 @@
                       Resolve complaints raised by consummers
                     </p>
                     <p class="card-text mt-3">
-                      <small class="text-muted"
+                      <!-- <small class="text-muted"
                         >Total raised complaints :
-                      </small>
+                      </small> -->
                     </p>
                   </div>
                 </div>
@@ -147,7 +147,7 @@
                 <tbody>
                     {% for consumer in consumers %}
                     <tr>
-                        <td><a id="table-link" href="#">{{consumer.cid}}</a></td>
+                        <td><a id="table-link" href="#">{{consumer.cno}}</a></td>
                         <td>{{consumer.fname}} {{consumer.lname}}</td>
                         <td>{{consumer.address}}</td>
                         <td>{{consumer.contact}}</td>
