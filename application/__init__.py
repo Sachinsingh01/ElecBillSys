@@ -284,7 +284,11 @@ def uploadFile():
 def fileComplaint(): 
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    if request.method=="POST":
+    if 'bid' in request.args:
+        bid=request.args['bid']
+    else:
+        bid=""
+    if bid == "" and request.method=="POST":
         #take values from the submitted form
         billId = request.form['inputBillId']
         connectionId = request.form['inputConnID']
@@ -305,6 +309,11 @@ def fileComplaint():
             conn.commit()
         except Exception as e:
             print(e)
+    else:
+        # bill = Bill(conn)
+        # bill.getBill(bid)
+        # bill.amount = round(float(bill.amount),2)
+        return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"])
 
     return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"])
 

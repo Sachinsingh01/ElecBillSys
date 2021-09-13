@@ -106,11 +106,13 @@
                     </div> 
                     <div class="col-1"></div>
 
+                    {% if compType==1 %}
+
                     <div class="col-1"></div>
                     <div class="mb-4 col-4" id="disp1" style="display: none;">
                         <div class="formControl" id="formControl">
                         <label for="inputBillId" class="form-label">Bill Number</label>
-                        <input type="text" class="form-control" id="inputBillId" name="inputBillId">
+                        <input type="text" class="form-control" id="inputBillId" name="inputBillId" value={{bill.bid}}>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p>
@@ -120,7 +122,7 @@
                     <div class="mb-4 col-4" id="disp2" style="display: none;">
                         <div class="formControl" id="formControl">
                         <label for="inputMeterNo" class="form-label">Meter Number</label>
-                        <input type="text" class="form-control" id="inputMeterNo" name="inputMeterNo">
+                        <input type="text" class="form-control" id="inputMeterNo" name="inputMeterNo" value={{bill.meterNo}}>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p>
@@ -132,7 +134,7 @@
                     <div class="mb-4 col-4" id="disp3" style="display: none;">
                         <div class="formControl" id="formControl">
                         <label for="inputBillAmount" class="form-label">Amount</label>
-                        <input type="text" class="form-control" id="inputBillAmount" name="inputBillAmount">
+                        <input type="text" class="form-control" id="inputBillAmount" name="inputBillAmount" value={{bill.amount}}>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p>
@@ -142,13 +144,14 @@
                     <div class="mb-4 col-4" id="disp4" style="display: none;">
                         <div class="formControl" id="formControl">
                         <label for="inputReadDate" class="form-label">Read Date</label>
-                        <input type="date" class="form-control" id="inputReadDate" name="inputReadDate">
+                        <input type="date" class="form-control" id="inputReadDate" name="inputReadDate" value={{bill.currDate}}>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p>
                     </div>
                     </div>
                     <div class="col-1"></div>
+                    {% endif %}
 
                     <div class="col-4" id="adjustor"></div>
                     <div class="col-1"></div>
