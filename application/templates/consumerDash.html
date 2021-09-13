@@ -150,7 +150,7 @@
                         <td><a id="table-link" href="#">{{conn.meterNo}}</a></td>
                         <td>{{conn.connAddress}}, {{conn.connTaluka}}, {{conn.connDistrict}}, Goa. {{conn.connPin}}</td>
                         <td>{{conn.installationDate}}</td>
-                        <td>{% if conn.conType=="1" %}Domestic{% elif conn.conType=="2" %}Agriculture{% elif conn.conType=="3" %}Commercial{% endif %}</td>
+                        <td>{% if conn.conType==1 %}Domestic{% elif conn.conType==2 %}Agriculture{% elif conn.conType==3 %}Commercial{% endif %}</td>
                         {% if conn.connStatus=="1" %}
                         <td><p class="status unpaid">Inactive</p></td>
                         {% else %}
