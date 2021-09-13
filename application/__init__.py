@@ -860,6 +860,8 @@ def billGenerate():
     reading = MeterReading(conn)
     MG1, MG2 = reading.sendData()
     js = {"MG1":MG1,"MG2":MG2}
-    for r in MG1:
-        print(r.Fname)
-    return render_template("billGenerate.html",js = js, MG1=MG1, MG2=MG2)
+    if "generate" in request.args:
+        reading.readFile()
+        return render_template("billGenerate.html",js = js,MG1=MG1, MG2=MG2, done ="1")
+    return render_template("billGenerate.html",js = js,MG1=MG1, MG2=MG2)
+    
