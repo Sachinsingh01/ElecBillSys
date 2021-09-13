@@ -158,12 +158,15 @@ def adminCust():
                 consumer = Consumer(conn,request)
                 msg = None
                 try:
-                    val = consumer.insertConsumer(conn)
+                    msg, val = consumer.insertConsumer()
                     if val:
                         conn.commit()
-                        msg = "Consumer Succefully Added"
+                        msg = f"Consumer Succefully Added\nConsumer Number for generated Consumer is ${consumer.cno}"
                     else:
-                        msg = "Unable to Add Consumer"
+                        pass
+                except Exception as e:
+                    print(f"outside${e}")
+                    msg = e
                 finally:
                     conn.close()
                 print(msg)
@@ -192,7 +195,7 @@ def adminCust():
                             if updateCon:
                                 msg = "Customer updated Sucessfully"
                             else:
-                                msg = "Unable to update consumer 1"
+                                msg = "Unable to update consumer"
                         except:
                             msg = "Unable to update consumer"
                     finally:
@@ -205,7 +208,7 @@ def adminCust():
                 js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                 print(js)
                 print(msg)
-                return render_template("customerDataInput.html", val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
+                return render_template("customerDataInput.html", msg=msg, val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
             # End Update
 
             # Begin Delete
@@ -248,7 +251,7 @@ def adminCust():
                 
                 print(js)
                 print(msg)
-                return render_template("customerDataInput.html", val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
+                return render_template("customerDataInput.html",msg=msg, val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
             #Delete end
         # User is loggedin show them the home page
         return render_template("customerDataInput.html", val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])

@@ -86,13 +86,10 @@
                     </div>              
                     <input type="text" class="d-none" id="task" name="task" value= {{val}}> 
                     <input type="text" class="d-none" id="state" name="state" value= "0"> 
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    {% for message in messages %}
-                    <p class="font-monospace d-none" id="alertMsg" >{{message}}</p>
-                    {% endfor %}
+                    {% if msg %}
+                    <p class="d-none" id="alertMsg">{{msg}}</p>
                     {% endif %}
-                    {% endwith %}
+                    
                     {% include "includes/consumerInputs/consumerAdd.html" %}
                     {% include "includes/consumerInputs/consumerFilter.html" %}
             </section>
@@ -113,21 +110,16 @@
     <script type="text/javascript">
 
         setTwoWords()
+        if(document.getElementById("alertMsg")){
+            var alertMsg = document.getElementById("alertMsg").innerText
+            Swal.fire('Please Check!!!', alertMsg, 'error')
+        }
 
         document.getElementById("filBtn").addEventListener("click", (e)=>{
             document.getElementById("state").value = "0"
-            if(document.getElementById("alertMsg")){
-                var alertMsg = document.getElementById("alertMsg").innerText
-                console.log(alertMsg)
-                alert(alertMsg)
-            }
         })
         document.getElementById("addBtn").addEventListener("click", (e)=>{
             document.getElementById("state").value = "1"
-            if(document.getElementById("alertMsg")){
-                var alertMsg = document.getElementById("alertMsg").innerText  
-                alert(alertMsg)
-            }
         })
         document.getElementById("custAdd").addEventListener("click", (e)=>{  
             resetVals()          
@@ -343,9 +335,7 @@
 
             let allErr = fnameErr||lnameErr||contactErr||addressErr||talukaErr||pinErr||emailErr||districtErr
             if(!cidErr){
-                alert("submitted")
             }else if(!allErr){
-                alert("submitted")
             }else{                
                 e.preventDefault()
             }
@@ -371,6 +361,8 @@
             resetCls(email)
             resetCls(cid)
         }
+        
+        
     </script>
 </body>
 

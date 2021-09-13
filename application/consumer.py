@@ -25,6 +25,7 @@ class Consumer():
                 self.contact = request.form['inputConContact']
                 self.email = request.form['inputConEmail']
                 self.cno = self.createConsumerNo()
+                self.cidpk = self.createConsumerPk()
         except:
             print("Unable to initialize consumer")
         
@@ -41,7 +42,7 @@ class Consumer():
         # INSERT INTO consumer(Con_No,Con_First_Name,Con_Last_Name,Con_Address,Con_Taluka,Con_District,Con_Pin_Code,Con_Contact,Created,Updated) VALUES("PO1000000001","Sachin","Tendulkar", "HS NO 10 TOP COLA", "PONDA", "SOUTH GOA", "403401", "9876543210", "2021-09-05", "2021-09-05")
         try:
             print("Executing Insert Query")
-            self.cursor.execute("INSERT INTO consumer(Con_No,Con_First_Name,Con_Last_Name,Con_Address,Con_Taluka,Con_District,Con_Pin_Code,Con_Contact,Created,Updated,Con_Email) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.cno,self.fname,self.lname,self.address,self.taluka,self.district,self.pinCode,self.contact,today,today,self.email))
+            self.cursor.execute("INSERT INTO consumer(Con_ID,Con_No,Con_First_Name,Con_Last_Name,Con_Address,Con_Taluka,Con_District,Con_Pin_Code,Con_Contact,Created,Updated,Con_Email) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.cidpk,self.cno,self.fname,self.lname,self.address,self.taluka,self.district,self.pinCode,self.contact,today,today,self.email))
             
             # Create a user along with consumer
             user = User(self.conn, cid)
@@ -49,8 +50,8 @@ class Consumer():
             self.conn.commit()
             return True
         except Exception as e:
-            print(e)
-            return False
+            msg = e
+            return msg, False
     
 
     def deleteConsumer(self, cid):
@@ -122,6 +123,20 @@ class Consumer():
         except:
             print("unable to create cno")
             return 0
+    def createConsumerPk(self):
+        try:
+            print("Trying to Get PK")
+            self.cursor.execute('SELECT * from consumer ORDER BY Con_ID DESC')
+            acc = self.cursor.fetchone()
+            print(acc)
+            id = acc['Con_ID']
+            cidpk = id+1
+            print(cidpk)
+            return cidpk
+        except:
+            print("unable to create cidpk")
+            return 0
+            
     def getMeterNos(self):
         self.cursor.execute("SELECT Meter_No From connections WHERE Con_ID = %s",(self.conID))
         records = self.cursor.fetchall()
