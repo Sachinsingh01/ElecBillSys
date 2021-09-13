@@ -77,98 +77,44 @@
     <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
             <section class="col-12 col-sm-11 col-md-11" id="loaderfn">
-                <form href="/fileComplaint" method="POST" class="shadow p-5 m-3 bg-body rounded" id="takeComplaint">
-                    <h2 class="text-start mb-4">Complaint Details</h2>
+                <form href="/transaction" method="POST" class="shadow p-5 m-3 bg-body rounded" id="takeComplaint">
+                    <input type="text" class="d-none" name="bid" id="bid" value="">
+                    <input type="text" class="d-none" name="amount" id="amount" value="">
+                    <h2 class="text-start mb-4">Proceed to Pay</h2>
                     <div class="row">
                     <div class="col-1"></div>
-                    <div class="mb-4 col-4">
-                        <div class="formControl" id="formControl">
-                        <label for="inputConnID" class="form-label">Connection ID</label>
-                        <input type="text" class="form-control" id="inputConnID" name="inputConnID">
-                        <i class="bi bi-check-circle"></i>
-                        <i class="bi bi-exclamation-circle"></i>
-                        <p class="mb-0" id="errMsg">Error Message</p>
-                    </div>
-
-                    </div>
-                    <div class="col-2"></div>
-                    <div class="mb-4 col-4">
-                        <div class="formControl" id="formControl">
-                        <label for="inputCompType" class="form-label">Complaint Type</label>
-                        <select id="inputCompType" class="form-select" name="inputCompType">
-                            <option selected value="none">Select One</option>
-                            <option value="Technical">Technical</option>
-                            <option value="Bill Complaint">Bill Complaint</option>
-                        </select>
-                        <i class="bi bi-check-circle"></i>
-                        <i class="bi bi-exclamation-circle"></i>
-                        <p class="mb-0" id="errMsg">Error Message</p></div>
-                    </div> 
+                    <p class="font-monospace col-4 fs-5">Bill Number : </p>
+                    <div class="col-2"></div>                    
+                    <p class="font-monospace col-4">Meter Number : </p>
                     <div class="col-1"></div>
 
                     <div class="col-1"></div>
-                    <div class="mb-4 col-4" id="disp1" style="display: none;">
-                        <div class="formControl" id="formControl">
-                        <label for="inputBillId" class="form-label">Bill Number</label>
-                        <input type="text" class="form-control" id="inputBillId" name="inputBillId">
-                        <i class="bi bi-check-circle"></i>
-                        <i class="bi bi-exclamation-circle"></i>
-                        <p class="mb-0" id="errMsg">Error Message</p>
-                    </div>
-                    </div>
-                    <div class="col-2"></div>
-                    <div class="mb-4 col-4" id="disp2" style="display: none;">
-                        <div class="formControl" id="formControl">
-                        <label for="inputMeterNo" class="form-label">Meter Number</label>
-                        <input type="text" class="form-control" id="inputMeterNo" name="inputMeterNo">
-                        <i class="bi bi-check-circle"></i>
-                        <i class="bi bi-exclamation-circle"></i>
-                        <p class="mb-0" id="errMsg">Error Message</p>
-                    </div>
-                    </div>
+                    <p class="font-monospace col-4">Due Date : </p>
+                    <div class="col-2"></div>                    
+                    <p class="font-monospace col-4">Payment Date : </p>
                     <div class="col-1"></div>
 
                     <div class="col-1"></div>
-                    <div class="mb-4 col-4" id="disp3" style="display: none;">
-                        <div class="formControl" id="formControl">
-                        <label for="inputBillAmount" class="form-label">Amount</label>
-                        <input type="text" class="form-control" id="inputBillAmount" name="inputBillAmount">
-                        <i class="bi bi-check-circle"></i>
-                        <i class="bi bi-exclamation-circle"></i>
-                        <p class="mb-0" id="errMsg">Error Message</p>
-                    </div>
-                    </div>
-                    <div class="col-2"></div>
-                    <div class="mb-4 col-4" id="disp4" style="display: none;">
-                        <div class="formControl" id="formControl">
-                        <label for="inputReadDate" class="form-label">Read Date</label>
-                        <input type="date" class="form-control" id="inputReadDate" name="inputReadDate">
-                        <i class="bi bi-check-circle"></i>
-                        <i class="bi bi-exclamation-circle"></i>
-                        <p class="mb-0" id="errMsg">Error Message</p>
-                    </div>
-                    </div>
-                    <div class="col-1"></div>
+                    <p class="font-monospace fs-5 bold col-4" style="font-weight: bold;">Amount : </p>
+                    <div class="col-7"></div>
 
-                    <div class="col-4" id="adjustor"></div>
-                    <div class="col-1"></div>
-                    <div class="mb-4 col-10">
-                        <div class="formControl" id="formControl">
-                        <label for="inputCompDesc" class="form-label">Example textarea</label>
-                        <textarea class="form-control" id="inputCompDesc" name="inputCompDesc" rows="3" value=""></textarea>
-                        <i class="bi bi-check-circle"></i>
-                        <i class="bi bi-exclamation-circle"></i>
-                        <p class="mb-0" id="errMsg">Error Message</p></div>
-                    </div> 
-                    <div class="col-1"></div>
-                    <div class="mt-3 col-2"></div>
-                    <div class="d-grid mt-3 gap-2 col-4 d-block">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div> 
-                    <div class="d-grid gap-2 mt-3 col-4 d-block">
-                        <button type="reset" class="btn btn-secondary" onclick="resetVals()">Cancel</button>
-                    </div> 
-                    <div class="mt-3 col-2"></div>
+                    <div class="col-4"></div>
+                    <div class="d-grid col-4 mb-3 mt-3 gap-2 d-block text-center">
+                        <button
+                          type="submit"
+                          id="makePaymentBtn"
+                          class="btn btn-primary"
+                        >
+                          <i class="bi bi-credit-card-fill me-2"></i>Make Payment
+                        </button>
+                    </div>
+                    <div class="col-4"></div>
+                    {% if stateT == "1" %}
+                    <div class="col-4"></div>
+                    <!--loaderFn-->
+                    <div class="col-4"></div>
+                    {% endif %}
+                        
                     </div>
                 </form>
             </section>

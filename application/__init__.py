@@ -777,6 +777,7 @@ def paymentHistory():
 
 @app.route("/transaction",methods=['GET', 'POST'])
 def transactionPage():
+<<<<<<< HEAD
     conn = mysql.connect()
     stateT = 0
     if request.method == 'POST'and 'bid' in request.form and 'amount' in request.form:
@@ -791,3 +792,12 @@ def transactionPage():
         return render_template("paymentPage.html", uName=session["uName"], uId=session["id"], bill = bill, stateT = stateT)
     
     
+=======
+
+    if request.method == 'POST'and 'bid' in request.form and 'amount' in request.form:
+        conn = mysql.connect()
+        transaction = Transaction(conn, request)
+        transaction.insertTransaction()
+        return render_template("paymentPage.html", uName=session["uName"], uId=session["id"],transaction = transaction)
+    return render_template("paymentPage.html", uName=session["uName"], uId=session["id"])
+>>>>>>> d612907664f8603f0212d12f981bec9250e14e0a
