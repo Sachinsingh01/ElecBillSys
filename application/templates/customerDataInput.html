@@ -131,22 +131,21 @@
             resetVals()          
             document.getElementById("addEl").style.display = "flex"
             document.getElementById("filterEl").style.display = "none"
-            if(document.getElementById("task").value != "add"){
-                document.getElementById("inputConID").value = ""
+            
+            if(document.getElementById("task").value && document.getElementById("task").value != "add"){
                 document.getElementById("inputConFName").value = ""
                 document.getElementById("inputConLName").value = ""
                 document.getElementById("inputConAddress").value = ""
                 document.getElementById("inputConTaluka").value = ""
                 document.getElementById("inputConDistrict").value = ""
                 document.getElementById("inputConPin").value = ""
-                document.getElementById("inputMeterId").value = ""
-                document.getElementById("inputConType").value = ""
                 document.getElementById("inputConContact").value = ""
-                document.getElementById("inputSancLoad").value = ""
-                document.getElementById("inputConFilID").value = ""
+                document.getElementById("inputConEmail").value = ""
             }           
             document.getElementById("task").value = "add"
-            document.getElementById("fieldSet").disabled = false
+            if(document.getElementById("fieldSet")){
+                document.getElementById("fieldSet").disabled = false
+            }
         })
         document.getElementById("custUpd").addEventListener("click", (e)=>{
             document.getElementById("addEl").style.display = "none"            

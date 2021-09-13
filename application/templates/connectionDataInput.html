@@ -135,7 +135,8 @@
                 document.getElementById("inputConnStatus").value = ""
             }           
             document.getElementById("taskC").value = "add"
-            document.getElementById("fieldSetC").disabled = false
+            if(document.getElementById("fieldSetC")){
+            document.getElementById("fieldSetC").disabled = false}
         })
         document.getElementById("connUpd").addEventListener("click", (e)=>{
             resetVals()  
