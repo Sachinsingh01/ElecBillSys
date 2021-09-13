@@ -5,26 +5,27 @@ from datetime import date
 class Connection:
 
     # initialise the connection whenever created 
-    def __init__(self, conn, request):
+    def __init__(self, conn, request=""):
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
-        try:
-            self.connID = self.generateConnID()
-            self.connAddress = request.form['inputConnAddress']
-            self.connTaluka = request.form['inputConnTaluka']
-            self.connDistrict = request.form['inputConnDistrict']
-            self.connPin = request.form['inputConnPin']
-            self.meterNo = request.form['inputMeterNo']
-            self.conType = request.form['inputConnType']
-            self.conNo = request.form['inputConNo']
-            self.installationID = self.generateInstallID()
-            self.installationDate = request.form['inputInstallationDate']
-            print(self.installationDate)
-            self.connStatus = request.form['inputConnStatus']
-            self.created = ""
-            self.updated = ""
-        except:
-            print("Could not instantiate connection")
+        if request != "":
+            try:
+                self.connID = self.generateConnID()
+                self.connAddress = request.form['inputConnAddress']
+                self.connTaluka = request.form['inputConnTaluka']
+                self.connDistrict = request.form['inputConnDistrict']
+                self.connPin = request.form['inputConnPin']
+                self.meterNo = request.form['inputMeterNo']
+                self.conType = request.form['inputConnType']
+                self.conNo = request.form['inputConNo']
+                self.installationID = self.generateInstallID()
+                self.installationDate = request.form['inputInstallationDate']
+                print(self.installationDate)
+                self.connStatus = request.form['inputConnStatus']
+                self.created = ""
+                self.updated = ""
+            except:
+                print("Could not instantiate connection")
 
         
 
