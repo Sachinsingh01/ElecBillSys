@@ -149,7 +149,7 @@ def adminCust():
                 consumer = Consumer(conn,request)
                 msg = None
                 try:
-                    val = consumer.insertConsumer()
+                    val = consumer.insertConsumer(conn)
                     if val:
                         conn.commit()
                         msg = "Consumer Succefully Added"
@@ -660,7 +660,7 @@ def adminDistributor():
                     val = distributor.insertDistributor()
                     if val:
                         conn.commit()
-                        msg = "Distributor Succefully Added"
+                        msg = "Distributor Successfully Added"
                     else:
                         msg = "Unable to Add Distributor"
                 finally:
@@ -671,8 +671,9 @@ def adminDistributor():
 
             # Begin Update
             elif taskD == "upd":
-                disId = request.form['inputDistFilID']
                 conn = mysql.connect()
+                disId = request.form['inputDistFilID']
+
                 distributor = Distributor(conn, request)
                 msg = None
                 # Messages for testing
@@ -684,7 +685,7 @@ def adminDistributor():
                         try:
                             print("actually updating")
                             disId = request.form['inputDistID']
-                            print("Printing dis ID", disId)
+                            print("Printing dis ID ", disId)
                             updateDis = distributor.updateDistributor(request, disId)
                             if updateDis:
                                 msg = "Distributor updated Sucessfully"
@@ -708,21 +709,21 @@ def adminDistributor():
             # Begin Delete
             elif taskD == "del":
                 js = {"disId":"","disCompName":"", "disAddress":"", "disDistrict":"", "disPincode":"", "suppplyMonth":"", "disContact":"", "supplyRate":"","created":"", "updated":""}
-                disId = request.form['inputDistFilID']
-                print(disId)
+                disId = request.form['inputDistFilID'] #this statement is not working
+                print("dis id from form ",disId)
                 conn = mysql.connect()
                 distributor = Distributor(conn, request)
                 distributor.getDistributor(disId)
                 
                 msg = None
                 print("in Delete")
-                print(request.form['stateD'])
+                print("state ",request.form['stateD'])
                 if request.form['stateD'] == "1":
                     try:
                         try:
                             print("actually deleting")
-                            print(request.form['inputDistFilID'])
                             disId = request.form['inputDistFilID']
+                            print("in delete dis id",disId)
                             
                             val = distributor.deleteDistributor(disId)
                             
