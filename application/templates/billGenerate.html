@@ -124,6 +124,7 @@
                 type="button"
                 id="processSampleCsv"
                 class="btn btn-primary"
+                {% if done=="1" %}disabled{% endif %}
               >
                 <i class="bi bi-upload me-2"></i>Generate Bill
               </button>
