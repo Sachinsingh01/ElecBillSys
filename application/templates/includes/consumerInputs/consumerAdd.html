@@ -4,7 +4,8 @@
 <div class="mb-4 col-4">
     <div class="formControl" id="formControl">
     <label for="inputConFName" class="form-label">First Name</label>
-    <input type="text" class="form-control" id="inputConFName" name="inputConFName" {% if val != "add" %} value = {{js.fname}} {% endif %}>
+    <input type="text" class="form-control" id="inputConFName" name="inputConFName">
+    <small class="d-none" id="inputConFNameVal">{{js.fname}}</small>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
     <p class="mb-0" id="errMsg">Error Message</p>
@@ -13,7 +14,8 @@
 <div class="mb-4 col-4" >
     <div class="formControl" id="formControl">
     <label for="inputConLName" class="form-label">Last Name</label>
-    <input type="text" class="form-control" id="inputConLName" name="inputConLName" {% if val != "add" %} value = {{js.lname}} {% endif %}>
+    <input type="text" class="form-control" id="inputConLName" name="inputConLName">
+    <small class="d-none" id="inputConLNameVal">{{js.lname}}</small>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
     <p class="mb-0" id="errMsg">Error Message</p>
@@ -23,7 +25,8 @@
 <div class="mb-4 col-12">
     <div class="formControl" id="formControl">
     <label for="inputConAddress" class="form-label">Address</label>
-    <input type="text" class="form-control" id="inputConAddress" name="inputConAddress" {% if val != "add" %} value = {{js.address}} {% endif %}>
+    <input type="text" class="form-control" id="inputConAddress" name="inputConAddress">
+    <small class="d-none" id="inputConAddressVal">{{js.address}}</small>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
     <p class="mb-0" id="errMsg">Error Message</p></div>
