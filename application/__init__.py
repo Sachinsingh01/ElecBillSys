@@ -10,7 +10,7 @@ from pymysql import NULL, cursors
 from werkzeug.utils import secure_filename
 import os
 from .consumer import Consumer
-from .fileToDB import MeterReading
+from .fileToDB import MeterReading, Reading
 from .Billing import Bill
 import re 
 from .connection import Connection
@@ -284,7 +284,11 @@ def uploadFile():
 def fileComplaint(): 
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    if request.method=="POST":
+    if 'bid' in request.args:
+        bid=request.args['bid']
+    else:
+        bid=""
+    if bid == "" and request.method=="POST":
         #take values from the submitted form
         billId = request.form['inputBillId']
         connectionId = request.form['inputConnID']
@@ -305,8 +309,16 @@ def fileComplaint():
             conn.commit()
         except Exception as e:
             print(e)
+    else:
+        try:
+            bill = Bill(conn)
+            bill.getBill(bid)
+            bill.amount = round(float(bill.amount),2)
+            return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"], bill=bill, compType=1)
+        except Exception as e:
+            print(e)
 
-    return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"])
+    return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"], compType=0)
 
 #route to handle the requests for complain list page
 @app.route("/complainList", methods=["GET", "POST"])
@@ -581,6 +593,7 @@ def meterReading():
     conn = mysql.connect()
     meterRead = MeterReading(conn,session['id'])
     roleId = session['role']
+    # csv,filename = meterRead.createMeterReadingFile()
     if request.method=="POST":
         if 'formStateGet' in request.form:
             csv,filename = meterRead.createMeterReadingFile()
@@ -840,4 +853,14 @@ def transactionPage():
         return render_template("paymentPage.html", uName=session["uName"], uId=session["id"], bill = bill, stateT = stateT,crDate = str(date.today()))
 
 
+@app.route("/billGenerate")
+def billGenerate():
+    conn = mysql.connect()
+    reading = MeterReading(conn)
+    MG1, MG2 = reading.sendData()
+    js = {"MG1":MG1,"MG2":MG2}
+    if "generate" in request.args:
+        reading.readFile()
+        return render_template("billGenerate.html",js = js,MG1=MG1, MG2=MG2, done ="1")
+    return render_template("billGenerate.html",js = js,MG1=MG1, MG2=MG2)
     

@@ -101,7 +101,7 @@
 
 
 
-
+    
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
         crossorigin="anonymous"></script>
@@ -109,8 +109,9 @@
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
     <script type="text/javascript">
-    
-    console.log("hi")
+
+        console.log(document.getElementById("task").value)
+
         document.getElementById("filBtn").addEventListener("click", (e)=>{
             document.getElementById("state").value = "0"
             if(document.getElementById("alertMsg")){
@@ -130,22 +131,21 @@
             resetVals()          
             document.getElementById("addEl").style.display = "flex"
             document.getElementById("filterEl").style.display = "none"
-            if(document.getElementById("task").value != "add"){
-                document.getElementById("inputConID").value = ""
+            
+            if(document.getElementById("task").value && document.getElementById("task").value != "add"){
                 document.getElementById("inputConFName").value = ""
                 document.getElementById("inputConLName").value = ""
                 document.getElementById("inputConAddress").value = ""
                 document.getElementById("inputConTaluka").value = ""
                 document.getElementById("inputConDistrict").value = ""
                 document.getElementById("inputConPin").value = ""
-                document.getElementById("inputMeterId").value = ""
-                document.getElementById("inputConType").value = ""
                 document.getElementById("inputConContact").value = ""
-                document.getElementById("inputSancLoad").value = ""
-                document.getElementById("inputConFilID").value = ""
+                document.getElementById("inputConEmail").value = ""
             }           
             document.getElementById("task").value = "add"
-            document.getElementById("fieldSet").disabled = false
+            if(document.getElementById("fieldSet")){
+                document.getElementById("fieldSet").disabled = false
+            }
         })
         document.getElementById("custUpd").addEventListener("click", (e)=>{
             document.getElementById("addEl").style.display = "none"            
@@ -194,7 +194,7 @@
         }
 
         function isConNo(strVal){
-            if((strVal.substring(0,3).toLowerCase().match(/^(pon|tis|bar|bic|can|san|sal|sat|mor|per|que|dha)$/))&&(!isNaN(strVal.substring(3,)))){
+            if((strVal.substring(0,2).toLowerCase().match(/^(po|ti|ba|bi|ca|sa|mo|pe|qu|dh)$/))&&(!isNaN(strVal.substring(2,)))){
                 console.log("its true")
                 return true
             }
@@ -215,9 +215,9 @@
             let districtErr = true
             let cidErr = true
 
-            const fnameVal = fname.value.trim()
-            const lnameVal = lname.value.trim()
-            const addressVal = address.value.trim()
+            const fnameVal = fname.value
+            const lnameVal = lname.value
+            const addressVal = address.value
             const districtVal = district.value.trim()
             const talukaVal = taluka.value.trim()
             const pinVal = pin.value.trim()

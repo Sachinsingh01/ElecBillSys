@@ -298,7 +298,7 @@
         //     alert("Please upload a valid CSV file.");
         // }
     }
-    document.getElementById("downloadSampleCsv").addEventListener("click", e=>{
+    document.getElementById("tabBody").addEventListener("load", e=>{
       UploadCSV()
       document.getElementById("processSampleCsv").disabled=false
       document.getElementById("table-config").className = "visible"

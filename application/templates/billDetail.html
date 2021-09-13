@@ -693,8 +693,9 @@
     {% endif %}
     <script>
       document.getElementById("fileComplaintBtn").addEventListener("click", e=>{
+        let bid = document.getElementById("billId").value
         var link = document.getElementById("gotoLink")
-        link.href="/fileComplaint"
+        link.href=`/fileComplaint?bid=${bid}`
         link.click()
       })
       document.getElementById("payBtn").addEventListener("click", e=>{

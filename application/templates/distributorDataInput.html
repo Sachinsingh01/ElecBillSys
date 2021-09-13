@@ -103,7 +103,6 @@
             document.getElementById("addElD").style.display = "flex"
             document.getElementById("filterElD").style.display = "none"
             if(document.getElementById("taskD").value != "add"){
-                document.getElementById("inputDistID").value = ""
                 document.getElementById("inputDistCompName").value = ""
                 document.getElementById("inputDistAddress").value = ""
                 document.getElementById("inputDistDistrict").value = ""
@@ -113,7 +112,8 @@
                 document.getElementById("inputDistContact").value = ""
             }           
             document.getElementById("taskD").value = "add"
-            document.getElementById("fieldSetD").disabled = false
+            if(document.getElementById("fieldSetD")){
+            document.getElementById("fieldSetD").disabled = false}
         })
         document.getElementById("distUpd").addEventListener("click", (e)=>{
             document.getElementById("addElD").style.display = "none"            

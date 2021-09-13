@@ -10,20 +10,26 @@ class MeterReading():
     columns = ['MeterReadingId', 'MeterNo', 'Fname', 'Lname','Address','Taluka','District','Pin', 'Contact', 'prev_date', 'prev_reading', 'Meter_Reading', 'Read_Date']
     #update the lis
     Talukas = {"PO":"Ponda", "TI":"Tiswadi"}
-    def __init__(self, conn, id):
+    def __init__(self, conn, id = ""):
         # self.filename = 
         self.path = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
         #take filename from {decide later}
-        self.id = id
-        d = str(date.today())
-        d = d.split('-')
-        filename = f"{d[0]}{d[1]}"
-        self.fileName = f'{self.id[:2]}-{filename}.csv'
+        # if id !="":
+        #     self.id = id
+        # d = str(date.today())
+        # d = d.split('-')
+        # filename = f"{d[0]}{d[1]}"
+        # self.fileName = f'{self.id[:2]}-{filename}.csv'
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
 
     def readFile(self):
-        df = pd.read_csv(f'{self.path}\\{self.fileName}')
+        fileName1 = "PO-202109.csv"
+        fileName2 = "TI-202109.csv"
+        df1 = pd.read_csv(f'{self.path}\\{fileName1}')
+        df2 = pd.read_csv(f'{self.path}\\{fileName2}')
+        frames = [df1,df2]
+        df = pd.concat(frames)
         print(df.columns == MeterReading.columns)
         for _, row in df.iterrows():
             print(f'row: {_}')
@@ -39,13 +45,10 @@ class MeterReading():
                 print(e)
         self.conn.commit()
         return True
-
-        
-
     def createMeterReadingFile(self): 
         #get meter guy login id
-        taluka = self.Talukas[self.id[:2]]
-        self.cursor.execute("SELECT * FROM connection where Co_Taluka = %s ",(taluka))
+        # taluka = self.Talukas[self.id[:2]]
+        self.cursor.execute("SELECT * FROM connection where Co_Taluka = %s ",("Ponda"))
         connections = self.cursor.fetchall()
         ls = []
         self.cursor.execute('SELECT MAX(Meter_reading_id) as md FROM meter_reading')
@@ -85,3 +88,36 @@ class MeterReading():
             return 60000000000001
         else:
             return int(record['mid']) + 1
+    
+    def sendData(self):
+
+        fileName1 = "PO-202109.csv"
+        fileName2 = "TI-202109.csv"
+        df1 = pd.read_csv(f'{self.path}\\{fileName1}')
+        df2 = pd.read_csv(f'{self.path}\\{fileName2}')
+        MG1 = []
+        for _, row in df1.iterrows():
+            t = Reading(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],row[12])
+            MG1.append(t)
+        MG2 = []
+        for _, row in df1.iterrows():
+            t = Reading(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],row[12])
+            MG2.append(t)
+        return MG1, MG2
+
+
+class Reading():
+    def __init__(self,MeterReadingId,MeterNo,Fname,Lname,Address,Taluka,District,Pin,Contact,prev_date,prev_reading,Meter_Reading,Read_Date):
+        self.MeterReadingId = MeterReadingId
+        self.MeterNo = MeterNo
+        self.Fname = Fname
+        self.Lname = Lname
+        self.Address = Address
+        self.Taluka = Taluka
+        self.District = District
+        self.Pin = Pin
+        self.Contact = Contact
+        self.prev_date = prev_date
+        self.prev_reading = prev_reading
+        self.Meter_Reading = Meter_Reading
+        self.Read_Date = Read_Date
