@@ -90,3 +90,36 @@ class MeterReading():
             return 60000000000001
         else:
             return int(record['mid']) + 1
+    
+    def sendData(self):
+
+        fileName1 = "PO-202109.csv"
+        fileName2 = "TI-202109.csv"
+        df1 = pd.read_csv(f'{self.path}\\{fileName1}')
+        df2 = pd.read_csv(f'{self.path}\\{fileName2}')
+        MG1 = []
+        for _, row in df1.iterrows():
+            t = Reading(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],row[12])
+            MG1.append(t)
+        MG2 = []
+        for _, row in df1.iterrows():
+            t = Reading(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],row[12])
+            MG2.append(t)
+        return MG1, MG2
+
+
+class Reading():
+    def __init__(self,MeterReadingId,MeterNo,Fname,Lname,Address,Taluka,District,Pin,Contact,prev_date,prev_reading,Meter_Reading,Read_Date):
+        self.MeterReadingId = MeterReadingId
+        self.MeterNo = MeterNo
+        self.Fname = Fname
+        self.Lname = Lname
+        self.Address = Address
+        self.Taluka = Taluka
+        self.District = District
+        self.Pin = Pin
+        self.Contact = Contact
+        self.prev_date = prev_date
+        self.prev_reading = prev_reading
+        self.Meter_Reading = Meter_Reading
+        self.Read_Date = Read_Date
