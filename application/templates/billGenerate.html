@@ -46,9 +46,9 @@
         <div class="col shadow p-5 bg-body rounded m-5"> 
           <div class="col-12" id="meter-status">
             <div class="row">
-                {% for mgr in js %}
+                <p class="font-monospace col-12 fs-4 my-3">PONDA</p>
                <div class="table-ctn" style="font-size: 12px;">
-                <table id="table-config" class="d-none">
+                <table id="table-config">
                     <thead>
                         <tr>
                             <th style="font-size: 10px;">Meter No</th>
@@ -62,23 +62,59 @@
                         </tr>
                     </thead>
                     
-                    {% for r in mgr %}
+                    
                     <tbody>
+                        {% for r in MG1 %}
                         <tr>
-                            <th style="font-size: 10px;">{{r.MeterNo}}</th>
-                            <th style="font-size: 10px;">{{r.Fname}} {{r.Lname}}</th>
-                            <th style="font-size: 10px;">{{r.Address}}, {{r.Taluka}}, {{r.District}}, Goa.{{r.Pin}}</th>
-                            <th style="font-size: 10px;">{{r.Contact}}</th>
-                            <th style="font-size: 10px;">{{r.prev_date}}</th>
-                            <th style="font-size: 10px;">{{r.prev_reading}}</th>
-                            <th style="font-size: 10px;">{{r.Read_Date}}</th>
-                            <th style="font-size: 10px;">{{r.Meter_Reading}}</th>
-                        </tr>
+                            <td style="font-size: 10px;">{{r.MeterNo}}</td>
+                            <td style="font-size: 10px;">{{r.Fname}} {{r.Lname}}</td>
+                            <td style="font-size: 10px;">{{r.Address}}, {{r.Taluka}}, {{r.District}}, Goa.{{r.Pin}}</td>
+                            <td style="font-size: 10px;">{{r.Contact}}</td>
+                            <td style="font-size: 10px;">{{r.prev_date}}</td>
+                            <td style="font-size: 10px;">{{r.prev_reading}}</td>
+                            <td style="font-size: 10px;">{{r.Read_Date}}</td>
+                            <td style="font-size: 10px;">{{r.Meter_Reading}}</td>
+                        </tr>                        
+                        {% endfor %}
                     </tbody>
-                    {% endfor %}
                 </table>
             </div>
-            {% endfor %}
+            
+            <p class="font-monospace col-12 fs-4 my-3">TISWADI</p>
+
+            <div class="table-ctn" style="font-size: 12px;">
+                <table id="table-config">
+                    <thead>
+                        <tr>
+                            <th style="font-size: 10px;">Meter No</th>
+                            <th style="font-size: 10px;">Name</th>
+                            <th style="font-size: 10px;">Address</th>
+                            <th style="font-size: 10px;">Contact</th>
+                            <th style="font-size: 10px;">Previous Date</th>
+                            <th style="font-size: 10px;">Previous Reading</th>
+                            <th style="font-size: 10px;">Current Date</th>
+                            <th style="font-size: 10px;">Current Reading</th>
+                        </tr>
+                    </thead>
+                    
+                   
+                    <tbody>
+                        {% for r in MG2 %}
+                        <tr>
+                            <td style="font-size: 10px;">{{r.MeterNo}}</td>
+                            <td style="font-size: 10px;">{{r.Fname}} {{r.Lname}}</td>
+                            <td style="font-size: 10px;">{{r.Address}}, {{r.Taluka}}, {{r.District}}, Goa.{{r.Pin}}</td>
+                            <td style="font-size: 10px;">{{r.Contact}}</td>
+                            <td style="font-size: 10px;">{{r.prev_date}}</td>
+                            <td style="font-size: 10px;">{{r.prev_reading}}</td>
+                            <td style="font-size: 10px;">{{r.Read_Date}}</td>
+                            <td style="font-size: 10px;">{{r.Meter_Reading}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="#" id="gotoLink" class="d-none"></a>
             <div class="col-4"></div>
             <div class="d-grid mt-5 mb-3 col-4 gap-2 d-block text-center">
               <label for="processSampleCsv" class="form-label"
@@ -88,7 +124,6 @@
                 type="button"
                 id="processSampleCsv"
                 class="btn btn-primary"
-                disabled
               >
                 <i class="bi bi-upload me-2"></i>Generate Bill
               </button>
@@ -111,6 +146,13 @@
       integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
       crossorigin="anonymous"
     ></script>
+    <script>
+        document.getElementById("processSampleCsv").addEventListener("click", e=>{
+            var lnk = document.getElementById("gotoLink")
+            lnk.href = "/billGenerate?generate=true"
+            lnk.click()
+        })
+    </script>
     
   </body>
 </html>
