@@ -821,6 +821,6 @@ def transactionPage():
         bid = request.args["bid"]
         bill = Bill(conn)
         bill.getBill(bid)
-        return render_template("paymentPage.html", uName=session["uName"], uId=session["id"], bill = bill, stateT = stateT)
+        return render_template("paymentPage.html", uName=session["uName"], uId=session["id"], bill = bill, stateT = stateT, crDate = str(date.today()))
     
     
