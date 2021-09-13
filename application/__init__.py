@@ -856,9 +856,12 @@ def transactionPage():
 
 @app.route("/billGenerate")
 def billGenerate():
-    conn = pymysql.connect()
+    conn = mysql.connect()
     reading = MeterReading(conn)
     MG1, MG2 = reading.sendData()
     js = {"MG1":MG1,"MG2":MG2}
-    return render_template("billGenerate.html",js = js)
+    if "generate" in request.args:
+        reading.readFile()
+        return render_template("billGenerate.html",js = js,MG1=MG1, MG2=MG2, done ="1")
+    return render_template("billGenerate.html",js = js,MG1=MG1, MG2=MG2)
     
