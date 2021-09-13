@@ -15,6 +15,7 @@ import re
 from .connection import Connection
 import hashlib
 import os
+from datetime import date
 # import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -51,10 +52,12 @@ def home():
     if 'loggedin' in session:
         # User is loggedin show them the home page
         roleId = session['role']
+        uName = session['uName']
+        uId = session['id']
         if roleId == "1":
-            return render_template("dash.html", roleId = roleId)
+            return render_template("dash.html", roleId = roleId, uName=uName, uId=uId)
         elif roleId == "2":
-            return render_template("consumerDash.html", roleId = roleId)
+            return render_template("consumerDash.html", roleId = roleId, uName=uName, uId=uId)
         elif roleId == "3":
             return redirect(url_for('meterReading'))
     # User is not loggedin redirect to login page
@@ -91,14 +94,18 @@ def login():
             session['role'] = role
             print(role)
             if role == "1":
+                session["uName"] = "ADMINISTRATOR"
                 session["task"] = "add"
                 session["taskC"] = "add"
                 session["taskD"] = "add"
                 return redirect(url_for('dashboard'))
             elif account and role == "2":
+                cursor.execute("SELECT CONCAT(Con_First_Name , ' ' , Con_Last_Name) as Name from consumer where Con_No = %s", (session['id']))
+                session["uName"] = cursor.fetchone()['Name']
                 return redirect(url_for('dashboardCon'))
                 # return redirect(url_for('billDetail'))
             elif role == "3":
+                session["uName"] = "METER GUY"
                 return redirect(url_for('meterReading'))
         else:
             msg = 'Incorrect Username or Password!'  
@@ -152,7 +159,7 @@ def adminCust():
                     conn.close()
                 print(msg)
                 # Only sending Role because user is Admin and username is Administrator
-                return render_template("customerDataInput.html", msg = msg, val = task, js = js, roleId = roleId)
+                return render_template("customerDataInput.html", msg = msg, val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
             # End Add
 
             # Begin Update
@@ -189,7 +196,7 @@ def adminCust():
                 js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                 print(js)
                 print(msg)
-                return render_template("customerDataInput.html", val = task, js = js, roleId = roleId)
+                return render_template("customerDataInput.html", val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
             # End Update
 
             # Begin Delete
@@ -232,10 +239,10 @@ def adminCust():
                 
                 print(js)
                 print(msg)
-                return render_template("customerDataInput.html", val = task, js = js, roleId = roleId) 
+                return render_template("customerDataInput.html", val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
             #Delete end
         # User is loggedin show them the home page
-        return render_template("customerDataInput.html", val = task, js = js, roleId = roleId)
+        return render_template("customerDataInput.html", val = task, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
     # User is not loggedin redirect to login page
 
     return redirect(url_for('login'))
@@ -267,22 +274,42 @@ def uploadFile():
                 return redirect(request.url)
 
     # Only sending role because user is admin            
-    return render_template("meterReading.html", roleId = roleId)
+    return render_template("meterReading.html", roleId = roleId, uName=session["uName"], uId=session["id"])
 
 #Functionality has to be added
 @app.route("/fileComplaint", methods=["GET", "POST"])
-def fileComplaint():  
-    return render_template("fileComplaint.html")
+def fileComplaint(): 
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    if request.method=="POST":
+        #take values from the submitted form
+        billId = request.form['inputBillId']
+        connectionId = request.form['inputConnID']
+        complaintCategory = request.form['inputCompType']
+        comment = request.form['inputCompDesc']
+        created = str(date.today())
+        updated = str(date.today())
+        status = 'unresolved'
+        try:
+            #query to insert the new complaint into the bill_complain table
+            cursor.execute("INSERT INTO bill_complain(`bill_id`,`co_id`,`category`,`status`,`comment`,`created`,`updated`) VALUES(%s,%s,%s,%s,%s,%s,%s)",(billId,connectionId,complaintCategory,status,comment,created,updated))
+            print("Success!")
+            conn.commit()
+        except Exception as e:
+            print(e)
+
+    return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"])
 
 @app.route("/complainList", methods=["GET", "POST"])
 def complainList():
     roleId = session['role']
+    
     complainCategory = [1,2,2,1]
     complainIDs = [1991,1992,1993,1994]
     connectionIDs = [3001,3002,3003,3004]
     length = 4
     complainStatus = [1,2,1,2]
-    return render_template("complainList.html",complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId)
+    return render_template("complainList.html", uName=session["uName"], uId=session["id"],complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId)
 
 @app.route("/complainDetail")
 def complainDetail():
@@ -357,7 +384,7 @@ def billsList():
         cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
         record = cursor.fetchone()
         consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
-    return render_template("billslist.html",prevDates=prevDates,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs, roleId = roleId, consumerNo = cNo, consumerName = consumerName)
+    return render_template("billslist.html", uName=session["uName"], uId=session["id"],prevDates=prevDates,billNos=billNos,billDates=billDates,length=length,BillPaymentStatus=BillPaymentStatus,meterNos=meterNos,amountDues=amountDues,unitsConsumed=unitsConsumed,connectionIDs=connectionIDs, roleId = roleId, consumerNo = cNo, consumerName = consumerName)
 
 
 @app.route("/billDetail")
@@ -384,7 +411,7 @@ def billDetail():
         consumerName = consumer.fname + " " + consumer.lname
     else:
         consumerName = ""
-    return render_template("billDetail.html", js=js, connection = connection, consumer=consumer, bill = bill, consumerName = consumerName, consumerNumber = conNo, roleId = roleId) 
+    return render_template("billDetail.html", uName=session["uName"], uId=session["id"], js=js, connection = connection, consumer=consumer, bill = bill, consumerName = consumerName, consumerNumber = conNo, roleId = roleId) 
 
 @app.route("/adminConn", methods=["POST", "GET"])
 def adminConn():
@@ -419,7 +446,7 @@ def adminConn():
                     print(msg)
 
                     # only roleId cuz user is admin
-                    return render_template("connectionDataInput.html", msg = msg, val = taskC, js = js, roleId = roleId)
+                    return render_template("connectionDataInput.html", msg = msg, val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
                 # End Add
 
                 # Begin Delete
@@ -457,7 +484,7 @@ def adminConn():
                             msg = "Unable to find the connection" 
                     print(js)
                     print(msg)
-                    return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId) 
+                    return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
                 # End Delete
 
                 # Begin Update
@@ -497,9 +524,11 @@ def adminConn():
                     
                     print(js)
                     print(msg)
-                    return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId)
+                    return render_template("connectionDataInput.html", val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
                 # End Update
     return render_template("connectionDataInput.html", js=js, val=taskC, roleId = roleId)
+
+    #return render_template("connectionDataInput.html", js=js, val=taskC, roleId = roleId, uName=session["uName"], uId=session["id"])
 
 @app.route("/meterReading", methods=["GET", "POST"])
 def meterReading():
@@ -531,7 +560,7 @@ def meterReading():
                 else:
                     print("That file extension is not allowed")
                     return redirect(request.url)
-    return render_template("meterReading.html", roleId = roleId)
+    return render_template("meterReading.html", roleId = roleId, uName=session["uName"], uId=session["id"])
 
 @app.route("/test")
 def test():
@@ -553,6 +582,7 @@ def dashboard():
     else:
         cid = ""
     roleId = session['role']
+    # userName = session['']
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     if cid == "":
@@ -569,17 +599,22 @@ def dashboard():
             consumer.getConsumer(conNumber["Con_No"])
             consumers.append(consumer)
             cursor.execute("SELECT count(*) as c FROM connection WHERE Con_ID = %s",(consumer.conID))
-            n = cursor.fetchone()["c"]
-            numberOfConnections.append(n)
+            num = cursor.fetchone()["c"]
+            numberOfConnections.append(num)
         print(consumers)
         print(numberOfConnections)
-        return render_template("dash.html", roleId = roleId, consumers = consumers,num = numberOfConnections,n=n/5)
+        print(n)
+        return render_template("dash.html", roleId = roleId, consumers = consumers, pageNo=pageNo+1, num = numberOfConnections,n=n, uName=session["uName"], uId=session["id"])
     else:
         consumers = []
+        numberOfConnections = []
         consumer = Consumer(conn)
         consumer.getConsumer(cid)
         consumers.append(consumer)
-        return render_template("dash.html", roleId = roleId, consumers = consumers)
+        cursor.execute("SELECT count(*) as c FROM connection WHERE Con_ID = %s",(consumer.conID))
+        num = cursor.fetchone()["c"]
+        numberOfConnections.append(num)
+        return render_template("dash.html", roleId = roleId, num=numberOfConnections, pageNo=0, n=0, consumers = consumers, uName=session["uName"], uId=session["id"])
 @app.route("/dashboardCon")
 def dashboardCon():
     cNo = session["id"]
@@ -599,8 +634,8 @@ def dashboardCon():
         consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
         print("Consumer Name")
         print(consumerName)
-        return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,bill=bill)
-    return render_template("consumerDash.html",roleId=roleId,consumerName="")
+        return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,bill=bill, uName=session["uName"], uId=session["id"])
+    return render_template("consumerDash.html",roleId=roleId,consumerName="", uName=session["uName"], uId=session["id"])
 
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
 
@@ -631,7 +666,7 @@ def adminDistributor():
                 finally:
                     conn.close()
                 print(msg)
-                return render_template("distributorDataInput.html", msg = msg, val = taskD, js = js, roleId = roleId)
+                return render_template("distributorDataInput.html", msg = msg, val = taskD, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
             # End Add
 
             # Begin Update
@@ -667,7 +702,7 @@ def adminDistributor():
                 js = {"disId": disId ,"disCompName": distributor.disCompName, "disAddress": distributor.disAddress, "disDistrict": distributor.disDistrict, "disPincode": distributor.disPincode, "suppplyMonth": distributor.supplyPMonth, "disContact":distributor.disContact, "supplyRate": distributor.supplyRate,"created":distributor.created, "updated":distributor.updated}
                 print(js)
                 print(msg)
-                return render_template("distributorDataInput.html", val = taskD, js = js, roleId = roleId)
+                return render_template("distributorDataInput.html", val = taskD, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
             # End Update
 
             # Begin Delete
@@ -707,10 +742,14 @@ def adminDistributor():
                 
                 print(js)
                 print(msg)
-                return render_template("distributorDataInput.html", val = taskD, js = js, roleId = roleId) 
+                return render_template("distributorDataInput.html", val = taskD, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
             #Delete end
         # User is loggedin show them the home page
-        return render_template("distributorDataInput.html", val = taskD, js = js, roleId = roleId)
+        return render_template("distributorDataInput.html", val = taskD, js = js, roleId = roleId, uName=session["uName"], uId=session["id"])
     # User is not loggedin redirect to login page
 
     return redirect(url_for('login'))
+
+@app.route("/paymentHistory")
+def paymentHistory():
+    return render_template("paymentHistory.html", uName=session["uName"], uId=session["id"])

@@ -27,9 +27,11 @@
         <div class="ctn-body">
             <ul class="nav-list">
                 <li class="nav-elements"><i id="hamburger" class="bi bi-list"></i><div class="nav-app-name">EBS</div></li>
+                <li class="nav-elements"><a href="/dashboardCon" class="nav-link"><i class="bi bi-house-fill"></i><div class="nav-txt">Dashboard</div></a></li>
                 <li class="nav-elements"><a href="/billsList" class="nav-link"><i class="bi bi-receipt-cutoff"></i><div class="nav-txt" >View Bills</div></a></li>
                 <li class="nav-elements"><a href="/fileComplaint" class="nav-link"><i class="bi bi-patch-exclamation-fill"></i><div class="nav-txt" >File Complaint</div></a></li>
                 <li class="nav-elements"><a href="/complainList" class="nav-link"><i class="bi bi-patch-question-fill"></i><div class="nav-txt" >Track Complaints</div></a></li>
+                <li class="nav-elements"><a href="/paymentHistory" class="nav-link"><i class="bi bi-credit-card-fill"></i><div class="nav-txt" >Payment History</div></a></li>
             </ul>
         </div>
     </div>
@@ -54,8 +56,8 @@
               <i class="bi bi-person-circle"></i>
             </div>
             <ul class="dropdownMenu" id="dropParent">
-              <li><div id="dropdown-item">Virat Kohli</div></li>
-              <li><div id="dropdown-item">1pon12314123451234</div></li>
+              <li><div id="dropdown-item">{{uName}}</div></li>
+              <li><div id="dropdown-item">{{uId}}</div></li>
               <li><div id="dropdown-divider"></div></li>
               <li><a id="dropdown-link" href="{{url_for('logout')}}"><i class="bi bi-box-arrow-left me-2" id="log-icon"></i>Logout</a></li>
             </ul>

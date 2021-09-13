@@ -164,18 +164,20 @@
                   </tr>
                 </tbody>
             </table>
+            <input type="text" id="pageNo" class="d-none" {% if pageNo %}value="{{pageNo}}"{% else %}value="1"{% endif %}>
+            <input type="text" id="totalPages" class="d-none" {% if n %} value="{{n}}"{% else %} value="1"{% endif %}>
             <nav class="mt-3 mx-auto mb-0" aria-label="Page navigation example">
                 <ul class="pagination">
                   <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                    <a class="page-link" href="#" aria-label="Previous" id="prevLinkPage">
                       <span aria-hidden="true">&laquo;</span>
                     </a>
                   </li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#" id="firstLinkPage">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#" id="secondLinkPage">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#" id="thirdLinkPage">3</a></li>
                   <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
+                    <a class="page-link" href="#" aria-label="Next" id="nextLinkPage">
                       <span aria-hidden="true">&raquo;</span>
                     </a>
                   </li>
@@ -190,24 +192,127 @@
     <script>
       document.getElementById("consumerInput").addEventListener("click", e=>{
         var link = document.getElementById("gotoLink")
-        link.href="/adminCust"
+        link.href="/billsList"
         link.click()
       })
       document.getElementById("connectionInput").addEventListener("click", e=>{
         var link = document.getElementById("gotoLink")
-        link.href="/adminConn"
+        link.href="/fileComplaint"
         link.click()
       })
       document.getElementById("billInput").addEventListener("click", e=>{
         var link = document.getElementById("gotoLink")
-        link.href="/billsList"
+        link.href="/paymentHistory"
         link.click()
       })
       document.getElementById("complaintInput").addEventListener("click", e=>{
         var link = document.getElementById("gotoLink")
-        link.href="/complainList"
+        link.href="/connectionList"
         link.click()
       })
+      let prevLP = document.getElementById("prevLinkPage") 
+      let nextLP = document.getElementById("nextLinkPage")
+      let firstLP = document.getElementById("firstLinkPage")
+      let secondLP = document.getElementById("secondLinkPage")
+      let thirdLP = document.getElementById("thirdLinkPage")
+      let pageNo = document.getElementById("pageNo").value.trim()
+      let totalPages = document.getElementById("totalPages").value.trim()
+      function pageActive(elt){
+        elt.parentElement.className="page-item active"
+      }
+      function pageDisabled(elt){
+        elt.parentElement.className="page-item disabled"
+      }
+      function overallFunc(){
+        prevLP.parentElement.className="page-item"
+        nextLP.parentElement.className="page-item"
+        firstLP.parentElement.className="page-item"
+        secondLP.parentElement.className="page-item"
+        thirdLP.parentElement.className="page-item"
+        prevLP.parentElement.className="page-item"
+        nextLP.parentElement.className="page-item"
+        firstLP.parentElement.className="page-item"
+        secondLP.parentElement.className="page-item"
+        thirdLP.parentElement.className="page-item"
+      }      
+      function pageLink(elt, p){
+        elt.href=`/dashboard?pageNo=${p}`
+      }
+      function pageText(elt, num){
+        elt.innerText=num
+      }
+      function paginationFunc(){
+        if(totalPages=="0"||totalPages=="1"){
+          overallFunc()
+          pageActive(firstLP)
+          pageDisabled(prevLP)
+          pageDisabled(nextLP)
+          pageDisabled(secondLP)
+          pageDisabled(thirdLP)         
+          pageText(firstLP, "1")
+          pageText(secondLP, "2")
+          pageText(thirdLP, "3")
+          firstLP.href="#"
+          console.log(pageNo)
+          console.log(totalPages)
+        }else if(totalPages=="2"){          
+          pageText(firstLP, "1")
+          pageText(secondLP, "2")
+          pageText(thirdLP, "3")
+          if(pageNo=="2"){
+            overallFunc()
+            pageDisabled(nextLP)
+            pageActive(secondLP)
+            pageDisabled(thirdLP)
+            pageLink(firstLP, "1")
+            pageLink(prevLP, "1")
+            secondLP.href="#"
+          }else{
+            overallFunc()
+            pageDisabled(prevLP)
+            pageActive(firstLP)
+            pageDisabled(thirdLP)
+            pageLink(secondLP, "2")
+            pageLink(nextLP, "2")
+            firstLP.href="#"
+          }  
+        }else if(parseInt(totalPages)>=3&&totalPages!=pageNo){
+          if(pageNo=="1"){
+            overallFunc()
+            pageActive(firstLP)
+            pageDisabled(prevLP)
+            pageText(thirdLP, String(parseInt(pageNo)+2))
+            pageText(firstLP, pageNo)
+            pageText(secondLP, String(parseInt(pageNo)+1))   
+            pageLink(thirdLP, String(parseInt(pageNo)+2))
+            pageLink(nextLP, String(parseInt(pageNo)+1))
+            pageLink(secondLP, String(parseInt(pageNo)+1)) 
+            firstLP.href="#"  
+          }else{
+            overallFunc()
+            pageActive(secondLP)
+            pageText(firstLP, String(parseInt(pageNo)-1))
+            pageText(secondLP, pageNo)
+            pageText(thirdLP, String(parseInt(pageNo)+1))
+            pageLink(firstLP, String(parseInt(pageNo)-1))
+            pageLink(prevLP, String(parseInt(pageNo)-1))
+            pageLink(thirdLP, String(parseInt(pageNo)+1))
+            pageLink(nextLP, String(parseInt(pageNo)+1))          
+            secondLP.href="#"
+          }          
+        }else{
+          overallFunc()
+          pageActive(thirdLP)
+          pageDisabled(nextLP)
+          pageText(firstLP, String(parseInt(pageNo)-2))
+          pageText(thirdLP, pageNo)
+          pageText(secondLP, String(parseInt(pageNo)-1))   
+          pageLink(firstLP, String(parseInt(pageNo)-2))
+          pageLink(prevLP, String(parseInt(pageNo)-1))
+          pageLink(secondLP, String(parseInt(pageNo)-1))     
+          thirdLP.href="#"  
+        }
+      }
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
