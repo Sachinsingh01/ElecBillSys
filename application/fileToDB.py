@@ -12,7 +12,7 @@ class MeterReading():
     Talukas = {"PO":"Ponda", "TI":"Tiswadi"}
     def __init__(self, conn, id):
         # self.filename = 
-        self.path = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
+        self.path = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file"
         #take filename from {decide later}
         self.id = id
         d = str(date.today())
@@ -23,7 +23,12 @@ class MeterReading():
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
 
     def readFile(self):
-        df = pd.read_csv(f'{self.path}\\{self.fileName}')
+        fileName1 = "PO-202109.csv"
+        fileName2 = "TI-202109.csv"
+        df1 = pd.read_csv(f'{self.path}\\{fileName1}')
+        df2 = pd.read_csv(f'{self.path}\\{fileName2}')
+        frames = [df1,df2]
+        df = pd.concat(frames)
         print(df.columns == MeterReading.columns)
         for _, row in df.iterrows():
             print(f'row: {_}')
@@ -44,8 +49,8 @@ class MeterReading():
 
     def createMeterReadingFile(self): 
         #get meter guy login id
-        taluka = self.Talukas[self.id[:2]]
-        self.cursor.execute("SELECT * FROM connection where Co_Taluka = %s ",(taluka))
+        # taluka = self.Talukas[self.id[:2]]
+        self.cursor.execute("SELECT * FROM connection where Co_Taluka = %s ",("Ponda"))
         connections = self.cursor.fetchall()
         ls = []
         self.cursor.execute('SELECT MAX(Meter_reading_id) as md FROM meter_reading')
