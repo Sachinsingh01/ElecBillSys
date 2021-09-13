@@ -573,6 +573,7 @@ def meterReading():
     conn = mysql.connect()
     meterRead = MeterReading(conn,session['id'])
     roleId = session['role']
+    # csv,filename = meterRead.createMeterReadingFile()
     if request.method=="POST":
         if 'formStateGet' in request.form:
             csv,filename = meterRead.createMeterReadingFile()
