@@ -282,6 +282,9 @@ def uploadFile():
 #Functionality has to be added
 @app.route("/fileComplaint", methods=["GET", "POST"])
 def fileComplaint(): 
+    #adding check if the connection belongs to the consumer filing the complaint
+    flag=0
+    cNo = session["id"]
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     if 'bid' in request.args:
@@ -292,6 +295,15 @@ def fileComplaint():
         #take values from the submitted form
         billId = request.form['inputBillId']
         connectionId = request.form['inputConnID']
+
+        try:
+            cursor.execute("SELECT Con_ID FROM connection WHERE Co_ID=%s",connectionId)
+            record = cursor.fetchone()
+            if(str(record["Con_ID"])!=str(cNo[2:])):
+               flag=1
+        except Exception as e:
+            print(e)
+
         complaintCategorycoming = request.form['inputCompType']
         complaintCategory = 0
         if(complaintCategorycoming=="Technical"):
@@ -302,13 +314,16 @@ def fileComplaint():
         created = str(date.today())
         updated = str(date.today())
         status = 0
-        try:
-            #query to insert the new complaint into the bill_complain table
-            cursor.execute("INSERT INTO bill_complain(`bill_id`,`co_id`,`category`,`status`,`comment`,`created`,`updated`) VALUES(%s,%s,%s,%s,%s,%s,%s)",(billId,connectionId,complaintCategory,status,comment,created,updated))
-            print("Success!")
-            conn.commit()
-        except Exception as e:
-            print(e)
+        if(flag==0):
+            try:
+                #query to insert the new complaint into the bill_complain table
+                cursor.execute("INSERT INTO bill_complain(`bill_id`,`co_id`,`category`,`status`,`comment`,`created`,`updated`) VALUES(%s,%s,%s,%s,%s,%s,%s)",(billId,connectionId,complaintCategory,status,comment,created,updated))
+                print("Success!")
+                conn.commit()
+            except Exception as e:
+                print(e)
+        else:
+            print("Consumer number dont match for connection!!")
     else:
         try:
             bill = Bill(conn)
@@ -331,7 +346,7 @@ def complainList():
         conn = mysql.connect()
         complainCategory, complainIDs, connectionIDs, complainStatus, comments, created, updated, billId = [], [], [], [], [], [], [], []
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM bill_complain ORDER BY status DESC")
+        cursor.execute("SELECT * FROM bill_complain ORDER BY status ASC")
         #get all complaints descending status wise
         complains = cursor.fetchall()
         for complain in complains:
