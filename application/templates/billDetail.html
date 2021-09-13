@@ -664,6 +664,7 @@
                   type="button"
                   id="fileComplaintBtn"
                   class="btn btn-primary"
+                  {% if bill.paymentStatus %}disabled{% endif %}
                 >
                   <i class="bi bi-patch-exclamation-fill me-2"></i>File Complaint
                 </button>
@@ -673,6 +674,7 @@
                   type="button"
                   id="payBtn"
                   class="btn btn-primary"
+                  {% if bill.paymentStatus %}disabled{% endif %}
                 >
                 <i class="bi bi-credit-card-fill me-2"></i>Proceed to pay
                 </button>
