@@ -381,7 +381,6 @@ def complainDetail():
         return render_template("complainDetail.html", js=js, consumer=consumer, connection=connection, bill=bill, roleId = roleId, consumerNo = conNo, consumerName = consumerName)
     except Exception as e:
         print(e)
-        return redirect(url_for('complainList'))
 
 @app.route("/billTimeline")
 def billTimeline():
