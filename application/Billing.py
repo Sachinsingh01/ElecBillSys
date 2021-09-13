@@ -245,6 +245,17 @@ class Bill():
         except Exception as e:
             print(e)
         self.bid = bid
+        try:
+            self.cursor.execute("SELECT Tr_Status from transactions WHERE BD_ID = %s",(self.bid))
+            record = self.cursor.fetchone()
+            if record:
+                if record["Tr_Status"] == "Paid":
+                    self.paymentStatus = True
+                else:
+                    self.paymentStatus = False
+        except Exception as e:
+            print(e)
+            self.paymentStatus = False
         self.meterNo = bill["Meter_No"]
         self.cursor.execute("SELECT Con_ID FROM connection WHERE Meter_No =  %s",(self.meterNo))
         conId = self.cursor.fetchone()["Con_ID"]
@@ -281,8 +292,21 @@ class Bill():
             connectionIds = []
             prevDate = []
             meterNos = []
+            paymentStatus = []
             for record in records:
                 billNos.append(record["BD_ID"])
+                try:
+                    self.cursor.execute("SELECT Tr_Status from transactions WHERE BD_ID = %s",(record["BD_ID"]))
+                    r = self.cursor.fetchone()
+                    if r:
+                        if r["Tr_Status"] == "Paid":
+                            paymentStatus.append(True)
+                        else:
+                            paymentStatus.append(False)
+                except Exception as e:
+                    print("Exception in transaction")
+                    print(e)
+                    paymentStatus.append(False)
                 billDates.append(record["Current_Read_Date"])
                 amounts.append(round(record["Total_Demand"],2))
                 prevDate.append(record["Prev_Read_Date"])
@@ -291,9 +315,10 @@ class Bill():
                 self.cursor.execute("SELECT CO_ID from connection where Meter_No = %s",(record["Meter_No"]))
                 coId = self.cursor.fetchone()['CO_ID']
                 connectionIds.append(coId)
-            return billNos, billDates, meterNos, amounts, consumptions, connectionIds, prevDate
+            return billNos, billDates, meterNos, amounts, consumptions, connectionIds, prevDate, paymentStatus
 
         except Exception as e:
+            print("Billing Exception")
             print(e)
             return False
         
