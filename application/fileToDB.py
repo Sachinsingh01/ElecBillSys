@@ -10,11 +10,12 @@ class MeterReading():
     columns = ['MeterReadingId', 'MeterNo', 'Fname', 'Lname','Address','Taluka','District','Pin', 'Contact', 'prev_date', 'prev_reading', 'Meter_Reading', 'Read_Date']
     #update the lis
     Talukas = {"PO":"Ponda", "TI":"Tiswadi"}
-    def __init__(self, conn, id):
+    def __init__(self, conn, id = ""):
         # self.filename = 
         self.path = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file"
         #take filename from {decide later}
-        self.id = id
+        if id !="":
+            self.id = id
         d = str(date.today())
         d = d.split('-')
         filename = f"{d[0]}{d[1]}"
