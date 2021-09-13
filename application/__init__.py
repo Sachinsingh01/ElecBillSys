@@ -6,7 +6,7 @@ from flask import Flask, request, session, redirect, url_for, render_template, R
 from flask.helpers import flash
 from flaskext.mysql import MySQL
 import pymysql
-from pymysql import cursors 
+from pymysql import NULL, cursors 
 from werkzeug.utils import secure_filename
 import os
 from .consumer import Consumer
@@ -288,7 +288,12 @@ def fileComplaint():
         #take values from the submitted form
         billId = request.form['inputBillId']
         connectionId = request.form['inputConnID']
-        complaintCategory = request.form['inputCompType']
+        complaintCategorycoming = request.form['inputCompType']
+        complaintCategory = 0
+        if(complaintCategorycoming=="Technical"):
+            complaintCategory = 1
+        elif(complaintCategorycoming=="Bill Complaint"):
+            complaintCategory = 2
         comment = request.form['inputCompDesc']
         created = str(date.today())
         updated = str(date.today())
@@ -312,7 +317,7 @@ def complainList():
     #if user is an administrator
     if roleId == "1":
         conn = mysql.connect()
-        complainCategory, complainIDs, connectionIDs, complainStatus, comments, created, updated = [], [], [], [], [], [], []
+        complainCategory, complainIDs, connectionIDs, complainStatus, comments, created, updated, billId = [], [], [], [], [], [], [], []
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT * FROM bill_complain ORDER BY status DESC")
         #get all complaints descending status wise
@@ -325,8 +330,12 @@ def complainList():
             comments.append(complain["Comment"])
             created.append(complain["Created"])
             updated.append(complain["Updated"])
+            if(complain["Bill_ID"]==NULL):
+                billId.append(0)
+            else:
+                billId.append(complain["Bill_ID"])
         length = len(complainIDs)
-        return render_template("complainList.html", uName=session["uName"], uId=session["id"],complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId, comments=comments)
+        return render_template("complainList.html", uName=session["uName"], uId=session["id"],complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId, comments=comments,billId=billId)
     #if user is a consumer
     elif roleId == "2":
         conn = mysql.connect()
