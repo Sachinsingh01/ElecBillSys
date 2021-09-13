@@ -634,12 +634,17 @@ def dashboardCon():
             bill = ""
         connections = []
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT Con_ID FROM consumer WHERE Con_No = %s",(cNo))
-        conId = cursor.fetchone()["Con_ID"]
-        
+        cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
+        record = cursor.fetchone()
         consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
         print("Consumer Name")
         print(consumerName)
+        cursor.execute("SELECT Co_ID FROM connection WHERE Con_ID = %s",(record['Con_ID']))
+        records = cursor.fetchall()
+        for record in records:
+            connection = Connection(conn)
+            connection.getConnection(record["Co_ID"])
+            connections.append(connection)
         return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,bill=bill, uName=session["uName"], uId=session["id"])
     return render_template("consumerDash.html",roleId=roleId,consumerName="", uName=session["uName"], uId=session["id"])
 
