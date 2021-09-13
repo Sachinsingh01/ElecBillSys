@@ -837,9 +837,15 @@ def adminDistributor():
 def paymentHistory():
     cid = session["id"]
     transactions = []
+    bids = []
     conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
     consumer = Consumer(conn)
-    return render_template("paymentHistory.html", uName=session["uName"], uId=session["id"],)
+    consumer.getConsumer(cid)
+    meterNos = consumer.getMeterNos()
+    for meterNo in meterNos:
+        meterNo
+    return render_template("paymentHistory.html", uName=session["uName"], uId=session["id"],transactions = transactions)
 
 @app.route("/transaction",methods=['GET', 'POST'])
 def transactionPage():
