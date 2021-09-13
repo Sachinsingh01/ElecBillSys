@@ -32,6 +32,7 @@
                 <li class="nav-elements"><a href="/adminDistributor" class="nav-link"><i class="bi bi-lightning-charge-fill"></i><div class="nav-txt">Distributor</div></a></li>
                 <li class="nav-elements"><a href="/billsList" class="nav-link"><i class="bi bi-card-list"></i><div class="nav-txt">Bills</div></a></li>
                 <li class="nav-elements"><a href="/complainList" class="nav-link"><i class="bi bi-patch-question-fill"></i><div class="nav-txt">Complaints</div></a></li>
+                <li class="nav-elements"><a href="/billGenerate" class="nav-link"><i class="bi bi-calculator-fill"></i><div class="nav-txt">Billing</div></a></li>
                 <!-- <li class="nav-elements"><a href="/complainList" class="nav-link"><i class="bi bi-person-x-fill"></i><div class="nav-txt">ComplainList</div></a></li> -->
             </ul>
         </div>
@@ -92,7 +93,7 @@
         }
       })
       function isConNo(strVal){
-            if((strVal.substring(0,3).toLowerCase().match(/^(pon|tis|bar|bic|can|san|sal|sat|mor|per|que|dha)$/))&&(!isNaN(strVal.substring(3,)))){
+            if((strVal.substring(0,2).toLowerCase().match(/^(po|ti|ba|bi|ca|sa|mo|pe|qu|dh)$/))&&(!isNaN(strVal.substring(2,)))){
                 console.log("its true")
                 return true
             }

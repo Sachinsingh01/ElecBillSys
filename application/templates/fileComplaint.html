@@ -96,9 +96,9 @@
                         <div class="formControl" id="formControl">
                         <label for="inputCompType" class="form-label">Complaint Type</label>
                         <select id="inputCompType" class="form-select" name="inputCompType">
-                            <option selected value="none">Select One</option>
+                            <option {% if compType!=1 %} selected {% endif %} value="none">Select One</option>
                             <option value="Technical">Technical</option>
-                            <option value="Bill Complaint">Bill Complaint</option>
+                            <option {% if compType==1 %} selected {% endif %} value="Bill Complaint">Bill Complaint</option>
                         </select>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
@@ -106,13 +106,13 @@
                     </div> 
                     <div class="col-1"></div>
 
-                    {% if compType==1 %}
+                    
 
                     <div class="col-1"></div>
                     <div class="mb-4 col-4" id="disp1" style="display: none;">
                         <div class="formControl" id="formControl">
                         <label for="inputBillId" class="form-label">Bill Number</label>
-                        <input type="text" class="form-control" id="inputBillId" name="inputBillId" value={{bill.bid}}>
+                        <input type="text" class="form-control" id="inputBillId" name="inputBillId" {% if compType==1 %} value={{bill.bid}} {% endif %}>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p>
@@ -122,7 +122,7 @@
                     <div class="mb-4 col-4" id="disp2" style="display: none;">
                         <div class="formControl" id="formControl">
                         <label for="inputMeterNo" class="form-label">Meter Number</label>
-                        <input type="text" class="form-control" id="inputMeterNo" name="inputMeterNo" value={{bill.meterNo}}>
+                        <input type="text" class="form-control" id="inputMeterNo" name="inputMeterNo" {% if compType==1 %} value={{bill.meterNo}} {% endif %}>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p>
@@ -134,7 +134,7 @@
                     <div class="mb-4 col-4" id="disp3" style="display: none;">
                         <div class="formControl" id="formControl">
                         <label for="inputBillAmount" class="form-label">Amount</label>
-                        <input type="text" class="form-control" id="inputBillAmount" name="inputBillAmount" value={{bill.amount}}>
+                        <input type="text" class="form-control" id="inputBillAmount" name="inputBillAmount" {% if compType==1 %} value={{bill.amount}} {% endif %}>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p>
@@ -144,14 +144,14 @@
                     <div class="mb-4 col-4" id="disp4" style="display: none;">
                         <div class="formControl" id="formControl">
                         <label for="inputReadDate" class="form-label">Read Date</label>
-                        <input type="date" class="form-control" id="inputReadDate" name="inputReadDate" value={{bill.currDate}}>
+                        <input type="date" class="form-control" id="inputReadDate" name="inputReadDate" {% if compType==1 %} value={{bill.currDate}} {% endif %}>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p>
                     </div>
                     </div>
                     <div class="col-1"></div>
-                    {% endif %}
+                    
 
                     <div class="col-4" id="adjustor"></div>
                     <div class="col-1"></div>

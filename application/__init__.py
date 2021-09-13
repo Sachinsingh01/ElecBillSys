@@ -310,12 +310,15 @@ def fileComplaint():
         except Exception as e:
             print(e)
     else:
-        # bill = Bill(conn)
-        # bill.getBill(bid)
-        # bill.amount = round(float(bill.amount),2)
-        return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"])
+        try:
+            bill = Bill(conn)
+            bill.getBill(bid)
+            bill.amount = round(float(bill.amount),2)
+            return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"], bill=bill, compType=1)
+        except Exception as e:
+            print(e)
 
-    return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"])
+    return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"], compType=0)
 
 #route to handle the requests for complain list page
 @app.route("/complainList", methods=["GET", "POST"])
@@ -850,4 +853,6 @@ def transactionPage():
         return render_template("paymentPage.html", uName=session["uName"], uId=session["id"], bill = bill, stateT = stateT,crDate = str(date.today()))
 
 
-    
+@app.route("/billGenerate")
+def billGenerate():
+    return render_template("billGenerate.html")

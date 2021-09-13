@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../static/css/dash.css">
+    <style>
+      #device-progress-bar {
+        animation: progress-mtr 5s ease-in-out 0s;
+        width: 100%;
+      }
+      @keyframes progress-mtr {
+        from {
+          width: 0%;
+        }
+        to {
+          width: 100%;
+        }
+      }
+      #container {
+        position: absolute;
+        width: calc(100vw - 80px);
+        height: calc(100vh - 70px);
+        right: 0;
+        bottom: 0;
+      }
+    </style>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container-fluid rounded" id="container">
+      <div class="row">
+        <div class="col shadow p-5 bg-body rounded m-5">            
+          <input type="file" name="" id="fl">
+          <div class="col-12" id="meter-status">
+            <div class="row">
+               <div class="table-ctn" style="font-size: 12px;">
+                <table id="table-config" class="d-none">
+                    <thead>
+                        <tr>
+                            <th style="font-size: 10px;">Meter No</th>
+                            <th style="font-size: 10px;">Name</th>
+                            <th style="font-size: 10px;">Address</th>
+                            <th style="font-size: 10px;">Contact</th>
+                            <th style="font-size: 10px;">Previous Date</th>
+                            <th style="font-size: 10px;">Previous Reading</th>
+                            <th style="font-size: 10px;">Current Date</th>
+                            <th style="font-size: 10px;">Current Reading</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBodyCSV">
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-4"></div>
+            <div class="d-grid mt-5 mb-3 col-4 gap-2 d-block text-center">
+              <label for="processSampleCsv" class="form-label"
+                >Send Data for Processing</label
+              >
+              <button
+                type="button"
+                id="processSampleCsv"
+                class="btn btn-primary"
+                disabled
+              >
+                <i class="bi bi-upload me-2"></i>Generate Bill
+              </button>
+            </div>
+            <div class="col-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {%include "navbar.html"%}
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function UploadCSV() {
+        var fileUpload = document.getElementById("fl");
+        // var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+        // if (regex.test(fileUpload.value.toLowerCase())) {
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var tableBodyCSV = document.getElementById("tableBodyCSV");
+                    tableBodyCSV.innerHTML = "";
+                    var rows = e.target.result.split("\n");
+                    for (var i = 1; i < rows.length; i++) {
+                        var cells = rows[i].split(",");
+                        if (cells.length > 1) {
+                            let name = 2;
+                            let address = 4;
+                            var tr = document.createElement("tr")
+                            for (var j = 0; j < cells.length; j++) {
+                                var td = document.createElement("td")
+                                td.style.fontSize = "10px"
+                                td.style.fontWeight = "bold"
+                                if(j==1){
+                                  while(name!=0){
+                                    td.innerHTML = td.innerHTML + cells[j] + " ";    
+                                    name = name - 1    
+                                    j = j+1                            
+                                  }
+                                  j = j-1
+                                }else if(j==3){
+                                  while(address!=0){
+                                    td.innerHTML = td.innerHTML + cells[j] + " ";    
+                                    address = address - 1   
+                                    j = j + 1                             
+                                  }
+                                  j=j-1
+                                }else{
+                                  td.innerHTML = cells[j];
+                                }
+                                tr.appendChild(td)
+                            }
+                            tableBodyCSV.appendChild(tr);
+                        }
+                    }
+                }
+                reader.readAsText(fileUpload.files[0]);
+            } else {
+                alert("This browser does not support HTML5.");
+            }
+        // } else {
+        //     alert("Please upload a valid CSV file.");
+        // }
+    }
+    document.getElementById("downloadSampleCsv").addEventListener("click", e=>{
+      UploadCSV()
+      document.getElementById("processSampleCsv").disabled=false
+      document.getElementById("table-config").className = "visible"
+    })
+    // $.ajax({
+    // type: "GET",
+    // url: "file:///C:\Users\sdharwadkar\electricityBillingSystem\application\static\file\abc.txt",
+    // dataType: "text",
+    // success: function(data) {
+    //     alert("worked");
+    //     console.log(data)
+    // },
+    // error: function (request, status, error) {
+    //     alert(request.responseText);
+    // }
+    // })
+    </script>
+  </body>
+</html>
