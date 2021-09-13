@@ -289,7 +289,7 @@ def fileComplaint():
         comment = request.form['inputCompDesc']
         created = str(date.today())
         updated = str(date.today())
-        status = 'unresolved'
+        status = 0
         try:
             #query to insert the new complaint into the bill_complain table
             cursor.execute("INSERT INTO bill_complain(`bill_id`,`co_id`,`category`,`status`,`comment`,`created`,`updated`) VALUES(%s,%s,%s,%s,%s,%s,%s)",(billId,connectionId,complaintCategory,status,comment,created,updated))
@@ -300,16 +300,49 @@ def fileComplaint():
 
     return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"])
 
+#route to handle the requests for complain list page
 @app.route("/complainList", methods=["GET", "POST"])
 def complainList():
+    #get role and consumer number from session
     roleId = session['role']
-    
-    complainCategory = [1,2,2,1]
-    complainIDs = [1991,1992,1993,1994]
-    connectionIDs = [3001,3002,3003,3004]
-    length = 4
-    complainStatus = [1,2,1,2]
-    return render_template("complainList.html", uName=session["uName"], uId=session["id"],complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId)
+    cNo = session["id"]
+    #if user is an administrator
+    if roleId == "1":
+        conn = mysql.connect()
+        complainCategory, complainIDs, connectionIDs, complainStatus, comments, created, updated = [], [], [], [], [], [], []
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT * FROM bill_complain ORDER BY status DESC")
+        #get all complaints descending status wise
+        complains = cursor.fetchall()
+        for complain in complains:
+            complainCategory.append(complain["category"])
+            complainIDs.append(complain["Bill_Comp_ID"])
+            connectionIDs.append(complain["Co_ID"])
+            complainStatus.append(complain["Status"])
+            comments.append(complain["Comment"])
+            created.append(complain["Created"])
+            updated.append(complain["Updated"])
+        length = len(complainIDs)
+        return render_template("complainList.html", uName=session["uName"], uId=session["id"],complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId, comments=comments)
+    #if user is a consumer
+    elif roleId == "2":
+        conn = mysql.connect()
+        complainCategory, complainIDs, connectionIDs, complainStatus, comments, created, updated = [], [], [], [], [], [], []
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT * FROM bill_complain WHERE Co_ID IN (SELECT Co_ID FROM connection WHERE Con_ID=%s)",cNo[2:])
+        # get all complains made by the requesting consumer
+        complains = cursor.fetchall()
+        for complain in complains:
+            complainCategory.append(complain["category"])
+            complainIDs.append(complain["Bill_Comp_ID"])
+            connectionIDs.append(complain["Co_ID"])
+            complainStatus.append(complain["Status"])
+            comments.append(complain["Comment"])
+            created.append(complain["Created"])
+            updated.append(complain["Updated"])
+        length = len(complainIDs)
+        return render_template("complainList.html", uName=session["uName"], uId=session["id"],complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId, comments=comments)
+
 
 @app.route("/complainDetail")
 def complainDetail():
