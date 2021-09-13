@@ -33,7 +33,8 @@
 <div class="mb-4 col-12">
     <div class="formControl" id="formControl">
     <label for="inputConnAddress" class="form-label">Address</label>
-    <input type="text" class="form-control" id="inputConnAddress" name="inputConnAddress" {% if val != "add" %} value = {{js.caddress}} {% endif %}>
+    <input type="text" class="form-control" id="inputConnAddress" name="inputConnAddress" >
+    <small class="d-none" id="inputConnAddressVal">{{js.caddress}}</small>
     <i class="bi bi-check-circle"></i>
     <i class="bi bi-exclamation-circle"></i>
     <p class="mb-0" id="errMsg">Error Message</p></div>

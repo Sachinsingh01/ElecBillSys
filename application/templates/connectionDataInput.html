@@ -107,6 +107,9 @@
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
     <script type="text/javascript">
+
+        setTwoWords()
+
         document.getElementById("filBtnC").addEventListener("click", (e)=>{
             document.getElementById("stateC").value = "0"
             alertMsg = document.getElementById("alertMsgC").innerText
@@ -356,6 +359,12 @@
             }
                 
         })
+
+        function setTwoWords(){
+            if(document.getElementById("task")&&(document.getElementById("task").value == "del" || document.getElementById("task").value == "upd")){
+                document.getElementById("inputConnAddress").value = document.getElementById("inputConnAddressVal").innerText
+            }
+        }
 
         function resetVals(){
             connId.value=""

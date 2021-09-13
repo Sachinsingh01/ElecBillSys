@@ -2,7 +2,7 @@ from application.transaction import Transaction
 from numpy import number
 from application.user import User
 from application.ditributor import Distributor
-from flask import Flask, request, session, redirect, url_for, render_template, Response
+from flask import Flask, request, session, redirect, url_for, render_template, Response, flash
 from flask.helpers import flash
 from flaskext.mysql import MySQL
 import pymysql
@@ -86,35 +86,38 @@ def login():
             account = cursor.fetchone()
             pwd = account['password']
             uType = account['user_type']
-        except Exception as e:
-            account = False
-            msg = e
+        
         # print(f"Account {account}")
         # print(pwd)
         # print(uType == role)
         # print(check_password_hash(pwd,password))
         
-        if account and check_password_hash(pwd,password) and uType == role :
-            session['loggedin'] = True
-            session['id'] = account['user_name']
-            session['role'] = role
-            print(role)
-            if role == "1":
-                session["uName"] = "ADMINISTRATOR"
-                session["task"] = "add"
-                session["taskC"] = "add"
-                session["taskD"] = "add"
-                return redirect(url_for('dashboard'))
-            elif account and role == "2":
-                cursor.execute("SELECT CONCAT(Con_First_Name , ' ' , Con_Last_Name) as Name from consumer where Con_No = %s", (session['id']))
-                session["uName"] = cursor.fetchone()['Name']
-                return redirect(url_for('dashboardCon'))
-                # return redirect(url_for('billDetail'))
-            elif role == "3":
-                session["uName"] = "METER GUY"
-                return redirect(url_for('meterReading'))
-        else:
-            msg = 'Incorrect Username or Password!'  
+            if account and check_password_hash(pwd,password) and uType == role :
+                session['loggedin'] = True
+                session['id'] = account['user_name']
+                session['role'] = role
+                print(role)
+                if role == "1":
+                    session["uName"] = "ADMINISTRATOR"
+                    session["task"] = "add"
+                    session["taskC"] = "add"
+                    session["taskD"] = "add"
+                    return redirect(url_for('dashboard'))
+                elif account and role == "2":
+                    cursor.execute("SELECT CONCAT(Con_First_Name , ' ' , Con_Last_Name) as Name from consumer where Con_No = %s", (session['id']))
+                    session["uName"] = cursor.fetchone()['Name']
+                    return redirect(url_for('dashboardCon'))
+                    # return redirect(url_for('billDetail'))
+                elif role == "3":
+                    session["uName"] = "METER GUY"
+                    return redirect(url_for('meterReading'))
+            
+            else:
+                msg = 'Please Enter Valid User Type, Username and Password'  
+
+        except Exception as e:
+            msg = e
+
     return render_template('login.html', msg=msg)
 
 @app.route("/logout")
