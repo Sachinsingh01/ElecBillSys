@@ -661,13 +661,13 @@ def dashboardCon():
     roleId = session['role']
     conn = mysql.connect()
     if roleId == "2":
-        if 'bid' in request.args:
-            bid = request.args['bid']
-            bill = Bill(conn)
-            bill.getBill(bid)
+        if 'connId' in request.args:
+            connId = request.args['connId']
+            connection = Connection(conn)
+            connection.getConnection()
         else:
-            bill = ""
-        if bill == "":
+            connection = ""
+        if connection == "":
             connections = []
             cursor = conn.cursor(pymysql.cursors.DictCursor)
             cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
@@ -683,7 +683,7 @@ def dashboardCon():
                 connection.getConnection(record["Co_ID"])
                 connections.append(connection)
             print(connections)
-            return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,bill=bill, uName=session["uName"], uId=session["id"])
+            return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,connection = connection, uName=session["uName"], uId=session["id"])
     
     return render_template("consumerDash.html",roleId=roleId,consumerName="", uName=session["uName"], uId=session["id"])
 
