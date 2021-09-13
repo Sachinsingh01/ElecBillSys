@@ -246,16 +246,14 @@ class Bill():
             print(e)
         self.bid = bid
         try:
-            self.cursor.execute("SELECT Tr_Status from transactions WHERE BD_ID = %s",(self.bid))
+            self.cursor.execute("SELECT Tr_Status from transactions WHERE BD_ID = %s AND Tr_Status = %s",(self.bid,"Paid"))
             record = self.cursor.fetchone()
             if record:
-                if record["Tr_Status"] == "Paid":
-                    self.paymentStatus = True
-                else:
-                    self.paymentStatus = False
+                self.paymentStatus = True
+            else:
+                self.paymentStatus = False
         except Exception as e:
             print(e)
-            self.paymentStatus = False
         self.meterNo = bill["Meter_No"]
         self.cursor.execute("SELECT Con_ID FROM connection WHERE Meter_No =  %s",(self.meterNo))
         conId = self.cursor.fetchone()["Con_ID"]
@@ -296,13 +294,12 @@ class Bill():
             for record in records:
                 billNos.append(record["BD_ID"])
                 try:
-                    self.cursor.execute("SELECT Tr_Status from transactions WHERE BD_ID = %s",(record["BD_ID"]))
+                    self.cursor.execute("SELECT Tr_Status from transactions WHERE BD_ID = %s and Tr_Status = %s",(record["BD_ID"],"Paid"))
                     r = self.cursor.fetchone()
                     if r:
-                        if r["Tr_Status"] == "Paid":
-                            paymentStatus.append(True)
-                        else:
-                            paymentStatus.append(False)
+                        paymentStatus.append(True)
+                    else:
+                        paymentStatus.append(False)
                 except Exception as e:
                     print("Exception in transaction")
                     print(e)

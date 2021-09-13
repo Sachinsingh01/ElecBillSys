@@ -665,7 +665,7 @@ def dashboardCon():
         if 'connId' in request.args:
             connId = request.args['connId']
             connection = Connection(conn)
-            connection.getConnection()
+            connection.getConnection(connId)
             connections.append(connection)
         else:
             connection = ""

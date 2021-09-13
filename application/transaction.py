@@ -18,7 +18,7 @@ class Transaction():
         try:
             print("Executing Insert Query")
             today = str(date.today())
-            self.cursor.execute("INSERT INTO transaction VALUES(%s,%s,%s,%s,%s,%s,%s)",(self.trId,self.bid,self.amount,self.status,self.date,today,today))
+            self.cursor.execute("INSERT INTO transactions VALUES(%s,%s,%s,%s,%s,%s,%s)",(self.trId,self.bid,self.amount,self.status,self.date,today,today))
             return True
         except Exception as e:
             print(e)
