@@ -861,3 +861,4 @@ def billGenerate():
     MG1, MG2 = reading.sendData()
     js = {"MG1":MG1,"MG2":MG2}
     return render_template("billGenerate.html",js = js)
+    

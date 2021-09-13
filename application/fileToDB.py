@@ -45,9 +45,6 @@ class MeterReading():
                 print(e)
         self.conn.commit()
         return True
-
-        
-
     def createMeterReadingFile(self): 
         #get meter guy login id
         # taluka = self.Talukas[self.id[:2]]
