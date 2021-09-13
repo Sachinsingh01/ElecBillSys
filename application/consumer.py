@@ -116,7 +116,7 @@ class Consumer():
             acc = self.cursor.fetchone()
             print(acc)
             id = acc['Con_ID']
-            cno = f'{self.taluka[:2].upper()}{id+1}'
+            cno = f'{self.taluka[:3].upper()}{id+1}'
             print(cno)
             return cno
         except:

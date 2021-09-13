@@ -11,7 +11,7 @@ class Transaction():
             self.trId = self.getTrId()
             self.bid = request.form['bid']
             self.date = str(date.today())
-            self.status = "Success" if randint(1,10000) % 2 else "Failure"
+            self.status = "Paid" if randint(1,10000) % 2 else "Unpaid"
             self.amount = request.form['amount']
 
     def insertTransaction(self):
@@ -38,7 +38,6 @@ class Transaction():
             print(e)
             print("Unable to get transaction")
             return False
-
 
     def getTrId(self):
         try:
