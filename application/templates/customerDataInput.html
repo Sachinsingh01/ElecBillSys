@@ -318,7 +318,7 @@
                 pinErr=false
             }
 
-            if(cidVal===""){
+            if(cidVal==""){
                 setError(cid, "Consumer Number can't be blank")
                 cidErr=true
             }else if(cidVal.length != 12){
@@ -327,16 +327,15 @@
             }else if(!isConNo(cidVal)){
                 setError(cid, "Enter valid Consumer Number")
                 cidErr=true
-            }
-            else{
+            }else{
                 setSuccess(cid)
                 cidErr=false
             }
-
             let allErr = fnameErr||lnameErr||contactErr||addressErr||talukaErr||pinErr||emailErr||districtErr
+            
             if(!cidErr){
             }else if(!allErr){
-            }else{                
+            }else{      
                 e.preventDefault()
             }
         })

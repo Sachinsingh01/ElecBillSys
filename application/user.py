@@ -17,13 +17,13 @@ class User:
             print(e)
             print("Unable to fetch record ")
         self.userId = self.generateUserId()
-        self.userType = "Consumer"
+        self.userType = 2
         self.userName = record['Con_No']
         self.password = self.generatePassword()
         self.created =  str(date.today())
         self.updated = str(date.today())
 
-    def generatePassword():
+    def generatePassword(self):
 
         DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']  
         LOCASE_CHARACTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'm', 'n', 'o', 'p', 'q','r', 's', 't', 'u', 'v', 'w', 'x', 'y','z']
@@ -54,7 +54,7 @@ class User:
 
     def generateUserId(self):
         try:
-            self.cursor.execute('SELECT MAX(user_id) as user_id FROM connection')
+            self.cursor.execute('SELECT MAX(user_id) as user_id FROM login_info')
             record = self.cursor.fetchone()
             if record:
                 user_id = record['user_id'] + 1

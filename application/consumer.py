@@ -37,8 +37,8 @@ class Consumer():
         print(today)
         print(self.cno)
         print(self.contact)
-        cid = int(self.cno[3:])
-        print(cid)
+        cid = int(self.cno[2:])
+        print(self.cidpk)
         # INSERT INTO consumer(Con_No,Con_First_Name,Con_Last_Name,Con_Address,Con_Taluka,Con_District,Con_Pin_Code,Con_Contact,Created,Updated) VALUES("PO1000000001","Sachin","Tendulkar", "HS NO 10 TOP COLA", "PONDA", "SOUTH GOA", "403401", "9876543210", "2021-09-05", "2021-09-05")
         try:
             print("Executing Insert Query")
@@ -48,8 +48,10 @@ class Consumer():
             user = User(self.conn, cid)
             user.insertUser()
             self.conn.commit()
-            return True
+            msg = "Consumer Inserted Successfully"
+            return msg, True
         except Exception as e:
+            print(f"inserConsumerfn${e}")
             msg = e
             return msg, False
     
@@ -65,13 +67,13 @@ class Consumer():
             return False 
 
 
-    def getConsumer(self, cid):
+    def getConsumer(self, cno):
         try:
             #check is consumer number or consumer ID is to be used
-            self.cursor.execute('SELECT * FROM consumer WHERE Con_No = %s', (cid))
+            self.cursor.execute('SELECT * FROM consumer WHERE Con_No = %s', (cno))
             acc = self.cursor.fetchone()
-            self.cid = cid
-            self.conID  = acc["Con_ID"]
+            self.cno = cno
+            self.cidpk  = acc["Con_ID"]
             self.fname = acc['Con_First_Name']
             self.lname = acc['Con_Last_Name']
             self.address = acc['Con_Address']
@@ -80,11 +82,11 @@ class Consumer():
             self.pinCode = acc['Con_Pin_Code']
             self.contact = acc['Con_Contact'] 
             self.email = acc["Con_Email"]
-            return True
+            return "Consumer Found", True
         except Exception as e:
             print(e)
-            print("Unable to get consumer")
-            return False
+            msg="Unable to get consumer"
+            return msg, False
 
     def updateConsumer(self, cid, request):
         try:
@@ -117,7 +119,7 @@ class Consumer():
             acc = self.cursor.fetchone()
             print(acc)
             id = acc['Con_ID']
-            cno = f'{self.taluka[:3].upper()}{id+1}'
+            cno = f'{self.taluka[:2].upper()}{id+1}'
             print(cno)
             return cno
         except:

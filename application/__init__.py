@@ -161,9 +161,7 @@ def adminCust():
                     msg, val = consumer.insertConsumer()
                     if val:
                         conn.commit()
-                        msg = f"Consumer Succefully Added\nConsumer Number for generated Consumer is ${consumer.cno}"
-                    else:
-                        pass
+                        msg = f"Consumer Succefully Added. Consumer Number for generated Consumer is {consumer.cno}"
                 except Exception as e:
                     print(f"outside${e}")
                     msg = e
@@ -176,6 +174,7 @@ def adminCust():
 
             # Begin Update
             elif task == "upd":
+                print(request.form['state'])
                 cid = request.form['inputConFilID']
                 conn = mysql.connect()
                 consumer = Consumer(conn, request)
@@ -183,27 +182,28 @@ def adminCust():
                 # Messages for testing
                 print("in Update")
                 print(cid)
-                print(request.form['state'])
                 if request.form['state'] == "1":
                     try:
-                        try:
-                            print("actually updating")
-                            cid = request.form['realID']
-                            print(cid)
-                            print("Printing cid")
-                            updateCon = consumer.updateConsumer(cid, request)
-                            if updateCon:
-                                msg = "Customer updated Sucessfully"
-                            else:
-                                msg = "Unable to update consumer"
-                        except:
+                        print("actually updating")
+                        cid = request.form['realID']
+                        print(cid)
+                        print("Printing cid")
+                        updateCon = consumer.updateConsumer(cid, request)
+                        if updateCon:
+                            msg = "Customer updated Sucessfully"
+                        else:
                             msg = "Unable to update consumer"
+                    except:
+                        msg = "Unable to update consumer"
                     finally:
                         conn.close()
                 else:
-                    findCon = consumer.getConsumer(cid)
-                    if not findCon:
-                        msg = "Unable to find the consumer"
+                    try:
+                        msg, findCon = consumer.getConsumer(cid)
+                        if not findCon:
+                            msg = "Unable to find the consumer"
+                    except Exception as e:
+                        msg=e
 
                 js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                 print(js)
@@ -244,7 +244,7 @@ def adminCust():
                     finally:
                         conn.close()
                 else:
-                    val2 = consumer.getConsumer(cid)
+                    msg, val2 = consumer.getConsumer(cid)
                     js = {"cid":cid,"fname":consumer.fname, "lname":consumer.lname, "address":consumer.address, "taluka":consumer.taluka, "district":consumer.district, "pinCode":consumer.pinCode, "email":consumer.email, "contact":consumer.contact}
                     if not val2:
                         msg = "Unable to find the consumer"
