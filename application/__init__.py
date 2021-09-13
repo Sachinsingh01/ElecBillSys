@@ -665,7 +665,7 @@ def dashboardCon():
         if 'connId' in request.args:
             connId = request.args['connId']
             connection = Connection(conn)
-            connection.getConnection()
+            connection.getConnection(connId)
             connections.append(connection)
         else:
             connection = ""
@@ -816,9 +816,13 @@ def transactionPage():
     stateT = 0
     if request.method == 'POST'and 'bid' in request.form and 'amount' in request.form:
         stateT = 1
+        bid=request.form['bid']
+        bill = Bill(conn)
+        bill.getBill(bid)
+        bill.amount = round(float(bill.amount),2)
         transaction = Transaction(conn, request)
         transaction.insertTransaction()
-        return render_template("paymentPage.html", uName=session["uName"], uId=session["id"],transaction = transaction, stateT = stateT)
+        return render_template("paymentPage.html", uName=session["uName"], uId=session["id"],transaction = transaction,bill = bill, stateT = stateT,crDate = str(date.today()))
     if "bid" in request.args:
         bid = request.args["bid"]
         bill = Bill(conn)

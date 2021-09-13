@@ -78,8 +78,8 @@
         <section class="row justify-content-center">
             <section class="col-12 col-sm-11 col-md-11" id="loaderfn">
                 <form href="/transaction" method="POST" class="shadow p-5 m-3 bg-body rounded" id="takeComplaint">
-                    <input type="text" class="d-none" name="bid" id="bid" value="{{bill.bid}}">
-                    <input type="text" class="d-none" name="amount" id="amount" value="{{bill.amount}}">
+                    <input type="text" class="d-none" name="bid" id="bid" value={{bill.bid}}>
+                    <input type="text" class="d-none" name="amount" id="amount" value={{bill.amount}}>
                     <h2 class="text-start mb-4">Proceed to Pay</h2>
                     <div class="row">
                     <div class="col-1"></div>
@@ -104,12 +104,13 @@
                           type="submit"
                           id="makePaymentBtn"
                           class="btn btn-primary"
+                          {% if stateT == 1 %}disabled{% endif %}
                         >
                           <i class="bi bi-credit-card-fill me-2"></i>Make Payment
                         </button>
                     </div>
                     <div class="col-4"></div>
-                    {% if stateT == "1" %}
+                    {% if stateT == 1 %}
                     <div class="col-4"></div>
                     <!--loaderFn-->
                     <p class="font-monospace">{{transaction.trId}}</p>
@@ -124,14 +125,6 @@
     {% include "consumerNavbar.html" %}
 
     <script>
-        var bid = document.getElementById("inputConnID")
-        var amt = document.getElementById("inputCompDesc")
-
-        document.getElementById("takeComplaint").addEventListener("submit", (e)=>{
-            e.preventDefault()
-            console.log(bid.value)
-            console.log(amt.value)
-        })
     </script>
 </body>
 

@@ -10,6 +10,7 @@ class Transaction():
         if request != "":
             self.trId = self.getTrId()
             self.bid = request.form['bid']
+            print(f"bid:{self.bid}")
             self.date = str(date.today())
             self.status = "Paid" if randint(1,10000) % 2 else "Unpaid"
             self.amount = request.form['amount']
@@ -18,10 +19,12 @@ class Transaction():
         try:
             print("Executing Insert Query")
             today = str(date.today())
-            self.cursor.execute("INSERT INTO transaction VALUES(%s,%s,%s,%s,%s,%s,%s)",(self.trId,self.bid,self.amount,self.status,self.date,today,today))
+            print(self.trId,self.bid,self.amount,self.status,self.date,today,today)
+            self.cursor.execute("INSERT INTO transactions VALUES(%s,%s,%s,%s,%s,%s,%s)",(self.trId,self.bid,self.amount,self.status,self.date,today,today))
+            self.conn.commit()
             return True
         except Exception as e:
-            print(e)
+            print(f"insert exception:{e}")
             return False
 
     def getTransactionByBid(self,bid):
@@ -52,4 +55,5 @@ class Transaction():
             return (TrId)
         except Exception as e:
             print(e)
+            return 100000000001
             print("Unable to generate InstallID")
