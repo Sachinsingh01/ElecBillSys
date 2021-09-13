@@ -81,11 +81,14 @@ def login():
         # print(hash_password)
         role = request.form['inputCredentials']
         print(role)
-        
-        cursor.execute('SELECT * FROM login_info WHERE user_name = %s', (username))
-        account = cursor.fetchone()
-        pwd = account['password']
-        uType = account['user_type']
+        try:
+            cursor.execute('SELECT * FROM login_info WHERE user_name = %s', (username))
+            account = cursor.fetchone()
+            pwd = account['password']
+            uType = account['user_type']
+        except Exception as e:
+            account = False
+            msg = e
         # print(f"Account {account}")
         # print(pwd)
         # print(uType == role)

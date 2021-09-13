@@ -12,7 +12,8 @@ class MeterReading():
     Talukas = {"PO":"Ponda", "TI":"Tiswadi"}
     def __init__(self, conn, id = ""):
         # self.filename = 
-        self.path = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
+        self.path = "C:\\Users\\adamle\\Documents\\ElecBillSys\\application\\static\\file"
+        # self.path = "C:\\Users\\sdharwadkar\\electricityBillingSystem\\application\\static\\file"
         #take filename from {decide later}
         # if id !="":
         #     self.id = id
