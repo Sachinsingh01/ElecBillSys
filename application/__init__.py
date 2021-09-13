@@ -660,15 +660,16 @@ def dashboardCon():
     cNo = session["id"]
     roleId = session['role']
     conn = mysql.connect()
+    connections = []
     if roleId == "2":
         if 'connId' in request.args:
             connId = request.args['connId']
             connection = Connection(conn)
             connection.getConnection()
+            connections.append(connection)
         else:
             connection = ""
         if connection == "":
-            connections = []
             cursor = conn.cursor(pymysql.cursors.DictCursor)
             cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
             record = cursor.fetchone()
@@ -683,8 +684,9 @@ def dashboardCon():
                 connection.getConnection(record["Co_ID"])
                 connections.append(connection)
             print(connections)
-            return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,connection = connection, uName=session["uName"], uId=session["id"])
-    
+            return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections, uName=session["uName"], uId=session["id"])
+        else :
+            return render_template("consumerDash.html",roleId=roleId,connections = connections, uName=session["uName"], uId=session["id"])
     return render_template("consumerDash.html",roleId=roleId,consumerName="", uName=session["uName"], uId=session["id"])
 
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
