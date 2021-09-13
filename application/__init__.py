@@ -1,3 +1,4 @@
+from application.transaction import Transaction
 from numpy import number
 from application.user import User
 from application.ditributor import Distributor
@@ -13,6 +14,8 @@ from .fileToDB import MeterReading
 from .Billing import Bill
 import re 
 from .connection import Connection
+from .transaction import Transaction
+
 import hashlib
 import os
 from datetime import date
@@ -289,7 +292,7 @@ def fileComplaint():
         comment = request.form['inputCompDesc']
         created = str(date.today())
         updated = str(date.today())
-        status = 'unresolved'
+        status = 0
         try:
             #query to insert the new complaint into the bill_complain table
             cursor.execute("INSERT INTO bill_complain(`bill_id`,`co_id`,`category`,`status`,`comment`,`created`,`updated`) VALUES(%s,%s,%s,%s,%s,%s,%s)",(billId,connectionId,complaintCategory,status,comment,created,updated))
@@ -300,16 +303,49 @@ def fileComplaint():
 
     return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"])
 
+#route to handle the requests for complain list page
 @app.route("/complainList", methods=["GET", "POST"])
 def complainList():
+    #get role and consumer number from session
     roleId = session['role']
-    
-    complainCategory = [1,2,2,1]
-    complainIDs = [1991,1992,1993,1994]
-    connectionIDs = [3001,3002,3003,3004]
-    length = 4
-    complainStatus = [1,2,1,2]
-    return render_template("complainList.html", uName=session["uName"], uId=session["id"],complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId)
+    cNo = session["id"]
+    #if user is an administrator
+    if roleId == "1":
+        conn = mysql.connect()
+        complainCategory, complainIDs, connectionIDs, complainStatus, comments, created, updated = [], [], [], [], [], [], []
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT * FROM bill_complain ORDER BY status DESC")
+        #get all complaints descending status wise
+        complains = cursor.fetchall()
+        for complain in complains:
+            complainCategory.append(complain["category"])
+            complainIDs.append(complain["Bill_Comp_ID"])
+            connectionIDs.append(complain["Co_ID"])
+            complainStatus.append(complain["Status"])
+            comments.append(complain["Comment"])
+            created.append(complain["Created"])
+            updated.append(complain["Updated"])
+        length = len(complainIDs)
+        return render_template("complainList.html", uName=session["uName"], uId=session["id"],complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId, comments=comments)
+    #if user is a consumer
+    elif roleId == "2":
+        conn = mysql.connect()
+        complainCategory, complainIDs, connectionIDs, complainStatus, comments, created, updated = [], [], [], [], [], [], []
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT * FROM bill_complain WHERE Co_ID IN (SELECT Co_ID FROM connection WHERE Con_ID=%s)",cNo[2:])
+        # get all complains made by the requesting consumer
+        complains = cursor.fetchall()
+        for complain in complains:
+            complainCategory.append(complain["category"])
+            complainIDs.append(complain["Bill_Comp_ID"])
+            connectionIDs.append(complain["Co_ID"])
+            complainStatus.append(complain["Status"])
+            comments.append(complain["Comment"])
+            created.append(complain["Created"])
+            updated.append(complain["Updated"])
+        length = len(complainIDs)
+        return render_template("complainList.html", uName=session["uName"], uId=session["id"],complainStatus=complainStatus,complainCategory=complainCategory,complainIDs=complainIDs,connectionIDs=connectionIDs,length=length, roleId = roleId, comments=comments)
+
 
 @app.route("/complainDetail")
 def complainDetail():
@@ -351,11 +387,13 @@ def billsList():
         conn = mysql.connect()
         bill = Bill(conn)
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = [],[],[],[],[],[],[]
+        billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates, BillPaymentStatus = [],[],[],[],[],[],[],[]
         cursor.execute("SELECT Con_No FROM consumer")
         cNos = cursor.fetchall()
+        print(cNos)
         for cNo in cNos:
-            billNo,billDate, meterNo, amountDue, unitsConsume, connectionID, prevDate = bill.getBillsByCNo(cNo["Con_No"])
+            print(f"cNo = {cNo}[Con_No]")
+            billNo,billDate, meterNo, amountDue, unitsConsume, connectionID, prevDate, BillPaymentStat = bill.getBillsByCNo(cNo["Con_No"])
             billNos.append(billNo)
             billDates.append(billDate)
             meterNos.append(meterNo)
@@ -363,6 +401,7 @@ def billsList():
             unitsConsumed.append(unitsConsume)
             connectionIDs.append(connectionID)
             prevDates.append(prevDate)
+            BillPaymentStatus.append(BillPaymentStat)
         billNos = [j for sub in billNos for j in sub]
         billDates = [j for sub in billDates for j in sub]
         meterNos = [j for sub in meterNos for j in sub]
@@ -370,16 +409,15 @@ def billsList():
         unitsConsumed = [j for sub in unitsConsumed for j in sub]
         connectionIDs = [j for sub in connectionIDs for j in sub]
         prevDates = [j for sub in prevDates for j in sub]
+        BillPaymentStatus = [j for sub in BillPaymentStatus for j in sub]
         length = len(billNos)
-        BillPaymentStatus = [True,False,False,True,False]
         consumerName = ""
     elif roleId == "2":
         print(f"CNO = {cNo}")
         conn = mysql.connect()
         bill = Bill(conn)
-        billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates = bill.getBillsByCNo(cNo)
+        billNos,billDates, meterNos, amountDues, unitsConsumed, connectionIDs, prevDates,BillPaymentStatus = bill.getBillsByCNo(cNo)
         length = len(billNos)
-        BillPaymentStatus = [True,False,False,True,False]   #should be taken from the db too
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
         record = cursor.fetchone()
@@ -606,6 +644,7 @@ def dashboard():
         print(n)
         return render_template("dash.html", roleId = roleId, consumers = consumers, pageNo=pageNo+1, num = numberOfConnections,n=n, uName=session["uName"], uId=session["id"])
     else:
+        print()
         consumers = []
         numberOfConnections = []
         consumer = Consumer(conn)
@@ -615,26 +654,39 @@ def dashboard():
         num = cursor.fetchone()["c"]
         numberOfConnections.append(num)
         return render_template("dash.html", roleId = roleId, num=numberOfConnections, pageNo=0, n=0, consumers = consumers, uName=session["uName"], uId=session["id"])
+
 @app.route("/dashboardCon")
 def dashboardCon():
     cNo = session["id"]
     roleId = session['role']
     conn = mysql.connect()
+    connections = []
     if roleId == "2":
-        if 'bid' in request.args:
-            bid = request.args['bid']
-            bill = Bill(conn)
-            bill.getBill(bid)
+        if 'connId' in request.args:
+            connId = request.args['connId']
+            connection = Connection(conn)
+            connection.getConnection()
+            connections.append(connection)
         else:
-            bill = ""
-        connections = []
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
-        record = cursor.fetchone()
-        consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
-        print("Consumer Name")
-        print(consumerName)
-        return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,bill=bill, uName=session["uName"], uId=session["id"])
+            connection = ""
+        if connection == "":
+            cursor = conn.cursor(pymysql.cursors.DictCursor)
+            cursor.execute("SELECT * FROM consumer WHERE Con_No = %s",(cNo))
+            record = cursor.fetchone()
+            consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
+            print("Consumer Name")
+            print(consumerName)
+            cursor.execute("SELECT Co_ID FROM connection WHERE Con_ID = %s",(record['Con_ID']))
+            records = cursor.fetchall()
+            print(records)
+            for record in records:
+                connection = Connection(conn)
+                connection.getConnection(record["Co_ID"])
+                connections.append(connection)
+            print(connections)
+            return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections, uName=session["uName"], uId=session["id"])
+        else :
+            return render_template("consumerDash.html",roleId=roleId,connections = connections, uName=session["uName"], uId=session["id"])
     return render_template("consumerDash.html",roleId=roleId,consumerName="", uName=session["uName"], uId=session["id"])
 
             # csv="Consumer No, Consumer First Name, Consumer Last Name, Connection No, Meter No, Address, District, Taluka, Pin Code, Contact, Email"
@@ -753,4 +805,27 @@ def adminDistributor():
 
 @app.route("/paymentHistory")
 def paymentHistory():
-    return render_template("paymentHistory.html", uName=session["uName"], uId=session["id"])
+    cid = session["id"]
+    transactions = []
+    conn = mysql.connect()
+    consumer = Consumer(conn)
+    return render_template("paymentHistory.html", uName=session["uName"], uId=session["id"],)
+
+@app.route("/transaction",methods=['GET', 'POST'])
+def transactionPage():
+    conn = mysql.connect()
+    stateT = 0
+    if request.method == 'POST'and 'bid' in request.form and 'amount' in request.form:
+        stateT = 1
+        transaction = Transaction(conn, request)
+        transaction.insertTransaction()
+        return render_template("paymentPage.html", uName=session["uName"], uId=session["id"],transaction = transaction, stateT = stateT)
+    if "bid" in request.args:
+        bid = request.args["bid"]
+        bill = Bill(conn)
+        bill.getBill(bid)
+        bill.amount = round(float(bill.amount),2)
+        return render_template("paymentPage.html", uName=session["uName"], uId=session["id"], bill = bill, stateT = stateT,crDate = str(date.today()))
+
+
+    
