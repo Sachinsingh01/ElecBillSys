@@ -83,8 +83,8 @@
                     <h2 class="text-start mb-4">Proceed to Pay</h2>
                     <div class="row">
                     <div class="col-1"></div>
-                    <p class="font-monospace col-4 fs-5">Bill Number : {{bill.bid}}</p>
-                    <div class="col-2"></div>                    
+                    <p class="font-monospace col-5 fs-5">Bill Number : {{bill.bid}}</p>
+                    <div class="col-1"></div>                    
                     <p class="font-monospace col-4">Meter Number : {{bill.meterNo}}</p>
                     <div class="col-1"></div>
 
@@ -95,7 +95,7 @@
                     <div class="col-1"></div>
 
                     <div class="col-1"></div>
-                    <p class="font-monospace fs-5 bold col-4" style="font-weight: bold;">Amount : {{bill.amount}}</p>
+                    <p class="font-monospace fs-5 bold col-4" style="font-weight: bold;">Amount : Rs. {{bill.amount}}/-</p>
                     <div class="col-7"></div>
 
                     <div class="col-4"></div>
@@ -124,190 +124,14 @@
     {% include "consumerNavbar.html" %}
 
     <script>
-        var connId = document.getElementById("inputConnID")
-        var compDesc = document.getElementById("inputCompDesc")
-        var compType = document.getElementById("inputCompType")
-        var bid = document.getElementById("inputBillId")
-        var meterNo = document.getElementById("inputMeterNo")
-        var rdDt = document.getElementById("inputReadDate")
-        var amt = document.getElementById("inputBillAmount")
-
-        function setError(elt, msg){
-            const fc = elt.parentElement
-            const pTag = fc.querySelector('p')
-            if(pTag){
-                pTag.innerText = msg
-            }
-            fc.className = "formControl error"
-        }
-
-        function setSuccess(elt){
-            const fc = elt.parentElement
-            fc.className = "formControl success"
-        }
-
-        function resetCls(elt){
-            const fc = elt.parentElement
-            fc.className = "formControl"
-        }
+        var bid = document.getElementById("inputConnID")
+        var amt = document.getElementById("inputCompDesc")
 
         document.getElementById("takeComplaint").addEventListener("submit", (e)=>{
-            let connIdErr = true
-            let compDescErr = true
-            let compTypeErr = true
-            let bidErr = true
-            let meterNoErr = true
-            let rdDtErr = true
-            let amtErr = true
-
-            const connIdVal = connId.value.trim()
-            const compDescVal = compDesc.value.trim()
-            const compTypeVal = compType.value.trim()
-            const bidVal = bid.value.trim()
-            const meterNoVal = meterNo.value.trim()
-            const rdDtVal = rdDt.value.trim()
-            const amtVal = amt.value.trim()
-
-            if(bidVal===""){
-                setError(bid, "Bill Number can't be blank")
-                bidErr=true
-            }else if(isNaN(bidVal)){
-                setError(bid, "Bill Number is Numeric field")
-                bidErr=true
-            }else if(isNaN(parseFloat(bidVal))){
-                setError(bid, "Please Remove any blank spaces")
-                bidErr=true
-            }else if(bidVal.includes(".")){
-                setError(bid, "Bill Number can't have period")
-                bidErr=true
-            }else if(bidVal.length !== 14){
-                setError(bid, "Bill Number should have 14 digits")
-                bidErr=true
-            }else{
-                setSuccess(bid)           
-                bidErr=false
-            }
-
-            if(meterNoVal===""){
-                setError(meterNo, "Meter Number can't be blank")
-                meterNoErr = true
-            }else if(isNaN(meterNoVal)){
-                setError(meterNo, "Meter Number is Numeric field")
-                meterNoErr=true
-            }else if(isNaN(parseFloat(meterNoVal))){
-                setError(meterNo, "Please Remove any blank spaces")
-                meterNoErr=true
-            }else if(meterNoVal.includes(".")){
-                setError(meterNo, "Meter Number can't have period")
-                meterNoErr=true
-            }else if(meterNoVal.length !== 10){
-                setError(meterNo, "Meter Number should have 10 digits")
-                meterNoErr=true
-            }    
-            else{
-                setSuccess(meterNo)
-                meterNoErr = false
-            }  
-
-            if(rdDtVal===""){
-                setError(rdDt, "Read Date can't be blank")
-                rdDtErr=true
-            }
-            else{
-                console.log(rdDtVal)
-                setSuccess(rdDt)
-                rdDtErr=false
-            }
-
-            if(amtVal==="none"){
-                setError(amt, "Amount can't be blank")
-                amtErr=true
-            }else if(isNaN(amtVal)){
-                setError(amt, "Amount is Numeric field")
-                amtErr=true
-            }else if(isNaN(parseFloat(amtVal))){
-                setError(amt, "Please Remove any blank spaces")
-                amtErr=true
-            }
-            else{
-                setSuccess(amt)
-                amtErr=false
-            }
-
-            if(connIdVal===""){
-                setError(connId, "Connection Number can't be blank")
-                connIdErr=true
-            }else if(isNaN(connIdVal)){
-                setError(connId, "Connection ID is Numeric field")
-                connIdErr=true
-            }else if(isNaN(parseFloat(connIdVal))){
-                setError(connId, "Please Remove any blank spaces")
-                connIdErr=true
-            }else if(connIdVal.includes(".")){
-                setError(connId, "Connection ID can't have period")
-                connIdErr=true
-            }else if(connIdVal.length !== 12){
-                setError(connId, "Connection ID should have 12 digits")
-                connIdErr=true
-            }else{
-                setSuccess(connId)           
-                connIdErr=false
-            }
-
-            if(compTypeVal==="none"){
-                setError(compType, "Complaint Type can't be blank")
-                compTypeErr=true
-            }
-            else{
-                setSuccess(compType)
-                compTypeErr=false
-            }
-            
-            if(compDescVal===""){
-                setError(compDesc, "Please provide a brief explanation about your problem.")
-                compDescErr=true
-            }
-            else{
-                setSuccess(compDesc)
-                compDescErr=false
-            }
-                      
-            let allErr = compDescErr||compTypeErr||connIdErr
-            let restErr = amtErr||rdDtErr||meterNoErr||bidErr
-            if(!allErr&&compTypeVal==="Technical"){
-                alert("submitted")
-            }else if(compTypeVal==="Bill Complaint"&&!(allErr||restErr)){
-                alert("submitted")
-            }else{                
-                e.preventDefault()
-            }
+            e.preventDefault()
+            console.log(bid.value)
+            console.log(amt.value)
         })
-
-        compType.addEventListener("change", e=>{
-            if(compType.value==="Bill Complaint"){
-                document.getElementById("disp1").style.display = "block"
-                document.getElementById("disp2").style.display = "block"
-                document.getElementById("disp3").style.display = "block"
-                document.getElementById("disp4").style.display = "block"  
-                document.getElementById("adjustor").style.display = "none"  
-            }else{
-                document.getElementById("disp1").style.display = "none"
-                document.getElementById("disp2").style.display = "none"
-                document.getElementById("disp3").style.display = "none"
-                document.getElementById("disp4").style.display = "none" 
-                document.getElementById("adjustor").style.display = "block" 
-            }
-        })
-
-        function resetVals(){
-            resetCls(connId)
-            resetCls(compType)
-            resetCls(compDesc)
-            resetCls(bid)
-            resetCls(meterNo)
-            resetCls(rdDt)
-            resetCls(amt)
-        }
     </script>
 </body>
 
