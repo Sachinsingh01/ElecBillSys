@@ -104,7 +104,7 @@
                           type="submit"
                           id="makePaymentBtn"
                           class="btn btn-primary"
-                          {% if stateT == 1 %}disabled{% endif %}
+                          {% if stateT==1 and transaction.status == "Paid" %}disabled{% endif %}
                         >
                           <i class="bi bi-credit-card-fill me-2"></i>Make Payment
                         </button>
