@@ -7,7 +7,7 @@ class Distributor:
         self.conn = conn
         self.cursor = conn.cursor(pymysql.cursors.DictCursor)
         try:
-            self.disId = request.form['inputDistID']
+            self.disId = ""
             self.disCompName = request.form['inputDistCompName']
             self.disAddress = request.form['inputDistAddress']
             self.disDistrict = request.form['inputDistDistrict']
@@ -21,10 +21,11 @@ class Distributor:
             print("Unable to initialize Distributor")
         
 
-    def insertDistributor(self):
+    def insertDistributor(self, conn):
         try:
+            self.disId = self.generateDisID(conn)
             print("Executing Insert Query")
-            self.cursor.execute("INSERT INTO distributor VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.disId,self.disCompName,self.disAddress,self.disDistrict,self.disPincode,self.supplyPMonth,self.supplyRate,self.disContact,self.created, self.updated))
+            self.cursor.execute("INSERT INTO distributor VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.disId,self.disCompName,self.disAddress,self.disDistrict,self.disPincode,self.supplyPMonth,self.disContact,self.supplyRate,self.created, self.updated))
             self.conn.commit()
             return True
         except Exception as e:
@@ -33,8 +34,9 @@ class Distributor:
 
     def deleteDistributor(self, disId):
         try:
+            self.disId = disId
             print("deleting inside dis")
-            self.cursor.execute('DELETE FROM distributor WHERE dis_id = %s', (disId))
+            self.cursor.execute('DELETE FROM distributor WHERE dis_id = %s', (self.disId))
             self.conn.commit()
             return True
         except Exception as e:
@@ -70,11 +72,28 @@ class Distributor:
             self.disDistrict = record['dis_district']
             self.disPincode = record['dis_pincode']
             self.supplyPMonth = record['supply_month']
-            self.supplyRate = record['dis_contact']
-            self.disContact = record['supply_rate']
+            self.supplyRate = record['supply_rate']
+            self.disContact = record['dis_contact']
             self.created = record['created']
             self.updated = record['updated']
             return True
         except Exception as e:
            print(e) 
            return False
+
+    def generateDisID(self, conn):
+        self.conn = conn
+        self.cursor = conn.cursor(pymysql.cursors.DictCursor)
+        try:
+            self.cursor.execute('SELECT MAX(dis_id) as dis_id FROM distributor')
+            record = self.cursor.fetchone()
+            if record:
+                disId = record['dis_id'] + 1
+                print(disId)
+            else:
+                # if the table is empty
+                disId = 100000000001
+        except:
+            print("Unable to generate connectID")
+        
+        return disId
