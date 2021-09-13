@@ -615,6 +615,7 @@ def dashboard():
         num = cursor.fetchone()["c"]
         numberOfConnections.append(num)
         return render_template("dash.html", roleId = roleId, num=numberOfConnections, pageNo=0, n=0, consumers = consumers, uName=session["uName"], uId=session["id"])
+
 @app.route("/dashboardCon")
 def dashboardCon():
     cNo = session["id"]
