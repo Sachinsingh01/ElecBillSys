@@ -72,7 +72,7 @@
     <title>Consumer Dash</title>
 </head>
 
-<body>
+<body onload="loaderFn()">
 
     <div class="container-fluid rounded" id="container">
         <section class="row justify-content-center">
@@ -113,18 +113,31 @@
                     {% if stateT == 1 %}
                     <div class="col-4"></div>
                     <!--loaderFn-->
-                    <p class="font-monospace">{{transaction.trId}}</p>
                     <div class="col-4"></div>
                     {% endif %}
-                        
+                    
                     </div>
                 </form>
+                <input type="text" class="d-none" id="stateT" value={{stateT}}>
+                <a href="#" class="d-none" id="gotoLink"></a>
             </section>
         </section>
     </div>
     {% include "consumerNavbar.html" %}
 
     <script>
+        function loaderFn(){
+            var stateT = document.getElementById("stateT").value.trim()
+            var gotoLink = document.getElementById("gotoLink")
+            if(stateT==1){
+                setTimeout(()=>{
+                    bid = document.getElementById("bid").value.trim()
+                    console.log(bid)
+                    gotoLink.href=`/billDetail?id=${bid}`
+                    gotoLink.click()
+                },5000)                
+            }
+        }
     </script>
 </body>
 
