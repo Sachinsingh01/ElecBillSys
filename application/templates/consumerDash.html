@@ -150,8 +150,12 @@
                         <td><a id="table-link" href="#">{{conn.meterNo}}</a></td>
                         <td>{{conn.connAddress}}, {{conn.connTaluka}}, {{conn.connDistrict}}, Goa. {{conn.connPin}}</td>
                         <td>{{conn.installationDate}}</td>
-                        <td>{{conn.connType}}</td>
-                        <td><p class="status paid">{{conn.connStatus}}</p></td>
+                        <td>{{conn.conType}}</td>
+                        {% if conn.connStatus=="1"}
+                        <td><p class="status unpaid">Inactive</p></td>
+                        {% else %}
+                        <td><p class="status paid">Active</p></td>
+                        {% endif %}
                     </tr>
                   {% endfor %}
                 </tbody>

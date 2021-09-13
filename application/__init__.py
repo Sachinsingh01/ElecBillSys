@@ -637,9 +637,10 @@ def dashboardCon():
         cursor.execute("SELECT Con_ID FROM consumer WHERE Con_No = %s",(cNo))
         conId = cursor.fetchone()["Con_ID"]
         
-        consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
+        # consumerName = record['Con_First_Name'] + " " + record['Con_Last_Name']
         print("Consumer Name")
-        print(consumerName)
+        # print(consumerName)
+        consumerName = ""
         return render_template("consumerDash.html",roleId=roleId,consumerName=consumerName,connections = connections,bill=bill, uName=session["uName"], uId=session["id"])
     return render_template("consumerDash.html",roleId=roleId,consumerName="", uName=session["uName"], uId=session["id"])
 
@@ -766,8 +767,10 @@ def paymentHistory():
 
 @app.route("/transaction")
 def transactionPage():
-    if request.method == 'POST'and 'bid' in request.form and 'meterNo' in request.form:
+    
+    if request.method == 'POST'and 'bid' in request.form and 'amount' in request.form:
         conn = mysql.connect()
         transaction = Transaction(conn, request)
         transaction.insertTransaction()
         return render_template("paymentPage.html", uName=session["uName"], uId=session["id"],transaction = transaction)
+    return render_template("paymentPage.html", uName=session["uName"], uId=session["id"])
