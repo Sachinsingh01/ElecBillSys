@@ -10,7 +10,7 @@ from pymysql import NULL, cursors
 from werkzeug.utils import secure_filename
 import os
 from .consumer import Consumer
-from .fileToDB import MeterReading
+from .fileToDB import MeterReading, Reading
 from .Billing import Bill
 import re 
 from .connection import Connection
@@ -856,4 +856,7 @@ def transactionPage():
 
 @app.route("/billGenerate")
 def billGenerate():
-    return render_template("billGenerate.html")
+    reading = MeterReading()
+    MG1, MG2 = reading.sendData()
+    js = {"MG1":MG1,"MG2":MG2}
+    return render_template("billGenerate.html",js = js)
