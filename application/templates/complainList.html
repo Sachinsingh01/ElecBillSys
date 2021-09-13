@@ -49,7 +49,7 @@
                                 <p class="font-monospace col-3">Complain ID : {{complainIDs[i]}}</p>                                
                                 <p class="font-monospace col-3">Connection ID : {{connectionIDs[i]}}</p>                             
                                 <p class="font-monospace col-5"></p>
-                                {% if complainStatus[i]=="1"%}
+                                {% if complainStatus[i]=="0"%}
                                 <p class="font-monospace col-1 d-flex justify-content-center status unpaid " style="font-size: 12px;font-weight:bold;">Unresolved</p>    
                                 {% else %}
                                 <p class="font-monospace col-1 d-flex justify-content-center status paid " style="font-size: 12px;font-weight:bold;">Resolved</p>    
@@ -65,13 +65,13 @@
                                 {% if roleId == "1" %}
                                 <div class="d-grid gap-2 mx-auto col-2 d-block">
                                     <form action="/complainList" method="POST">
-                                        <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="discard" name="{{complainIDs[i]}}" {% if complainStatus[i]!="1" %}disabled{% endif %}>Discard</button>
+                                        <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="discard" name="{{complainIDs[i]}}" {% if complainStatus[i]!="0" %}disabled{% endif %}>Discard</button>
                                     </form>
                                 </div>  
                                 {% if complainCategory[i] == "1" %}
                                 <div class="d-grid gap-2 mx-auto col-2 d-block">
                                     <form action="/complainList" method="POST">
-                                        <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="resolve" name="{{complainIDs[i]}}" {% if complainStatus[i]!="1" %}disabled{% endif %}>Resolve</button>
+                                        <button style="font-size: 12px;font-weight:bold;width: 100%;" type="submit" class="btn btn-primary" id="resolve" name="{{complainIDs[i]}}" {% if complainStatus[i]!="0" %}disabled{% endif %}>Resolve</button>
                                     </form>
                                 </div> 
                                 {% else %}
