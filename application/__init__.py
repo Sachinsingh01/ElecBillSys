@@ -892,8 +892,24 @@ def paymentHistory():
     consumer = Consumer(conn)
     consumer.getConsumer(cid)
     meterNos = consumer.getMeterNos()
+    print(meterNos)
     for meterNo in meterNos:
-        meterNo
+        cursor.execute("SELECT BD_ID FROM bill_master WHERE Meter_No = %s",(meterNo))
+        records = cursor.fetchall()
+        if records:
+            for record in records:
+                t = Transaction(conn)
+                try:
+                    t.getTransactionByBid(record["BD_ID"])
+                    print(t.status,t.trId,t.bid)
+                    transactions.append(t)
+                except Exception as e:
+                    print(e)
+    # print(transactions)
+    print(len(transactions))
+    for t in transactions:
+        print(t.status)
+        
     return render_template("paymentHistory.html", uName=session["uName"], uId=session["id"],transactions = transactions)
 
 @app.route("/transaction",methods=['GET', 'POST'])

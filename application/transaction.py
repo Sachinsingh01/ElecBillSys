@@ -54,5 +54,7 @@ class Transaction():
                 TrId = 100000000001
             return (TrId)
         except Exception as e:
+            TrId = 100000000001
+            return TrId
             print(e)
             print("Unable to generate InstallID")

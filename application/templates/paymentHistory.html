@@ -40,17 +40,25 @@
                 <div class="shadow p-5 m-3 bg-body rounded">
                     <h2 class="text-start mb-3">Your Transactions</h2>
                     <div id="bills-list" class="list-group">
+                        {%for t in transactions%}
                             <div class="row my-2 mx-1 p-2" style="border: 1px solid #e5e5e5;font-size: 14px;">
-                                <p class="font-monospace col-4">Transaction ID : </p>                                
-                                <p class="font-monospace col-4">Bill Number : </p>                             
+                                
+                                <p class="font-monospace col-4">Transaction ID : {{t.trId}} </p>                                
+                                <p class="font-monospace col-4">Bill Number : {{t.bid}} </p>                             
                                 <p class="font-monospace col-3"></p>
+                                {%if t.status == "Paid"%}
+                                <p class="font-monospace col-1 d-flex justify-content-center status paid " style="font-size: 12px;font-weight:bold;">Successful</p>    
+                                {%else%}
                                 <p class="font-monospace col-1 d-flex justify-content-center status unpaid " style="font-size: 12px;font-weight:bold;">Failed</p>    
+                                {%endif%}
                                 <!-- <p class="font-monospace col-1 d-flex justify-content-center status paid " style="font-size: 12px;font-weight:bold;">Successful</p>     -->
                                 
-                                <p class="font-monospace col-4">Payment Date: </p>  
+                                <p class="font-monospace col-4">Payment Date: {{t.date}}</p>  
                                 <div class="col-4"></div> 
-                                <p class="font-monospace col-4">Amount : <small class="fs-5">Rs1000/-</small></p>
-                            </div>                             
+                                <p class="font-monospace col-4">Amount :  <small class="fs-5">{{t.amount}}/-</small></p>
+                                
+                            </div>   
+                            {%endfor%}              
                     </div>
                 </div>            
             </div>
