@@ -353,8 +353,11 @@ def fileComplaint():
         try:
             bill = Bill(conn)
             bill.getBill(bid)
+            bill.cursor.execute("SELECT Co_ID FROM connection WHERE Meter_No =  %s",(bill.meterNo))
+            coId = bill.cursor.fetchone()["Co_ID"]
             bill.amount = round(float(bill.amount),2)
-            return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"], bill=bill, compType=1)
+
+            return render_template("fileComplaint.html", uName=session["uName"], uId=session["id"], bill=bill, coId=coId,compType=1)
         except Exception as e:
             print(e)
 

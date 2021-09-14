@@ -84,7 +84,7 @@
                     <div class="mb-4 col-4">
                         <div class="formControl" id="formControl">
                         <label for="inputConnID" class="form-label">Connection ID</label>
-                        <input type="text" class="form-control" id="inputConnID" name="inputConnID">
+                        <input type="text" class="form-control" id="inputConnID" name="inputConnID" {% if compType==1 %} value={{coId}} {% endif %}>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
                         <p class="mb-0" id="errMsg">Error Message</p>
@@ -157,7 +157,7 @@
                     <div class="col-1"></div>
                     <div class="mb-4 col-10">
                         <div class="formControl" id="formControl">
-                        <label for="inputCompDesc" class="form-label">Example textarea</label>
+                        <label for="inputCompDesc" class="form-label">Description</label>
                         <textarea class="form-control" id="inputCompDesc" name="inputCompDesc" rows="3" value=""></textarea>
                         <i class="bi bi-check-circle"></i>
                         <i class="bi bi-exclamation-circle"></i>
@@ -331,9 +331,7 @@
             let allErr = compDescErr||compTypeErr||connIdErr
             let restErr = amtErr||rdDtErr||meterNoErr||bidErr
             if(!allErr&&compTypeVal==="Technical"){
-                alert("submitted")
             }else if(compTypeVal==="Bill Complaint"&&!(allErr||restErr)){
-                alert("submitted")
             }else{                
                 e.preventDefault()
             }

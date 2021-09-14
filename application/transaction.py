@@ -29,7 +29,7 @@ class Transaction():
 
     def getTransactionByBid(self,bid):
         try:
-            self.cursor.execute('SELECT * FROM transactions WHERE BD_ID = %s', (bid))
+            self.cursor.execute('SELECT * FROM transactions WHERE BD_ID = %s ORDER BY Tr_Status', (bid))
             acc = self.cursor.fetchone()
             self.trId  = acc["Tr_ID"]
             self.bid = acc['BD_ID']
