@@ -109,7 +109,7 @@ def login():
                     return redirect(url_for('dashboardCon'))
                     # return redirect(url_for('billDetail'))
                 elif role == "3":
-                    session["uName"] = "METER GUY"
+                    session["uName"] = "METER READER"
                     return redirect(url_for('meterReading'))
             
             else:
@@ -585,14 +585,15 @@ def adminConn():
                             conn.close()
                     else:
                         msg, val2 = connection.getConnection(conid)
-                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":connection.conType, "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
+                        consumer1 = Consumer(conn)
+                        consumer1.getConsumerbyId(connection.conNo)
+                        js = {"cid": connection.connID, "cno":consumer1.cno, "connType":connection.conType, "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
                         if not val2:
                             msg = "Unable to find the connection" 
                             msgCat=0
                         else:
                             msgCat=1
                     print(js)
-                    print(msg)
                     return render_template("connectionDataInput.html",msgCat=msgCat,msg=msg, val = taskC, js = js, roleId = roleId, uName=session["uName"], uId=session["id"]) 
                 # End Delete
 
@@ -615,8 +616,9 @@ def adminConn():
                                 print("actually updating")
                                 connid = request.form['realID']
                                 print("ConnectionID : ",connid)
-
-                                msg, updateConn = connection.updateConnection(connid, request)
+                                consumer2 = Consumer(conn)
+                                consumer2.getConsumerbyId(connection.conNo)
+                                msg, updateConn = connection.updateConnection(connid, consumer2.cidpk,request)
                                 if updateConn:
                                     msg = "Connection updated Sucessfully"
                                     msgCat=1
@@ -630,7 +632,10 @@ def adminConn():
                             conn.close()
                     else:
                         msg, findConn = connection.getConnection(connid)
-                        js = {"cid": connection.connID, "cno":connection.conNo, "connType":str(connection.conType), "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
+                        consumer1 = Consumer(conn)
+                        consumer1.getConsumerbyId(connection.conNo)
+                        print(connection.conNo)
+                        js = {"cid": connection.connID, "cno":consumer1.cno, "connType":str(connection.conType), "meterNo":connection.meterNo,"caddress":connection.connAddress, "cdistrict":connection.connDistrict, "ctaluka":connection.connTaluka, "connStatus":connection.connStatus, "cpinCode":connection.connPin, "installationDate":connection.installationDate}
                         
                         if not findConn:
                             msg = "Unable to find the connection"

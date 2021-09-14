@@ -87,6 +87,27 @@ class Consumer():
             print(e)
             msg="Unable to get consumer"
             return msg, False
+    
+    def getConsumerbyId(self, cidpk):
+        try:
+            #check is consumer number or consumer ID is to be used
+            self.cursor.execute('SELECT * FROM consumer WHERE Con_ID = %s', (int(cidpk)))
+            acc = self.cursor.fetchone()
+            self.cno = acc["Con_No"]
+            self.cidpk  = acc["Con_ID"]
+            self.fname = acc['Con_First_Name']
+            self.lname = acc['Con_Last_Name']
+            self.address = acc['Con_Address']
+            self.taluka = acc['Con_Taluka']
+            self.district = acc['Con_District']
+            self.pinCode = acc['Con_Pin_Code']
+            self.contact = acc['Con_Contact'] 
+            self.email = acc["Con_Email"]
+            return "Consumer Found", True
+        except Exception as e:
+            print(e)
+            msg="Unable to get consumer"
+            return msg, False
 
     def updateConsumer(self, cid, request):
         try:

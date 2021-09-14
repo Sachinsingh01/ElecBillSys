@@ -35,7 +35,8 @@ class User:
         COMBINED_LIST = DIGITS + UPCASE_CHARACTERS + LOCASE_CHARACTERS + SYMBOLS
 
         length = 8
-        r_str = ''.join(random.choice(COMBINED_LIST) for i in range(length))
+        # r_str = ''.join(random.choice(COMBINED_LIST) for i in range(length))
+        r_str = "1234abcd"
 
         # h_password is the hashed value
         # h_password = hashlib.pbkdf2_hmac('sha256',r_str.encode('utf-8'), salt, 100000, dklen=32)

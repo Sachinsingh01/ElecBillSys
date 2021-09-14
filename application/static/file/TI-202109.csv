@@ -1,4 +1,4 @@
 MeterReadingId,MeterNo,Fname,Lname,Address,Taluka,District,Pin,Contact,prev_date,prev_reading,Meter_Reading,Read_Date
-1E+11,1000000013,Vidit,Gujrati,"Flat 17, building W",Tiswadi,North Goa,403001,9866554422,8/18/2021,0,200,9/18/2021
-1E+11,1000000020,Vishy,Anand,H no 26,Tiswadi,North Goa,403001,9622334477,7/20/2021,0,300,8/30/2021
-1E+11,1000000021,Vishy,Anand,Flat 24,Tiswadi,North Goa,403001,9622334477,8/20/2021,0,333,9/13/2021
+1.00E+11,1000000013,Vidit,Gujrati,Flat 17 building W,Tiswadi,North Goa,403001,9866554422,8/18/2021,0,200,9/18/2021
+1.00E+11,1000000020,Vishy,Anand,H no 26,Tiswadi,North Goa,403001,9622334477,7/20/2021,0,300,8/30/2021
+1.00E+11,1000000021,Vishy,Anand,Flat 24,Tiswadi,North Goa,403001,9622334477,8/20/2021,0,333,9/13/2021

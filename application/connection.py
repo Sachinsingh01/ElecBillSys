@@ -122,7 +122,7 @@ class Connection:
             msg ="Unable to delete connection"
             return msg, False
 
-    def updateConnection(self, connId, request):
+    def updateConnection(self, connId, cid,request):
         today = str(date.today())
         try:
             self.cursor.execute("SELECT Installation_ID, Installation_Date, Created FROM connection WHERE Co_ID = %s",(connId))
@@ -134,13 +134,13 @@ class Connection:
             self.connPin = request.form['inputConnPin']
             self.meterNo = request.form['inputMeterNo']
             self.conType = request.form['inputConnType']
-            self.conNo = request.form['inputConNo']
+            self.conNo = cid
             self.installationID = record['Installation_ID']
             self.installationDate = request.form['inputInstallationDate']
             self.connStatus = request.form['inputConnStatus']
             self.created = record['Created']
             
-            self.cursor.execute("UPDATE connection SET Co_Address = %s, Co_Taluka = %s, Co_District = %s, Co_Pin = %s, Meter_No = %s, Co_Type_ID = %s, Con_ID = %s, Installation_ID = %s, Installation_Date = %s, Co_Status = %s, Created = %s, Updated = %s WHERE Co_ID = %s",(self.connAddress, self.connTaluka, self.connDistrict, self.connPin, self.meterNo, self.conType, self.conNo, self.installationID, self.installationDate, self.connStatus, self.created, today, connId))
+            self.cursor.execute("UPDATE connection SET Co_Address = %s, Co_Taluka = %s, Co_District = %s, Co_Pin = %s, Meter_No = %s, Co_Type_ID = %s, Con_ID = %s, Installation_ID = %s, Installation_Date = %s, Co_Status = %s, Created = %s, Updated = %s WHERE Co_ID = %s",(self.connAddress, self.connTaluka, self.connDistrict, self.connPin, self.meterNo, self.conType, int(self.conNo), self.installationID, self.installationDate, self.connStatus, self.created, today, connId))
             self.conn.commit()
             msg="Successfully Deleted the Connection"
             return msg, True

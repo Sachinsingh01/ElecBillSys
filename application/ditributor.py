@@ -21,9 +21,9 @@ class Distributor:
             print("Unable to initialize Distributor")
         
 
-    def insertDistributor(self, conn):
+    def insertDistributor(self):
         try:
-            self.disId = self.generateDisID(conn)
+            self.disId = self.generateDisID(self.conn)
             print("Executing Insert Query")
             self.cursor.execute("INSERT INTO distributor VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(self.disId,self.disCompName,self.disAddress,self.disDistrict,self.disPincode,self.supplyPMonth,self.disContact,self.supplyRate,self.created, self.updated))
             self.conn.commit()
